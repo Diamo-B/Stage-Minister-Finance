@@ -1,0 +1,39 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    html,
+    body,
+    #root {
+        height: 100%;
+    }
+
+    html {
+        font-family: "Roboto", sans-serif;
+    }
+}
+
+@layer utilities {
+    .border-1 {
+        border: 1px solid;
+    }
+    .PrevXnext {
+        @apply btn w-40;
+    }
+}
+
+@layer utilities {
+
+    .scrollbar-thumb-2::-webkit-scrollbar-thumb {
+        height: px !important;
+        border-radius: 50px;
+    }
+
+    .scrollbar-thumb-2::-webkit-scrollbar-track {
+        border-radius: 50px;
+    }
+
+}
+

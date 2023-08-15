@@ -1,0 +1,204 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum TitreEnum {
+  M
+  Mme
+  Mlle
+}
+
+model User {
+  id            String    @id @default(uuid())
+  titre         TitreEnum
+  cin           String    @unique
+  prenom        String
+  nom           String
+  email         String    @unique
+  password      String
+  adresse       String?
+  dateNaissance DateTime
+  villeId       String?
+  ville         Ville?    @relation(fields: [villeId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  codePostal    Int?
+  telephone     String
+  candidat      Candidat?
+  admin         Admin?
+}
+
+model Candidat {
+  id             String       @id @default(uuid())
+  userId         String       @unique
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  Attachments    Attachment[]
+  concoursActifs Concours[]
+  diplomes       Diplome[]
+}
+
+model Admin {
+  id           String  @id @default(uuid())
+  userId       String  @unique
+  user         User    @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  isSuperAdmin Boolean @default(false)
+}
+
+model Diplome {
+  id             String             @id @default(uuid())
+  label          String
+  typeId         String?
+  type           DiplomeType?       @relation(fields: [typeId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  affiliationId  String?
+  affiliation    Affiliation?       @relation(fields: [affiliationId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  specialityId   String?
+  speciality     DiplomeSpecialite? @relation(fields: [specialityId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  anneeObtention String
+  paysId         String?
+  paysObtention  Pays?              @relation(fields: [paysId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  ecoleId        String?
+  ecole          Ecole?             @relation(fields: [ecoleId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  attachments Attachment[]
+  candidatId  String?
+  candidat    Candidat?    @relation(fields: [candidatId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model DiplomeType {
+  id       String    @id @default(uuid())
+  nom      String // master, doctorat, Brevet, ingénieur etc ...
+  diplomes Diplome[]
+}
+
+model Affiliation {
+  id          String              @id @default(uuid())
+  Filiere     String //.e.g génieCivil, developpement informatique, réseau, management .... 
+  specialites DiplomeSpecialite[] //e.g web, mobile, AI, BI ...
+  diplomes    Diplome[]
+}
+
+model DiplomeSpecialite {
+  id           String        @id @default(uuid())
+  nom          String
+  affiliations Affiliation[]
+  diplomes     Diplome[]
+}
+
+model Pays {
+  id      String    @id @default(uuid())
+  code    String    @unique
+  nom     String    @unique
+  diplome Diplome[]
+}
+
+model Ecole {
+  id       String    @id @default(uuid())
+  nom      String
+  adresse  String?
+  villeId  String?
+  ville    Ville?    @relation(fields: [villeId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  diplomes Diplome[]
+}
+
+model Ville {
+  id         String     @id @default(uuid())
+  nom        String
+  concours   Concours[]
+  users      User[]
+  ecoles     Ecole[]
+  regionId   Int?
+  region     Region?    @relation(fields: [regionId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  chefRegion Boolean    @default(false)
+}
+
+model Region {
+  id     Int     @id
+  nom    String
+  villes Ville[]
+}
+
+model direction {
+  id       String     @id @default(uuid())
+  label    String
+  concours Concours[]
+}
+
+model Concours {
+  id                    String      @id @default(uuid())
+  label                 String
+  status                String
+  directionId           String?
+  direction             direction?  @relation(fields: [directionId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  limitePlaces          Int
+  limiteAge             Int
+  jobs                  job[]
+  villes                Ville[]
+  candidats             Candidat[]
+  avis                  Attachment?
+  datePublication       DateTime?
+  dateLimiteInscription DateTime?
+  dateConcours          DateTime?
+  campagneId            String?
+  campagne              Campagne?   @relation(fields: [campagneId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+}
+
+model job {
+  id          String       @id @default(uuid())
+  label       String
+  grades      Grade[]
+  specialites specialite[]
+  branches    branche[]
+  concours    Concours[]
+}
+
+model Grade {
+  id    String @id @default(uuid())
+  label String
+  jobs  job[]
+}
+
+model specialite {
+  id    String @id @default(uuid())
+  label String
+  jobs  job[]
+}
+
+model branche {
+  id    String @id @default(uuid())
+  label String
+  jobs  job[]
+}
+
+model Campagne {
+  id                    String     @id @default(uuid())
+  datePublication       DateTime
+  dateLimiteInscription DateTime
+  dateConcours          DateTime
+  status                String
+  concours              Concours[]
+}
+
+enum AttachmentTypes {
+  CIN
+  CV
+  DIPLOME
+  AVIS
+  AUTRE
+}
+
+model Attachment {
+  id         String          @id @default(uuid())
+  path       String
+  type       AttachmentTypes
+  candidatId String?
+  candidat   Candidat?       @relation(fields: [candidatId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  concoursId String?         @unique
+  concours   Concours?       @relation(fields: [concoursId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  diplomeId  String?
+  diplome    Diplome?        @relation(fields: [diplomeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
