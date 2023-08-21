@@ -15,10 +15,11 @@ const getByCandidatID = async (req: Request, res: Response, next: NextFunction) 
 
 const create = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { path, type, candidatId, concoursId, diplomeId } = req.body;
+        const { path, type, base64, candidatId, concoursId, diplomeId } = req.body;
         const attachment = await attachmentService.create(
             path,
             type,
+            base64,
             candidatId,
             concoursId,
             diplomeId

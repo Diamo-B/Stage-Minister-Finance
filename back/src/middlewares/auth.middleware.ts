@@ -6,25 +6,35 @@ import httpException from '../utils/httpException';
 
 dotenv.config();
 
-
-export const AuthMiddleware  = (
+export const AuthMiddleware = (
     req: Request,
     res: Response,
     next: NextFunction
 ) => {
     let token = req.header('Authorization')?.replace('Bearer ', '');
 
-    if (token == null)
-        throw new httpException(401, 'No auth token was provided')
-
-    jsonwebtoken.verify(
-        token,
-        process.env.JWT_SECRET as string,
-        (err, user) => {
-            if (err) 
-                throw new httpException(403, 'Invalid auth token');
-            (req as CandidatAuthRequest).user = user;
-            next(); // pass the execution off to whatever request the client intended
-        }
-    );
-}
+    if (token) {
+        jsonwebtoken.verify(
+            token,
+            process.env.JWT_SECRET as string,
+            (err, decodedToken) => {
+                if (!err) {
+                    if (decodedToken != null) {
+                        // Correct candidat token
+                        (req as CandidatAuthRequest).user = decodedToken;
+                        next();
+                    } else {
+                        // Correct token but doesn't belong to an agent
+                        next(new httpException(403, 'Unauthorized'));
+                    }
+                } else {
+                    // Incorrect token
+                    next(new httpException(401, 'Invalid auth token'));
+                }
+            }
+        );
+    } else {
+        // No token found, send error response
+        return res.status(401).json({ message: 'Unauthorized' });
+    }
+};

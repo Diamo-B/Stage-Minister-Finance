@@ -40,6 +40,7 @@ router.patch(
     usersApis.updateCandidat
 );
 
+//explain: Adds CIN and CV to candidat
 router.patch(
     '/link/candidat',
     AuthMiddleware,

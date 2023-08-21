@@ -8,7 +8,12 @@ const getAll = async () => {
                 id: true,
                 nom: true,
                 chefRegion: true,
-                region: true
+                region: {
+                    select:{
+                        id: true,
+                        nom: true,
+                    }
+                }
             }
         });
     } catch (err) {

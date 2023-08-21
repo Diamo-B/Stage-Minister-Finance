@@ -2,9 +2,8 @@ import { Request, Response, NextFunction } from 'express';
 import httpException from '../../utils/httpException';
 import diplomaService from './service.diplomas';
 import attachmentService from '../attachments/service.attachments';
-import { saveDiplomas } from '../../utils/fileUploaders/saveDiplomes';
+import { saveFiles } from '../../utils/fileUploaders/candidat/saveFiles';
 import { CandidatAuthRequest } from '../../utils/interfaces/ModifiedRequestObject';
-import fs from "fs"
 
 const getAll = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -77,18 +76,26 @@ const create = async (req: Request, res: Response, next: NextFunction) => {
         name,
         ext,
     } = req.body;
-    try {
+    
+    const filesArray = new Array(files);        
+
+    try {        
         const candidat = (req as CandidatAuthRequest).user.candidatId;
         //explain: saves the attachement in the public folder and returns the paths
-        const filesPaths = saveDiplomas(candidat, files, name, ext);
+        const filesPaths = saveFiles(candidat, files, name, ext);
 
         //explain: create Attachments for each file and assign it to the candidat
         let attachments: string[]= [];
-        for(const path of filesPaths) {
-            const attachment = await attachmentService.create(path, 'DIPLOME', candidat);
-            attachments.push(attachment.id);
-        }
         
+        for(const [index, path] of filesPaths.entries()) {
+            const attachment = await attachmentService.create(
+                path,
+                'DIPLOME',
+                filesArray[index],
+                candidat
+            );
+            attachments.push(attachment.id);                      
+        }        
         //explain: create a Diploma and assign it to the candidat
         const diploma = await diplomaService.create(
             intitule,
@@ -122,7 +129,7 @@ const deleteDiplome = async (req: Request, res:Response, next:NextFunction) => {
     catch(err:any)
     {
         next(new httpException(500, err.message));
-    }
+    } 
 }
 
 export default {

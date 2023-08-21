@@ -6,6 +6,7 @@ import helmet from 'helmet';
 import compression from 'compression';
 import ErrorMiddleware from './middlewares/error.middleware';
 import GenRouter from './Routers/GenRouter';
+import fileUpload from 'express-fileupload';
 
 dotenv.config();
 export const app: Express = express();
@@ -17,6 +18,8 @@ app.use(cookieParser());
 app.use(cors());
 app.use(helmet());
 app.use(compression());
+// Use the express-fileupload middleware
+app.use(fileUpload());
 
 app.get('/404', (req: Request, res: Response, next: NextFunction) => {
     throw new Error('Page Not Found');

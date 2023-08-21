@@ -64,9 +64,9 @@ model Diplome {
   paysObtention  Pays?              @relation(fields: [paysId], references: [id], onDelete: SetNull, onUpdate: Cascade)
   ecoleId        String?
   ecole          Ecole?             @relation(fields: [ecoleId], references: [id], onDelete: SetNull, onUpdate: Cascade)
-  attachments Attachment[]
-  candidatId  String?
-  candidat    Candidat?    @relation(fields: [candidatId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  attachments    Attachment[]
+  candidatId     String?
+  candidat       Candidat?          @relation(fields: [candidatId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model DiplomeType {
@@ -114,6 +114,7 @@ model Ville {
   regionId   Int?
   region     Region?    @relation(fields: [regionId], references: [id], onDelete: SetNull, onUpdate: Cascade)
   chefRegion Boolean    @default(false)
+  status     Boolean    @default(true)
 }
 
 model Region {
@@ -122,63 +123,73 @@ model Region {
   villes Ville[]
 }
 
+enum concoursStatus {
+  Disabled
+  enabled
+  ended
+}
+
+model Concours {
+  id                    String         @id @default(uuid())
+  label                 String
+  status                concoursStatus @default(enabled)
+  directionId           String
+  direction             direction      @relation(fields: [directionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  posteId               String
+  poste                 poste          @relation(fields: [posteId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  gradeId               String
+  grade                 Grade          @relation(fields: [gradeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  specialiteId          String
+  specialite            specialite     @relation(fields: [specialiteId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  brancheId             String
+  branche               branche        @relation(fields: [brancheId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  limitePlaces          Int
+  limiteAge             Int
+  villes                Ville[]
+  candidats             Candidat[]
+  avis                  Attachment?
+  datePublication       String?        
+  dateLimiteInscription String?
+  dateConcours          String?
+  campagneId            String?
+  campagne              Campagne?      @relation(fields: [campagneId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+}
+
 model direction {
   id       String     @id @default(uuid())
   label    String
   concours Concours[]
 }
 
-model Concours {
-  id                    String      @id @default(uuid())
-  label                 String
-  status                String
-  directionId           String?
-  direction             direction?  @relation(fields: [directionId], references: [id], onDelete: SetNull, onUpdate: Cascade)
-  limitePlaces          Int
-  limiteAge             Int
-  jobs                  job[]
-  villes                Ville[]
-  candidats             Candidat[]
-  avis                  Attachment?
-  datePublication       DateTime?
-  dateLimiteInscription DateTime?
-  dateConcours          DateTime?
-  campagneId            String?
-  campagne              Campagne?   @relation(fields: [campagneId], references: [id], onDelete: SetNull, onUpdate: Cascade)
-}
-
-model job {
-  id          String       @id @default(uuid())
-  label       String
-  grades      Grade[]
-  specialites specialite[]
-  branches    branche[]
-  concours    Concours[]
+model poste {
+  id       String     @id @default(uuid())
+  label    String
+  concours Concours[]
 }
 
 model Grade {
-  id    String @id @default(uuid())
-  label String
-  jobs  job[]
+  id       String     @id @default(uuid())
+  label    String
+  concours Concours[]
 }
 
 model specialite {
-  id    String @id @default(uuid())
-  label String
-  jobs  job[]
+  id       String     @id @default(uuid())
+  label    String
+  concours Concours[]
 }
 
 model branche {
-  id    String @id @default(uuid())
-  label String
-  jobs  job[]
+  id       String     @id @default(uuid())
+  label    String
+  concours Concours[]
 }
 
 model Campagne {
   id                    String     @id @default(uuid())
-  datePublication       DateTime
-  dateLimiteInscription DateTime
-  dateConcours          DateTime
+  datePublication       String
+  dateLimiteInscription String
+  dateConcours          String
   status                String
   concours              Concours[]
 }
@@ -192,13 +203,14 @@ enum AttachmentTypes {
 }
 
 model Attachment {
-  id         String          @id @default(uuid())
-  path       String
-  type       AttachmentTypes
-  candidatId String?
-  candidat   Candidat?       @relation(fields: [candidatId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  concoursId String?         @unique
-  concours   Concours?       @relation(fields: [concoursId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  diplomeId  String?
-  diplome    Diplome?        @relation(fields: [diplomeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  id          String          @id @default(uuid())
+  path        String
+  type        AttachmentTypes
+  data_base64 Bytes?
+  candidatId  String?
+  candidat    Candidat?       @relation(fields: [candidatId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  concoursId  String?         @unique
+  concours    Concours?       @relation(fields: [concoursId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  diplomeId   String?
+  diplome     Diplome?        @relation(fields: [diplomeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }

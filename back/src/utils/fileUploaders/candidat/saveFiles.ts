@@ -1,7 +1,7 @@
-import httpException from '../httpException';
+import httpException from '../../httpException';
 import fs from 'fs';
 
-export const saveDiplomas = (
+export const saveFiles = (
     candidat: string,
     files: string[],
     name: string[],

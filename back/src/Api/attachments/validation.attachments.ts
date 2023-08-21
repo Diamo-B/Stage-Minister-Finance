@@ -5,6 +5,7 @@ const create = z
     .object({
         path: z.string().nonempty({ message: 'path is required' }),
         type: z.nativeEnum(AttachmentTypes),
+        base64: z.string().nonempty({ message: 'base64 is required' }),
         candidatId: z.string().uuid().nullish(),
         concoursId: z.string().uuid().nullish(),
         diplomeId: z.string().uuid().nullish(),

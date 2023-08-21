@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import httpException from '../../utils/httpException';
 import userService from './service.user';
 import attachmentService from '../attachments/service.attachments';
-import { saveDiplomas } from '../../utils/fileUploaders/saveDiplomes';
+import { saveFiles } from '../../utils/fileUploaders/candidat/saveFiles';
 import { generateJWT } from '../../utils/JWT/generateJWT';
 import { CandidatAuthRequest } from 'utils/interfaces/ModifiedRequestObject';
 
@@ -136,8 +136,8 @@ const createCandidat = async (
                 concoursActifsIds,
                 diplomesIds
             );
-            const token  = generateJWT({candidatId: candidat.id}, "1d");
-            res.status(201).json({candidat, token});
+            const token = generateJWT({ candidatId: candidat.id }, '1d');
+            res.status(201).json({ candidat, token });
         }
     } catch (err: any) {
         next(new httpException(500, err.message));
@@ -235,11 +235,12 @@ const linkAttachmentsToCandidat = async (
         //* CV Attachments (step1)
 
         //explain: saves the attachement in the public folder and returns the paths
-        const cvPaths = saveDiplomas(id, CVFiles, CVFileNames, CVExtensions);
+        const cvPaths = saveFiles(id, CVFiles, CVFileNames, CVExtensions);
 
         //explain: create Attachments for each CV file and assign it to the candidat
-        for (const path of cvPaths) {
-            const attachment = await attachmentService.create(path, 'CV', id);
+        for (const [index, path] of cvPaths.entries()) {
+            const attachment = await attachmentService.create(path, 'CV',
+             cvPaths[index],id);
             AttachmentsIDS.push(attachment.id);
         }
 
@@ -247,11 +248,18 @@ const linkAttachmentsToCandidat = async (
         //* CIN Attachments (step2)
 
         //explain: saves the attachement in the public folder and returns the paths
-        const cinPaths = saveDiplomas(id, CINFiles, CINFileNames, CINExtensions);
+        const cinPaths = saveFiles(
+            id,
+            CINFiles,
+            CINFileNames,
+            CINExtensions
+        );
 
         //explain: create Attachments for each CIN file and assign it to the candidat
-        for (const path of cinPaths) {
-            const attachment = await attachmentService.create(path, 'CIN', id);
+        for (const [index, path] of cinPaths.entries()) {
+            const attachment = await attachmentService.create(path, 'CIN',
+            cinPaths[index]
+            , id);
             AttachmentsIDS.push(attachment.id);
         }
 
