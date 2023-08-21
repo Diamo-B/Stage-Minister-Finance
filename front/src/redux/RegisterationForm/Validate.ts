@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { IValidateState } from "./RegisterationForm/types/validationTypes";
+import { IValidateState } from "./types/validationTypes";
 
 export const validateSlice = createSlice({
     name: "validate",

@@ -131,20 +131,20 @@ const Table = ({ deleteRecord, Records }: any) => {
                                         <td>{Record.type}</td>
                                         <td>
                                             <div className="w-full flex items-center justify-center gap-5">
-                                                <button className="w-20 text-sm capitalize font-medium border-1 py-1 rounded-md text-primary hover:bg-primary hover:text-white">
-                                                    <Link
-                                                        to={`${
-                                                            import.meta.env
-                                                                .VITE_BackendBaseUrl
-                                                        }${Record.path.replace(
-                                                            "./public",
-                                                            "",
-                                                        )}`}
-                                                        target="_blank"
-                                                    >
-                                                        afficher
-                                                    </Link>
-                                                </button>
+                                                <Link
+                                                    to={`${
+                                                        import.meta.env
+                                                            .VITE_BackendBaseUrl
+                                                    }${Record.path.replace(
+                                                        "./public",
+                                                        "",
+                                                    )}`}
+                                                    target="_blank"
+                                                >
+                                                    <button className="w-20 text-sm capitalize font-medium border-1 py-1 rounded-md text-primary hover:bg-primary hover:text-white">
+                                                            afficher
+                                                    </button>
+                                                </Link>
                                                 <button
                                                     className="w-20 text-sm capitalize font-medium border-1 py-1 rounded-md text-error hover:bg-error hover:text-white"
                                                     onClick={() =>

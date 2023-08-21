@@ -70,9 +70,11 @@ const useFormRegistry = () => {
                 .refine(
                     val => {
                         const birthDate = dayjs(val, "DD-MM-YYYY");
+                        const alternateBirthDate = dayjs(val, "D-M-YYYY");
                         const isValid = birthDate.isValid();
-                        const isAdult = dayjs().diff(birthDate, "year") >= 17;
-                        return isValid && isAdult;
+                        const isValidAlternate = alternateBirthDate.isValid();
+                        const isAdult = dayjs().diff(birthDate, "year") >= 17 || dayjs().diff(alternateBirthDate, "year") >= 17;
+                        return (isValid || isValidAlternate) && isAdult;
                     },
                     {
                         message:

@@ -1,7 +1,7 @@
 import { useFormContext } from "react-hook-form";
 
 type option = {
-    value: string;
+    id: string;
     label: string;
 };
 
@@ -22,21 +22,26 @@ const Select = ({ options, label, reg }: Props) => {
             <label className="label w-full flex justify-center">
                 <span className="label-text font-bold">{label}</span>
             </label>
-            <div className="indicator w-full">
+            <div className="indicator w-full !z-10">
                 <span
-                    className={`indicator-item badge font-bold ${
-                        errors[reg] ? "text-white bg-error" : ""
+                    className={`indicator-item badge font-bold  border-1 border-neutral-content ${
+                        errors[reg as string] ? "text-white bg-error" : ""
                     }`}
                 >
                     Obligatoire
                 </span>
                 <select
-                    className="select select-bordered w-72"
+                    className="select select-bordered w-64 "
                     {...register(reg)}
                 >
                     <option hidden value={undefined}>
                         _ _ _ _ _ _
                     </option>
+                    {options.map(option => (
+                        <option key={option.id} value={option.id}>
+                            {option.label}
+                        </option>
+                    ))}
                 </select>
             </div>
         </div>

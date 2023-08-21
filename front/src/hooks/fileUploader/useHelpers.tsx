@@ -22,6 +22,7 @@ import {
 
 import { useAppDispatch } from "../redux";
 import convertBase64 from "../../utils/convertBase64";
+import { addAvis, removeAvis, resetAvis } from "../../redux/Admin/concours/create";
 
 type Props = {
     reg: string;
@@ -155,6 +156,15 @@ const useHelpers = ({ reg, files, setFiles, setShow, setErrors }: Props) => {
                     }),
                 );
                 break;
+            case "avis": //explain: concours avis file (page /admin/concours/create)
+                dispatch(
+                    addAvis({
+                        file: data.file,
+                        name: data.name,
+                        extension: data.extension,
+                    })
+                );
+                break;
         }
     };
 
@@ -169,6 +179,9 @@ const useHelpers = ({ reg, files, setFiles, setShow, setErrors }: Props) => {
             case "CIN": //explain: CIN related files (step 5)
                 dispatch(removeCINFileStep5(index));
                 break;
+            case "avis": //explain: concours avis file (page /admin/concours/create)
+                dispatch(removeAvis(index));
+                break;
         }
     };
 
@@ -182,6 +195,9 @@ const useHelpers = ({ reg, files, setFiles, setShow, setErrors }: Props) => {
                 break;
             case "CIN": //explain: CIN related files (step 5)
                 dispatch(resetCINFilesStep5());
+                break;
+            case "avis": //explain: concours avis file (page /admin/concours/create)
+                dispatch(resetAvis());
                 break;
         }
     };

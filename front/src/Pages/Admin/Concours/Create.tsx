@@ -1,16 +1,79 @@
 import Input from "../../../Components/ReusableForm/input";
+import { useEffect, useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
-import Select from "../../../Components/admin/Select";
+import Select from "../../../Components/admin/Concours/create/Select";
 import FileUpload from "../../../Components/fileUploader/fileUploader";
 import { zodResolver } from "@hookform/resolvers/zod";
 import useFormRegistry from "../../../hooks/admin/concours/useFormRegistry";
+import cityChoiceHint from "../../../utils/tours/Admin/Concours/cityChoiceHint";
+import DragNDropCities from "../../../Components/admin/Concours/create/citiesDragNDrop/citiesDragNDrop";
+import { useAppSelector } from "../../../hooks/redux";
+import { IConcours } from "../../../utils/interfaces/Admin/concours/IConcours";
+import useHelpers from "../../../hooks/admin/concours/useHelpers";
+import { IFormType } from "../../../utils/interfaces/Admin/concours/IFormTypes";
+import IntitulePanel from "../../../Components/admin/Concours/create/intitulePanel";
+import Toast from "../../../Components/toast";
 
 const CreateConcours = () => {
-    const {schema} = useFormRegistry();
-    const methods = useForm({
-        resolver: zodResolver(schema)
+    const [directions, setDirections] = useState<IFormType[]>([]);
+    const [postes, setPostes] = useState<IFormType[]>([]);
+    const [grades, setGrades] = useState<IFormType[]>([]);
+    const [branches, setBranches] = useState<IFormType[]>([]);
+    const [specs, setSpecs] = useState<IFormType[]>([]);
+    const { fetchOnLoad } = useHelpers({
+        setDirections,
+        setPostes,
+        setGrades,
+        setBranches,
+        setSpecs,
     });
 
+    useEffect(() => {
+        fetchOnLoad();
+    }, []);
+
+    //explain: intitulePanel states ----------------------------------------
+    const [intitulePanel, showIntitulePanel] = useState<boolean>(false);
+    const [CustomLabelInput, showCustomLabelInput] = useState<boolean>(false);
+    //----------------------------------------------------------------------
+    const { avis } = useAppSelector(state => state.concours);
+    const { schema, saveConcours } = useFormRegistry();
+
+    const methods = useForm<IConcours>({
+        resolver: zodResolver(schema),
+    });
+
+    const submit = (data: IConcours) => {
+        saveConcours(data, emptyFields, showIntitulePanel, showCustomLabelInput);
+    };
+
+    //explain: This is used to add the cityChoiceHint tour
+    useEffect(() => {
+        cityChoiceHint
+            .setOption("hintButtonLabel", "OK")
+            .setOption("position", "right")
+            .addHints();
+    }, []);
+
+    //explain: fileUpload states
+    const [emptyFiles, shouldEmptyFiles] = useState(false);
+
+    const emptyFields = (): void => {
+        shouldEmptyFiles(true);
+        methods.reset();
+    };
+
+    const triggerValidation = () => {
+        methods.clearErrors();
+        methods.setValue("avis", avis);
+        methods.trigger().then(() => {
+            const errorKeys = Object.keys(methods.formState.errors);
+            if (errorKeys.length === 1 && errorKeys[0] === "intitulé") {
+                showIntitulePanel(true);
+                methods.clearErrors();
+            }
+        });
+    };
 
     return (
         <>
@@ -19,18 +82,16 @@ const CreateConcours = () => {
             </h1>
             <div className="w-full flex flex-col flex-1 border-2 border-slate-300 rounded-3xl shadow-lg bg-base-300 py-5">
                 <FormProvider {...methods}>
-                    <form className="flex-1 mt-2 flex flex-col overflow-y-auto"
+                    <form
+                        className="flex-1 mt-2 flex flex-col overflow-y-auto"
+                        onSubmit={methods.handleSubmit(submit)}
                     >
                         <div className="w-full flex justify-evenly border-2">
                             <Select
-                                options={[]}
+                                options={directions}
                                 label="Direction"
                                 reg="direction"
                             />
-                            {/*
-                                //TODO: Make a custom multi-options select
-                            */}
-                            <Select options={[]} label="Villes" reg="Villes" />
                         </div>
                         <div className="grid grid-cols-3 bg-slate-300 mx-10 my-3 p-5 rounded-xl shadow-lg">
                             <div className="col-span-2">
@@ -40,40 +101,41 @@ const CreateConcours = () => {
                                     </h2>
                                     <div className="flex justify-center">
                                         <Select
-                                            options={[]}
-                                            label="Job"
-                                            reg="job"
+                                            options={postes}
+                                            label="Poste"
+                                            reg="poste"
                                         />
                                     </div>
                                     <div className="flex justify-center">
                                         <Select
-                                            options={[]}
+                                            options={grades}
                                             label="Grade"
                                             reg="grade"
                                         />
                                     </div>
                                     <div className="flex justify-center">
                                         <Select
-                                            options={[]}
-                                            label="Spécialité"
-                                            reg="spécialité"
-                                        />
-                                    </div>
-                                    <div className="flex justify-center">
-                                        <Select
-                                            options={[]}
+                                            options={branches}
                                             label="Branche"
                                             reg="branche"
                                         />
                                     </div>
+                                    <div className="flex justify-center">
+                                        <Select
+                                            options={specs}
+                                            label="Spécialité"
+                                            reg="spécialité"
+                                        />
+                                    </div>
                                 </div>
-                                <div className="col-span-2 mt-5 p-5 rounded-xl bg-white">
-                                        <h2 className="col-span-2 text-lg font-bold mb-3 py-1 border-2 border-neutral-content rounded-full text-center">
+                                <div className=" mt-5 p-5 rounded-xl bg-white">
+                                    <h2 className=" text-lg font-bold mb-3 py-1 border-2 border-neutral-content rounded-full text-center">
                                         Avis
                                     </h2>
                                     <FileUpload
-                                        emptyFiles={false}
-                                        shouldEmptyFiles={() => true}
+                                        emptyFiles={emptyFiles}
+                                        shouldEmptyFiles={shouldEmptyFiles}
+                                        numberOfFiles={1}
                                         reg="avis"
                                     />
                                 </div>
@@ -89,40 +151,88 @@ const CreateConcours = () => {
                                     <Input
                                         registerValue="maxPlaces"
                                         t_left_text="Nombre de places"
+                                        placeholder=">= 1"
                                         type="number"
                                         changeIndicatorPlacement={true}
+                                        customClasses="w-1/6 p-2 flex justify-center items-center text-center font-bold text-xl [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                        customIndicatorStyle="border-1 border-neutral-content"
+                                        min={1}
                                     />
                                     <Input
                                         registerValue="maxAge"
                                         t_left_text="Age maximum"
+                                        placeholder="17 ~ 50"
                                         type="number"
                                         changeIndicatorPlacement={true}
+                                        customClasses="p-2 flex justify-center items-center text-center font-bold text-xl [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                        min={17}
+                                        max={50}
+                                        customIndicatorStyle="border-1 border-neutral-content"
                                     />
                                     <Input
-                                        registerValue="dateLimiteDossier"
+                                        registerValue="dateLimite"
                                         t_left_text="Date limite du dépôt des dossiers"
-                                        type="date"
+                                        placeholder="jj-mm-aaaa"
                                         changeIndicatorPlacement={true}
+                                        customClasses={
+                                            "text-center font-bold text-lg"
+                                        }
+                                        customIndicatorStyle="border-1 border-neutral-content"
                                     />
                                     <Input
                                         registerValue="dateConcours"
                                         t_left_text="Date du concours"
-                                        type="date"
+                                        placeholder="jj-mm-aaaa"
                                         changeIndicatorPlacement={true}
+                                        customClasses={
+                                            "text-center font-bold text-lg"
+                                        }
+                                        customIndicatorStyle="border-1 border-neutral-content"
                                     />
                                 </div>
                             </div>
+                            <div className="mt-5 p-5 rounded-xl bg-white w-full col-span-3">
+                                <DragNDropCities />
+                            </div>
                         </div>
                         <div className="flex justify-center mt-5">
-                            <button className="btn btn-wide btn-outline btn-success !text-neutral hover:!text-white"
-                                type="submit"
+                            <label
+                                className="btn btn-wide btn-outline btn-success !text-neutral hover:!text-white"
+                                onClick={triggerValidation}
                             >
                                 Valider
-                            </button>
+                            </label>
                         </div>
+                        {intitulePanel && (
+                            <IntitulePanel
+                                showIntitulePanel={showIntitulePanel}
+                                direction={
+                                    directions.filter(
+                                        d =>
+                                            d.id ===
+                                            methods.getValues("direction"),
+                                    )[0].label
+                                }
+                                poste={
+                                    postes.filter(
+                                        p =>
+                                            p.id === methods.getValues("poste"),
+                                    )[0].label
+                                }
+                                grade={
+                                    grades.filter(
+                                        g =>
+                                            g.id === methods.getValues("grade"),
+                                    )[0].label
+                                }
+                                CustomLabelInput={CustomLabelInput}
+                                showCustomLabelInput={showCustomLabelInput}
+                            />
+                        )}
                     </form>
                 </FormProvider>
             </div>
+            <Toast text="Concours créé avec succès" type="success" />
         </>
     );
 };

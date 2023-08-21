@@ -18,4 +18,8 @@ declare module "@iconscout/react-unicons" {
     export const UilEllipsisH: Icon;
     export const UilListUiAlt: Icon;
     export const UilBars: Icon;
+    export const UilDraggabledots: Icon;
+    export const UilAngleRightB: Icons;
+    export const UilSearch: Icon;
+    export const UilCheckCircle: Icon;
 }

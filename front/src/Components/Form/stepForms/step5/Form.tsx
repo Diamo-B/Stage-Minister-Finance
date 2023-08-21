@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useForm, FormProvider, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { IStep5Form } from "../../../../utils/interfaces/IStep5Form";
+import { IStep5Form } from "../../../../utils/interfaces/RegistrationForm/IStep5Form";
 import useFormRegistry from "../../../../hooks/step5/useFormRegistry";
 import CINCard from "./CINCard";
 import CVCard from "./CVCard";

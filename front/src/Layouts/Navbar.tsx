@@ -1,5 +1,5 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { UilEllipsisH, UilBars, UilListUiAlt } from "@iconscout/react-unicons";
+import { UilEllipsisH, UilBars } from "@iconscout/react-unicons";
 
 const Navbar = () => {
     return (

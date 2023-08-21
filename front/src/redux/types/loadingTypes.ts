@@ -1,4 +1,4 @@
 export interface ILoadingState {
-    loading: boolean;
-    GenPageloading: boolean;
+    loading: boolean|null;
+    GenPageloading: boolean|null;
 }

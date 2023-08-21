@@ -1,9 +1,9 @@
 /*
  * This slice is used to control the tabs of the steps 4(diplomas) and 5(attachments) of the form
- */
+*/
 
 import { createSlice } from "@reduxjs/toolkit";
-import { ITabState } from "./RegisterationForm/types/formTabsTypes";
+import { ITabState } from "./types/formTabsTypes";
 
 export const tabsSlice = createSlice({
     name: "tabs",

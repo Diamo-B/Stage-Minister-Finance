@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { IDiplomesState } from "./RegisterationForm/types/diplomesTypes";
+import { IDiplomesState, diplomeRecord } from "./types/diplomesTypes";
 
 export const diplomesState = createSlice({
     name: "diplomes",
@@ -29,9 +29,6 @@ export const diplomesState = createSlice({
         setFilières: (state, action) => {
             state.filières = action.payload;
         },
-        setFilesAction: (state, action) => {
-            state.files = action.payload;
-        },
         addFile: (state, action) => {
             state.files?.push(action.payload);
         },
@@ -51,7 +48,7 @@ export const diplomesState = createSlice({
             //remove diplome with id matching action.payload
             state.diplomes?.splice(
                 state.diplomes.findIndex(
-                    diplome => diplome.id === action.payload,
+                    (diplome: diplomeRecord) => diplome.id === action.payload,
                 ),
                 1,
             );
@@ -71,7 +68,6 @@ export const {
     setFilières,
     setSpécialités,
     setTypes,
-    setFilesAction,
     addFile,
     removeFile,
     resetFiles,

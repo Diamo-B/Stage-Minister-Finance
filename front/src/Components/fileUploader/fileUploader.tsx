@@ -16,9 +16,10 @@ import { useFormContext } from "react-hook-form";
 type Props = {
     emptyFiles: boolean;
     shouldEmptyFiles: Dispatch<SetStateAction<boolean>>;
+    numberOfFiles?: number;
     reg: string;
 };
-const FileUpload = ({ emptyFiles, shouldEmptyFiles, reg }: Props) => {
+const FileUpload = ({ emptyFiles, shouldEmptyFiles, reg, numberOfFiles }: Props) => {
     const [files, setFiles] = useState<fileField[]>([]);
     const [show, setShow] = useState<boolean>(false);
     const [errors, setErrors] = useState<errorsField | null>(null);
@@ -38,7 +39,7 @@ const FileUpload = ({ emptyFiles, shouldEmptyFiles, reg }: Props) => {
 
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
         onDrop,
-        maxFiles: 2,
+        maxFiles: numberOfFiles || 2,
         maxSize: 4 * 1024 * 1024, //? ~= 4MB
         accept: {
             "image/*": [".jpg", ".jpeg", ".png"],
@@ -79,7 +80,7 @@ const FileUpload = ({ emptyFiles, shouldEmptyFiles, reg }: Props) => {
         );
     } else {
         return (
-            <div {...getRootProps()} className="w-full">
+            <div className="w-full">
                 {show && files.length > 0 ? (
                     /* 
                         explain: This is the container where you can view the selected files 
@@ -98,11 +99,16 @@ const FileUpload = ({ emptyFiles, shouldEmptyFiles, reg }: Props) => {
                             </button>
                             <button
                                 className="PrevXnext !bg-base-100 hover:!bg-success hover:text-white disabled:hover:cursor-not-allowed"
-                                disabled={files.length >= 2}
+                                disabled={
+                                    files.length >= 2 ||
+                                    (numberOfFiles !== undefined &&
+                                        files.length >= numberOfFiles)
+                                }
                                 type="button"
                                 onClick={() => setShow(false)}
                             >
-                                {files.length < 2 ? (
+                                {numberOfFiles !== undefined &&
+                                files.length < numberOfFiles ? (
                                     <span className="flex items-center">
                                         Ajouter <UilFilePlus />
                                     </span>
@@ -159,6 +165,22 @@ const FileUpload = ({ emptyFiles, shouldEmptyFiles, reg }: Props) => {
                         explain: This is the container where you can drag-nd-drop or load files 
                     */
                     <label
+                        {...getRootProps()}
+                        tabIndex={0}
+                        onKeyDown={(e) => {
+                            if (e.key === "Enter"){
+                                e.preventDefault(); // Prevent the default Enter behavior
+                                e.stopPropagation(); // Stop the event from propagating
+
+                                // Manually trigger the click event on the dropzone element
+                                const dropzoneElement = document.getElementById(
+                                    `dropZone_${reg}`,
+                                );
+                                if (dropzoneElement) {
+                                    dropzoneElement.click();
+                                }
+                            }
+                        }}
                         htmlFor={`dropZone_${reg}`}
                         className="flex justify-center items-center w-full h-52 border-2 border-dashed  border-base-100 rounded-xl cursor-pointer bg-base-300 hover:bg-base-100"
                     >
@@ -170,18 +192,21 @@ const FileUpload = ({ emptyFiles, shouldEmptyFiles, reg }: Props) => {
                                 </span>
                             ) : (
                                 <>
-                                    {files.length === 1 && (
-                                        <span className="text-sm text-neutral">
-                                            Fichiers sélectionnés 1/2
-                                        </span>
-                                    )}
+                                    {numberOfFiles &&
+                                        files.length > 0 &&
+                                        files.length < numberOfFiles && (
+                                            <span className="text-sm text-neutral">
+                                                Fichiers sélectionnés 1/
+                                                {numberOfFiles}
+                                            </span>
+                                        )}
                                     <span className="text-sm text-neutral">
                                         Glissez et déposez un fichier ici ou
                                         cliquez pour le télécharger
                                     </span>
                                     <span className="text-sm text-neutral">
-                                        PDF, PNG, JPG ou JPEG (max: 2 fichiers
-                                        &#60; 4MB)
+                                        PDF, PNG, JPG ou JPEG (max:{" "}
+                                        {numberOfFiles} fichiers &#60; 4MB)
                                     </span>
                                 </>
                             )}

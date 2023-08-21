@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { city } from "./detailsTypes";
+import { file } from "../../../utils/interfaces/IFileUpload";
 
 type country = {
     id: number;
@@ -27,12 +28,6 @@ type spécialité = {
 export type filière = {
     id: number;
     Filiere: string;
-};
-
-export type file = {
-    file: string;
-    name: string;
-    extension: string;
 };
 
 export type diplomeRecord = {

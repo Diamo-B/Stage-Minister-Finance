@@ -9,9 +9,12 @@ import formTabsReducer from "./RegisterationForm/formTabs";
 import loadingReducer from "./loading";
 import alertReducer from "./alerts";
 import confirmationPanelReducer from "./confirmationPanel";
+import concoursReducer from "./Admin/concours/create";
+
 
 export const store = configureStore({
     reducer: {
+        //----------------Applicant's Registration-------------------
         user: userReducer,
         formSteps: formStepsReducer,
         validation: validationReducer,
@@ -19,6 +22,9 @@ export const store = configureStore({
         diplomes: diplomesState,
         lastStep: lastStepReducer,
         formTabs: formTabsReducer,
+        //----------------create Concours-------------------
+        concours: concoursReducer,
+        //----------------General-------------------
         loading: loadingReducer,
         alert: alertReducer,
         confirmationPanel: confirmationPanelReducer,

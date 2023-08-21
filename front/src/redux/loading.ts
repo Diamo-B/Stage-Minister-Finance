@@ -4,7 +4,7 @@ import { ILoadingState } from "./types/loadingTypes";
 export const loadingSlice = createSlice({
     name: "loading",
     initialState: {
-        loading: false,
+        loading: null,
         GenPageloading: false,
     } as ILoadingState,
     reducers: {

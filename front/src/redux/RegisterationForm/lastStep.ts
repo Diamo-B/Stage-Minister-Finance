@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { ILastStep } from "./RegisterationForm/types/lastStepTypes";
+import { ILastStep } from "./types/lastStepTypes";
 
 const lastStep = createSlice({
     name: "lastStep",

@@ -123,6 +123,7 @@ const Form = () => {
                         emptyFiles={emptyFiles}
                         shouldEmptyFiles={shouldEmptyFiles}
                         reg="files"
+                        numberOfFiles={2}
                     />
                 </div>
                 <div className="mt-5 flex justify-center">

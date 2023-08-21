@@ -1,10 +1,5 @@
 import { z } from "zod";
-
-export type file = {
-    file: string;
-    name: string;
-    extension: string;
-};
+import { file } from "../../../utils/interfaces/IFileUpload";
 
 enum AttachmentType {
     CIN = "CIN",

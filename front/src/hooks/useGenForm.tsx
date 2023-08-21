@@ -16,6 +16,7 @@ const useGenForm = () => {
         if (candidatId) {
             const step = localStorage.getItem("step");
             if (step) {
+                console.log("step: ", step);
                 const stepNumber = parseInt(step);
                 //explain: The loop is to set the status of all the previous steps to "done"
                 for (let i = 1; i < stepNumber; i++) {
@@ -25,6 +26,8 @@ const useGenForm = () => {
             }
         } else {
             dispatch(resetSteps());
+            localStorage.removeItem("token");
+            localStorage.removeItem("step");
         }
         dispatch(stopGenPageLoading());
     };

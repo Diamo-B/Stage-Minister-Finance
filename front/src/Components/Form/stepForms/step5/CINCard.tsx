@@ -15,6 +15,7 @@ const CINCard = ({ emptyFilesCIN, shouldEmptyFilesCIN }: Props) => {
                     emptyFiles={emptyFilesCIN}
                     shouldEmptyFiles={shouldEmptyFilesCIN}
                     reg="CIN"
+                    numberOfFiles={2}
                 />
             </div>
         </div>

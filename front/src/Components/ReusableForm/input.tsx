@@ -9,6 +9,12 @@ type InputProps = {
     b_right_text?: string;
     type?: string;
     changeIndicatorPlacement?: boolean;
+    customIndicatorText?: string;
+    customIndicatorStyle?: string;
+    customClasses?: string;
+    min?: number;
+    max?: number;
+    defaultValue?: string;
 };
 
 const Input: FC<InputProps> = (props): JSX.Element => {
@@ -22,7 +28,7 @@ const Input: FC<InputProps> = (props): JSX.Element => {
         <div className="form-control w-full flex justify-center items-center">
             <label
                 className={`label ${
-                    props.changeIndicatorPlacement ? "w-full px-5" : ""
+                    props.changeIndicatorPlacement ? "w-72" : ""
                 }`}
             >
                 {props.registerValue &&
@@ -33,13 +39,29 @@ const Input: FC<InputProps> = (props): JSX.Element => {
                     </span>
                 ) : (
                     props.t_left_text && (
-                        <span className='label-text font-bold'>
+                        <span className="label-text font-bold">
                             {props.t_left_text}
                         </span>
                     )
                 )}
                 {props.changeIndicatorPlacement && (
-                    <span className="badge font-bold">Obligatoire</span>
+                    <span
+                        className={`badge font-bold 
+                        ${
+                            props.registerValue && errors[props.registerValue]
+                                ? "badge-error text-white"
+                                : ""
+                        }
+                        ${
+                            props.customIndicatorStyle
+                                ? props.customIndicatorStyle
+                                : ""
+                        }`}
+                    >
+                        {props.customIndicatorText
+                            ? props.customIndicatorText
+                            : "Obligatoire"}
+                    </span>
                 )}
                 {props.t_right_text && (
                     <span className="label-text-alt">{props.t_right_text}</span>
@@ -61,7 +83,10 @@ const Input: FC<InputProps> = (props): JSX.Element => {
                     <input
                         type={props.type ? props.type : "text"}
                         placeholder={props.placeholder}
-                        className="input input-bordered w-72 join-item"
+                        className={`input input-bordered w-72 join-item ${props.customClasses}`}
+                        min={props.type === "number" ? props.min : undefined}
+                        max={props.type === "number" ? props.max : undefined}
+                        value={props.defaultValue}
                         {...register(props.registerValue as string)}
                     />
                 </div>
@@ -69,7 +94,10 @@ const Input: FC<InputProps> = (props): JSX.Element => {
                 <input
                     type={props.type ? props.type : "text"}
                     placeholder={props.placeholder}
-                    className="input input-bordered w-72 join-item"
+                    className={`input input-bordered w-72 join-item ${props.customClasses}`}
+                    min={props.type === "number" ? props.min : undefined}
+                    max={props.type === "number" ? props.max : undefined}
+                    value={props.defaultValue}
                     {...register(props.registerValue as string)}
                 />
             )}

@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { IformStepsState } from "./RegisterationForm/types/formStepsTypes";
+import { IformStepsState } from "./types/formStepsTypes";
 
 export const formStepsState = createSlice({
     name: "formSteps",
@@ -71,8 +71,6 @@ export const formStepsState = createSlice({
                     status: "pending",
                 },
             ];
-            localStorage.removeItem("step");
-            localStorage.removeItem("candidatId");
         },
         enablesubmit: state => {
             state.submitState = true;

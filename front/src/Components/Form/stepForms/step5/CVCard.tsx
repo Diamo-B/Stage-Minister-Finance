@@ -15,6 +15,7 @@ const CVCard = ({ emptyFilesCV, shouldEmptyFilesCV }: Props) => {
                     emptyFiles={emptyFilesCV}
                     shouldEmptyFiles={shouldEmptyFilesCV}
                     reg="CV"
+                    numberOfFiles={2}
                 />
             </div>
         </div>
