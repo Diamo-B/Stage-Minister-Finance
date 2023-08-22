@@ -61,6 +61,10 @@ const Form = () => {
     //explain: This handles the submit state (when the suivant button is clicked)
     useEffect(() => {
         if (submitState) {
+            dispatch(changeStepStatus({
+                order: current,
+                status: "done",
+            }))
             dispatch(incrementStep());
             dispatch(stopSubmit());
         }

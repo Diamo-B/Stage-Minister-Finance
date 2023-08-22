@@ -2,7 +2,8 @@ import { Request, Response, NextFunction } from 'express';
 import httpException from '../../utils/httpException';
 import diplomaService from './service.diplomas';
 import attachmentService from '../attachments/service.attachments';
-import { saveFiles } from '../../utils/fileUploaders/candidat/saveFiles';
+import { saveFiles } from '../../utils/fileUploaders/saveFiles';
+import { UploadedFile } from 'express-fileupload';
 import { CandidatAuthRequest } from '../../utils/interfaces/ModifiedRequestObject';
 
 const getAll = async (req: Request, res: Response, next: NextFunction) => {
@@ -14,7 +15,11 @@ const getAll = async (req: Request, res: Response, next: NextFunction) => {
     }
 };
 
-const getAllByCandidatId = async (req: Request, res: Response, next: NextFunction) => {
+const getAllByCandidatId = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
     try {
         const id = (req as CandidatAuthRequest).user.candidatId;
         const diplomes = await diplomaService.getAllByCandidatId(id);
@@ -64,38 +69,30 @@ const getAllDiplomeSpecialities = async (
 };
 
 const create = async (req: Request, res: Response, next: NextFunction) => {
-    const {
-        intitule,
-        type,
-        filiere,
-        annee,
-        pays,
-        etablissement,
-        specialite,
-        files,
-        name,
-        ext,
-    } = req.body;
-    
-    const filesArray = new Array(files);        
+    const { intitule, type, filiere, annee, pays, etablissement, specialite } = req.body;
 
-    try {        
+    const files = req.files?.files as UploadedFile[];
+
+    try {
         const candidat = (req as CandidatAuthRequest).user.candidatId;
         //explain: saves the attachement in the public folder and returns the paths
-        const filesPaths = saveFiles(candidat, files, name, ext);
+        const dirPath = `./public/candidat_${candidat}/Diplomes/`;
+        const filesPaths = saveFiles(dirPath, files);
 
         //explain: create Attachments for each file and assign it to the candidat
-        let attachments: string[]= [];
-        
-        for(const [index, path] of filesPaths.entries()) {
+        let attachments: string[] = [];  
+
+        for (const [index, path] of filesPaths.entries()) {
             const attachment = await attachmentService.create(
                 path,
                 'DIPLOME',
-                filesArray[index],
-                candidat
+                files[index].data,
+                candidat,
+                undefined,
+                undefined
             );
-            attachments.push(attachment.id);                      
-        }        
+            attachments.push(attachment.id);
+        }
         //explain: create a Diploma and assign it to the candidat
         const diploma = await diplomaService.create(
             intitule,
@@ -107,7 +104,7 @@ const create = async (req: Request, res: Response, next: NextFunction) => {
             specialite,
             candidat,
             attachments
-        ); 
+        );
 
         return res.status(201).json(diploma);
     } catch (err: any) {
@@ -115,22 +112,25 @@ const create = async (req: Request, res: Response, next: NextFunction) => {
     }
 };
 
-const deleteDiplome = async (req: Request, res:Response, next:NextFunction) => {
+const deleteDiplome = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
     try {
         const { diplomeId, attachments } = req.body;
         //explain: delete the attachments from DB and public folder
-        await attachmentService.deleteAttachments_byDiplome(diplomeId,attachments.map((attachment: {path: string})=>attachment.path));
-
-        const deletedDiplome = await diplomaService.deleteDiplome(
-            diplomeId
+        await attachmentService.deleteAttachments_byDiplome(
+            diplomeId,
+            attachments.map((attachment: { path: string }) => attachment.path)
         );
+
+        const deletedDiplome = await diplomaService.deleteDiplome(diplomeId);
         res.status(200).json(deletedDiplome);
-    }
-    catch(err:any)
-    {
+    } catch (err: any) {
         next(new httpException(500, err.message));
-    } 
-}
+    }
+};
 
 export default {
     getAll,
@@ -139,5 +139,5 @@ export default {
     getAllDiplomeFillieres,
     getAllDiplomeSpecialities,
     create,
-    deleteDiplome
+    deleteDiplome,
 };

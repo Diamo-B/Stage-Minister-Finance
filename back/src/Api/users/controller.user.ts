@@ -2,7 +2,8 @@ import { Request, Response, NextFunction } from 'express';
 import httpException from '../../utils/httpException';
 import userService from './service.user';
 import attachmentService from '../attachments/service.attachments';
-import { saveFiles } from '../../utils/fileUploaders/candidat/saveFiles';
+import { saveFiles } from '../../utils/fileUploaders/saveFiles';
+import { UploadedFile } from 'express-fileupload';
 import { generateJWT } from '../../utils/JWT/generateJWT';
 import { CandidatAuthRequest } from 'utils/interfaces/ModifiedRequestObject';
 
@@ -200,76 +201,41 @@ const linkAttachmentsToCandidat = async (
     next: NextFunction
 ) => {
     try {
-        const id = (req as CandidatAuthRequest).user.candidatId;
-        const CVFiles =
-            typeof req.body.CVFiles === 'string'
-                ? req.body.CVFiles
-                : req.body.CVFiles.map((cv: any) => cv);
-        const CINFiles =
-            typeof req.body.CINFiles === 'string'
-                ? req.body.CINFiles
-                : req.body.CINFiles.map((cin: any) => cin);
+        const id = (req as CandidatAuthRequest).user.candidatId; 
+        const cvFiles = req.files?.cvFiles as (UploadedFile[] | UploadedFile);
+        const cinFiles = req.files?.cinFiles as (UploadedFile[] | UploadedFile);
 
-        const CVExtensions =
-            typeof req.body.CVextensions === 'string'
-                ? req.body.CVextensions
-                : req.body.CVextensions.map((cv: any) => cv);
-        const CINExtensions =
-            typeof req.body.CINextensions === 'string'
-                ? req.body.CINextensions
-                : req.body.CINextensions.map((cin: any) => cin);
+        //*Step 1: save cvfiles and get paths
+        const cvsDirPath = `public/candidat_${id}/CVs/`;
+        const cvPaths = saveFiles(cvsDirPath, cvFiles);
+        
+        //*step 2: save cinfiles and get paths
+        const cinsDirPath = `public/candidat_${id}/CINs/`;
+        const cinPaths = saveFiles(cinsDirPath, cinFiles);
 
-        const CVFileNames =
-            typeof req.body.CVNames === 'string'
-                ? req.body.CVNames
-                : req.body.CVNames.map((cv: any) => cv);
-        const CINFileNames =
-            typeof req.body.CINNames === 'string'
-                ? req.body.CINNames
-                : req.body.CINNames.map((cin: any) => cin);
+        const attachmentIds: string[] = []; //? this will hold the ids of the created attachments to link them to the candidat later
 
-        //explain: This will the hold the IDs of the createdAttachments so they can be linked to the candidat
-        let AttachmentsIDS: string[] = [];
-
-        //!----------------------------------------------------------------------------------------------------------------
-        //* CV Attachments (step1)
-
-        //explain: saves the attachement in the public folder and returns the paths
-        const cvPaths = saveFiles(id, CVFiles, CVFileNames, CVExtensions);
-
-        //explain: create Attachments for each CV file and assign it to the candidat
+        //* step3: create attachments for the cv files
         for (const [index, path] of cvPaths.entries()) {
-            const attachment = await attachmentService.create(path, 'CV',
-             cvPaths[index],id);
-            AttachmentsIDS.push(attachment.id);
+            const attachment = await attachmentService.create(path, 'CV', (Array.isArray(cvFiles)? cvFiles[index]:cvFiles).data, id, undefined, undefined);
+            attachmentIds.push(attachment.id);
         }
 
-        //!----------------------------------------------------------------------------------------------------------------
-        //* CIN Attachments (step2)
-
-        //explain: saves the attachement in the public folder and returns the paths
-        const cinPaths = saveFiles(
-            id,
-            CINFiles,
-            CINFileNames,
-            CINExtensions
-        );
-
-        //explain: create Attachments for each CIN file and assign it to the candidat
+        //* step4: create attachments for the cin files
         for (const [index, path] of cinPaths.entries()) {
-            const attachment = await attachmentService.create(path, 'CIN',
-            cinPaths[index]
-            , id);
-            AttachmentsIDS.push(attachment.id);
+            const attachment = await attachmentService.create(
+                path,
+                'CIN',
+                (Array.isArray(cinFiles) ? cinFiles[index] : cinFiles).data,
+                id,
+                undefined,
+                undefined
+            );
+            attachmentIds.push(attachment.id);
         }
 
-        //!----------------------------------------------------------------------------------------------------------------
-        //* Link Attachments to candidat (step3)
-
-        const updatedCandidat = await userService.linkAttachments(
-            id,
-            AttachmentsIDS
-        );
+        //* step5: link attachments to candidat and return the updated candidat
+        const updatedCandidat = await userService.linkAttachments(id, attachmentIds);
 
         return res.status(200).json(updatedCandidat);
     } catch (err: any) {

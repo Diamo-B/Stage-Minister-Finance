@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import Input from "../../../ReusableForm/input";
 import { useFormContext } from "react-hook-form";
-import { startLoading } from "../../../../redux/loading";
+import { resetLoading, startLoading } from "../../../../redux/loading";
 import { useAppDispatch, useAppSelector } from "../../../../hooks/redux";
 import { UilCheckCircle } from "@iconscout/react-unicons";
 
@@ -32,6 +32,7 @@ const IntitulePanel = ({
         {
             animate(true);
             setTimeout(() => {
+                dispatch(resetLoading());
                 animate(false);
                 showIntitulePanel(false);
             }, 2000);

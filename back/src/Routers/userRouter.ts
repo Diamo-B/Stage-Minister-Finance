@@ -2,7 +2,6 @@ import { Router } from 'express';
 import usersApis from '../Api/users/controller.user';
 import validate from '../middlewares/validation.middleware';
 import schema from '../Api/users/validation.user';
-import { upload } from '../utils/multer/config';
 import {AuthMiddleware}  from '../middlewares/auth.middleware';
 
 const router: Router = Router();
@@ -44,11 +43,6 @@ router.patch(
 router.patch(
     '/link/candidat',
     AuthMiddleware,
-    upload.fields([
-        { name: 'CVFiles', maxCount: 2 },
-        { name: 'CINFiles', maxCount: 2 },
-    ]),
-    validate(schema.linkAttachments),
     usersApis.linkAttachmentsToCandidat
 );
 

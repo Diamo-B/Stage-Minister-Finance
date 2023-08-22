@@ -14,6 +14,9 @@ export const loadingSlice = createSlice({
         stopLoading: state => {
             state.loading = false;
         },
+        resetLoading: state => {
+            state.loading = null;
+        },
         startGenPageLoading: state => {
             state.GenPageloading = true;
         },
@@ -26,6 +29,7 @@ export const loadingSlice = createSlice({
 export const {
     startLoading,
     stopLoading,
+    resetLoading,
     startGenPageLoading,
     stopGenPageLoading,
 } = loadingSlice.actions;

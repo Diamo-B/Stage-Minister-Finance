@@ -15,6 +15,7 @@ import {
 } from "../../redux/RegisterationForm/diplomes";
 import { filière } from "../../redux/RegisterationForm/types/diplomesTypes";
 import AddedDiploma from "../../utils/tours/RegistrationForm/diplomes/AddedDiplomaTour";
+import { base64ToBlob } from "../../utils/base64ToBlobs";
 
 const useFormRegistry = () => {
     const dispatch = useAppDispatch();
@@ -181,11 +182,17 @@ const useFormRegistry = () => {
         formData.append("annee", data.annee);
         formData.append("specialite", data.specialite);
         formData.append("filiere", data.filiere);
+        console.log(data.files);
+        
         // Append each file object to the FormData
         data.files.forEach(file => {
-            formData.append("files", file.file); // Assuming 'file' is the field name expected by the backend
-            formData.append("name", file.name);
-            formData.append("ext", file.extension);
+            const base64Data = file.file.replace(/^data:.*;base64,/, ""); //explain: Remove data URL prefix for any type
+            const contentType =
+                file.extension === "pdf"
+                    ? "application/pdf"
+                    : `image/${file.extension}`;
+            const blob = base64ToBlob(base64Data, contentType);
+            formData.append("files", blob, file.name);
         });
 
         await fetch(
@@ -213,6 +220,8 @@ const useFormRegistry = () => {
                         attachments: response.attachments,
                     }),
                 );
+                console.log('done');
+                
             })
             .catch(err => {
                 console.error(err);

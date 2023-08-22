@@ -7,6 +7,7 @@ import { base64ToBlob } from "../../../utils/base64ToBlobs";
 import { stopLoading } from "../../../redux/loading";
 import { useAppDispatch } from "../../redux";
 import { Dispatch, SetStateAction } from "react";
+import { activateAlert } from "../../../redux/alerts";
 
 const useFormRegistry = () => {
     const schema = z
@@ -188,6 +189,7 @@ const useFormRegistry = () => {
                     showIntitulePanel(false);
                     showCustomLabelInput(false);
                     dispatch(stopLoading());
+                    dispatch(activateAlert({message:'Concours ajouté avec succès',level:'success'}))
                 });
         }; 
 

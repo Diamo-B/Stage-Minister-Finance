@@ -6,6 +6,7 @@ import { startLoading, stopLoading } from "../../redux/loading";
 import { setAttachmentRecords } from "../../redux/RegisterationForm/lastStep";
 import { setHint } from "../../redux/RegisterationForm/formTabs";
 import AddedAttachment from "../../utils/tours/RegistrationForm/attachments/AddedAttachment";
+import { base64ToBlob } from "../../utils/base64ToBlobs";
 
 const useFormRegistry = () => {
     const schema = z.object({
@@ -44,16 +45,25 @@ const useFormRegistry = () => {
         dispatch(startLoading());
         const formData = new FormData();
         data.CV?.forEach(file => {
-            formData.append("CVFiles", file.file); // Assuming 'file' is the field name expected by the backend
-            formData.append("CVNames", file.name);
-            formData.append("CVextensions", file.extension);
-        });
-        data.CIN?.forEach(file => {
-            formData.append("CINFiles", file.file); // Assuming 'file' is the field name expected by the backend
-            formData.append("CINNames", file.name);
-            formData.append("CINextensions", file.extension);
+            const base64Data = file.file.replace(/^data:.*;base64,/, ""); //explain: Remove data URL prefix for any type
+            const contentType =
+                file.extension === "pdf"
+                    ? "application/pdf" 
+                    : `image/${file.extension}`;
+            const blob = base64ToBlob(base64Data, contentType);
+            formData.append("cvFiles", blob, file.name);
         });
 
+        data.CIN?.forEach(file => {
+            const base64Data = file.file.replace(/^data:.*;base64,/, ""); //explain: Remove data URL prefix for any type
+            const contentType =
+                file.extension === "pdf"
+                    ? "application/pdf"
+                    : `image/${file.extension}`;
+            const blob = base64ToBlob(base64Data, contentType);
+            formData.append("cinFiles", blob, file.name);
+        });
+        
         fetch(
             `${import.meta.env.VITE_BackendBaseUrl}/api/v1/user/link/candidat/`,
             {

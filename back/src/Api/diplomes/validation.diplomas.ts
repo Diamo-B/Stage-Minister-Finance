@@ -47,31 +47,7 @@ const create = z.object({
                 return year > 1950 && year <= currentYear;
             },
             { message: "L'année d'obtention est invalide" }
-        ),
-
-    files: z
-        .array(z.string())
-        .nonempty({ message: 'Les fichiers sont obligatoires' })
-        .refine(value => value.length < 3, {
-            message: 'Vous pouvez fournir au plus deux fichiers',
-        })
-        .or(z.string()),
-
-    name: z
-        .array(z.string())
-        .nonempty({ message: 'Les noms des fichiers sont obligatoires' })
-        .refine(value => value.length < 3, {
-            message: 'Vous pouvez fournir au plus deux noms de fichiers',
-        })
-        .or(z.string()),
-
-    ext: z
-        .array(z.string())
-        .nonempty({ message: 'Les extensions des fichiers sont obligatoires' })
-        .refine(value => value.length < 3, {
-            message: 'Vous pouvez fournir au plus deux extensions de fichiers',
-        })
-        .or(z.string()),
+        )
 });
 
 

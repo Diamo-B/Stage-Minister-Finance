@@ -3,22 +3,22 @@ const prisma = new PrismaClient();
 
 const seedPostes = async () => {
     const postes = [
-        "Ingenieur",
-        "Technicien",
-        'Administrateur',
-        'Agent de Maitrise',
-        'Ouvrier',
-        'Chauffeur',
-        'Agent de Service',
-        'Agent de Surveillance',
-        'Agent de Sécurité',
-        'Agent de Bureau',
-        'Agent de Saisie',
-        'Agent de Maintenance',
-        'Agent de Nettoyage',
+        "Ingenieurs",
+        "Techniciens",
+        'Administrateurs',
+        'Agents de Maitrise',
+        'Ouvriers',
+        'Chauffeurs',
+        'Agents de Service',
+        'Agents de Surveillance',
+        'Agents de Sécurité',
+        'Agents de Bureau',
+        'Agents de Saisie',
+        'Agents de Maintenance',
+        'Agents de Nettoyage',
         "RH",
-        'Comptable',
-        'Commercial',
+        'Comptables',
+        'Commerciales',
     ];
     await prisma.poste.deleteMany().catch(err => {
         throw err;

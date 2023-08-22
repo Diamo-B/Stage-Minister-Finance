@@ -48,7 +48,7 @@ const Table = ({ deleteRecord, Records }: any) => {
 
     if (isDiplome) {
         return (
-            <div className="overflow-y-auto max-h-52">
+            <div className="overflow-y-auto max-h-72">
                 <table className="table relative text-center">
                     <thead className="sticky top-0 bg-base-200">
                         <tr>
@@ -111,7 +111,7 @@ const Table = ({ deleteRecord, Records }: any) => {
         );
     } else if (isAttachment) {
         return (
-            <div className="overflow-y-auto max-h-52">
+            <div className="overflow-y-auto max-h-72">
                 <table className="table relative text-center border">
                     <thead className="sticky top-0 bg-base-200">
                         <tr>
@@ -136,7 +136,7 @@ const Table = ({ deleteRecord, Records }: any) => {
                                                         import.meta.env
                                                             .VITE_BackendBaseUrl
                                                     }${Record.path.replace(
-                                                        "./public",
+                                                        "public",
                                                         "",
                                                     )}`}
                                                     target="_blank"

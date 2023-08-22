@@ -37,6 +37,7 @@ const CreateConcours = () => {
     const [CustomLabelInput, showCustomLabelInput] = useState<boolean>(false);
     //----------------------------------------------------------------------
     const { avis } = useAppSelector(state => state.concours);
+    const { alert } = useAppSelector(state => state.alert);
     const { schema, saveConcours } = useFormRegistry();
 
     const methods = useForm<IConcours>({
@@ -63,6 +64,7 @@ const CreateConcours = () => {
         methods.reset();
     };
 
+    //explain: This is used to trigger the validation of the form before submitting
     const triggerValidation = () => {
         methods.clearErrors();
         methods.setValue("avis", avis);
@@ -211,19 +213,19 @@ const CreateConcours = () => {
                                         d =>
                                             d.id ===
                                             methods.getValues("direction"),
-                                    )[0].label
+                                    )[0].label as string
                                 }
                                 poste={
                                     postes.filter(
                                         p =>
                                             p.id === methods.getValues("poste"),
-                                    )[0].label
+                                    )[0].label as string
                                 }
                                 grade={
                                     grades.filter(
                                         g =>
                                             g.id === methods.getValues("grade"),
-                                    )[0].label
+                                    )[0].label as string
                                 }
                                 CustomLabelInput={CustomLabelInput}
                                 showCustomLabelInput={showCustomLabelInput}
@@ -232,7 +234,10 @@ const CreateConcours = () => {
                     </form>
                 </FormProvider>
             </div>
-            <Toast text="Concours créé avec succès" type="success" />
+            {
+                alert.status &&
+                <Toast text="Concours créé avec succès" type="success" />
+            }
         </>
     );
 };

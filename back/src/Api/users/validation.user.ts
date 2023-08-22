@@ -52,48 +52,7 @@ const createCandidat = create.merge(
 );
 
 const linkAttachments = z.object({
-    CVFiles: z
-        .array(z.string())
-        .nonempty({ message: 'Les CVs sont obligatoires' })
-        .refine(value => value.length < 3, {
-            message: 'Vous pouvez fournir au plus deux fichiers',
-        })
-        .or(z.string()),
-    CVNames: z
-        .array(z.string())
-        .nonempty({ message: 'Les nom des CVs sont obligatoires' })
-        .refine(value => value.length < 3, {
-            message: 'Vous pouvez fournir au plus deux fichiers',
-        })
-        .or(z.string()),
-    CVextensions: z
-        .array(z.string())
-        .nonempty({ message: 'Les fichiers sont obligatoires' })
-        .refine(value => value.length < 3, {
-            message: 'Vous pouvez fournir au plus deux fichiers',
-        })
-        .or(z.string()),
-    CINFiles: z
-        .array(z.string())
-        .nonempty({ message: 'Les fichiers sont obligatoires' })
-        .refine(value => value.length < 3, {
-            message: 'Vous pouvez fournir au plus deux fichiers',
-        })
-        .or(z.string()),
-    CINNames: z
-        .array(z.string())
-        .nonempty({ message: 'Les fichiers sont obligatoires' })
-        .refine(value => value.length < 3, {
-            message: 'Vous pouvez fournir au plus deux fichiers',
-        })
-        .or(z.string()),
-    CINextensions: z
-        .array(z.string())
-        .nonempty({ message: 'Les fichiers sont obligatoires' })
-        .refine(value => value.length < 3, {
-            message: 'Vous pouvez fournir au plus deux fichiers',
-        })
-        .or(z.string()),
+   
 });
 
 const createAdmin = create.merge(
