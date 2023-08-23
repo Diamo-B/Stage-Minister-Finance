@@ -1,4 +1,4 @@
-import GenForm from "../../Components/Form/genForm";
+import GenForm from "../../Components/Candidat/Registration/genForm";
 
 const Register = () => {
     return <GenForm />;

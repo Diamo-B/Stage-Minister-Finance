@@ -76,7 +76,7 @@ const create = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const candidat = (req as CandidatAuthRequest).user.candidatId;
         //explain: saves the attachement in the public folder and returns the paths
-        const dirPath = `./public/candidat_${candidat}/Diplomes/`;
+        const dirPath = `public/candidat_${candidat}/Diplomes/`;
         const filesPaths = saveFiles(dirPath, files);
 
         //explain: create Attachments for each file and assign it to the candidat

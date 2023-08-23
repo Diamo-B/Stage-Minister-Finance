@@ -1,4 +1,4 @@
-import Input from "../../../Components/ReusableForm/input";
+import Input from "../../../Components/FormElements/input";
 import { useEffect, useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import Select from "../../../Components/admin/Concours/create/Select";
@@ -78,10 +78,7 @@ const CreateConcours = () => {
     };
 
     return (
-        <>
-            <h1 className="text-2xl font-bold mb-5">
-                Création d'un Nouvel Concours
-            </h1>
+        <div className="w-full px-5">
             <div className="w-full flex flex-col flex-1 border-2 border-slate-300 rounded-3xl shadow-lg bg-base-300 py-5">
                 <FormProvider {...methods}>
                     <form
@@ -238,7 +235,7 @@ const CreateConcours = () => {
                 alert.status &&
                 <Toast text="Concours créé avec succès" type="success" />
             }
-        </>
+        </div>
     );
 };
 
