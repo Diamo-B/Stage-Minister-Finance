@@ -28,13 +28,21 @@ export const AuthMiddleware = (
                         next(new httpException(403, 'Unauthorized'));
                     }
                 } else {
-                    // Incorrect token
-                    next(new httpException(401, 'Invalid auth token'));
+                    if (err) {
+                        if (err.name === 'TokenExpiredError') {
+                            // Token has expired
+                            throw new httpException(403, 'Token expired');
+                        } else {
+                            // Other verification error
+                            throw new httpException(403, 'Invalid auth token');
+                        }
+                    }
+                    next(new httpException(401, ''));
                 }
             }
         );
     } else {
         // No token found, send error response
-        return res.status(401).json({ message: 'Unauthorized' });
+        return res.status(401).json({ message: 'No token found' });
     }
 };

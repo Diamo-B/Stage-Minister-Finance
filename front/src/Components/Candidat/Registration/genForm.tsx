@@ -38,7 +38,7 @@ const GenForm = () => {
             {current === 2 && (
                 <>
                     <Validate />
-                    <SecondMail />
+                    <SecondMail type="registrationStep2" />
                 </>
             )}
             {current === 3 && <DetailsForm />}

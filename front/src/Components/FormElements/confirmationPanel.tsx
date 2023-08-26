@@ -5,7 +5,11 @@ import {
 } from "../../redux/confirmationPanel";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 
-const ConfirmationPanel = () => {
+type Props = {
+    customConfirmButton?: string;
+}
+
+const ConfirmationPanel = ({ customConfirmButton }: Props) => {
     const dispatch = useAppDispatch();
     const { loading } = useAppSelector(state => state.loading);
     const { text, itemIdentifier } = useAppSelector(
@@ -27,7 +31,7 @@ const ConfirmationPanel = () => {
                     )}
                     <div className="card-actions justify-end">
                         <button
-                            className={`capitalize border-1 w-24 py-1 rounded-md font-medium btn-outline btn-error ${
+                            className={`capitalize border-1 w-28 py-1 rounded-md font-medium btn-outline btn-error ${
                                 loading ? "hover:!bg-transparent" : ""
                             } group`}
                             onClick={() => {
@@ -38,12 +42,12 @@ const ConfirmationPanel = () => {
                                 {loading ? (
                                     <span className="loading loading-spinner loading-sm text-error"></span>
                                 ) : (
-                                    "supprimer"
+                                    customConfirmButton? customConfirmButton : "annuler"
                                 )}
                             </span>
                         </button>
                         <button
-                            className="capitalize border-1 w-24 py-1 rounded-md font-medium btn-outline btn-neutral"
+                            className="capitalize border-1 w-28 py-1 rounded-md font-medium btn-outline btn-neutral"
                             onClick={() => {
                                 dispatch(hideConfirmationPanel());
                             }}

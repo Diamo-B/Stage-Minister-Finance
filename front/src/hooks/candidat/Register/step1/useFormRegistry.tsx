@@ -97,7 +97,7 @@ const useFormRegistry = () => {
         setError: UseFormSetError<IRegistrationForm>,
     ): void => {
         fetch(
-            `${import.meta.env.VITE_BackendBaseUrl}/api/v1/user/register/check`,
+            `${import.meta.env.VITE_BackendBaseUrl}/user/register/check`,
             {
                 method: "post",
                 headers: {

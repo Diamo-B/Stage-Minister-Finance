@@ -4,7 +4,7 @@ import { TCity } from "../../../redux/Admin/concours/types/create";
 const useCitiesHelpers = () => {
     const [cities, setCities] = useState<TCity[]>([]);
     useEffect(() => {
-        fetch(`${import.meta.env.VITE_BackendBaseUrl}/api/v1/city/getAll`, {
+        fetch(`${import.meta.env.VITE_BackendBaseUrl}/city/getAll`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",

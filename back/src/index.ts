@@ -21,14 +21,6 @@ app.use(compression());
 // Use the express-fileupload middleware
 app.use(fileUpload());
 
-app.get('/404', (req: Request, res: Response, next: NextFunction) => {
-    throw new Error('Page Not Found');
-});
-
-app.get('/', (req: Request, res: Response) => {
-    res.send('Hello World');
-});
-
 app.use(`/api/${process.env.API_VERSION}/`, GenRouter);
 
 app.use(ErrorMiddleware);

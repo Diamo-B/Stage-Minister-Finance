@@ -23,7 +23,7 @@ const useManipForm = () => {
         fetch(
             `${
                 import.meta.env.VITE_BackendBaseUrl
-            }/api/v1/user/update/candidat`,
+            }/user/update/candidat`,
             {
                 method: "PATCH",
                 headers: {

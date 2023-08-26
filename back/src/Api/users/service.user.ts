@@ -4,8 +4,8 @@ import customParseFormat from 'dayjs/plugin/customParseFormat';
 dayjs.extend(customParseFormat);
 const sendMailScript = require('../../utils/mailer/nodemailerOutlook.js'); // Provide the correct path if needed
 import { hashPassword } from '../../utils/hashPassword';
-import { AttachmentTypes } from '@prisma/client';
-
+import { z } from 'zod';
+import schema from './validation.user'
 
 const getAll = async () => {
     try {
@@ -58,6 +58,8 @@ const getOneId = async (id: string) => {
                         nom: true,
                     },
                 },
+                titre: true,
+                refreshPasswordToken: true,
             },
         });
     } catch (err) {
@@ -117,6 +119,7 @@ const getOneCIN =async (cin:string) => {
             },
             select: {
                 id: true,
+                titre: true,
                 cin: true,
                 prenom: true,
                 nom: true,
@@ -147,6 +150,7 @@ const getOneEmail = async (email: string) => {
             },
             select: {
                 id: true,
+                titre: true,
                 cin: true,
                 prenom: true,
                 nom: true,
@@ -197,13 +201,37 @@ const checkRegistration = async (email: string, cin: string) => {
     }
 };
 
-const sendMail = async (recipient: string) => {
+const sendAccountVerificationMail = async (recipient: z.infer<typeof schema.sendMail>['recipient']) => {
+    console.log('hi');
     
     try {
-        let sixDigitCode = Math.floor(100000 + Math.random() * 900000).toString();        
-        const status = await sendMailScript(recipient, sixDigitCode);
+        let sixDigitCode = Math.floor(100000 + Math.random() * 900000).toString();   
+        const mailGenBody = {
+            subject: 'Code de vérification',
+            recipientMail: recipient.email, 
+            response: {
+                body: {
+                    greeting: `${recipient.titre === 'M' ? 'Cher' : 'chère'} ${
+                        recipient.titre
+                    }.`,
+                    name: `${recipient.prenom} ${recipient.nom}`,
+                    intro: "Bienvenue sur la plateforme e-Recrutement du Ministère de l'Économie et des Finances ! Nous vous souhaitons bonne chance pour vos prochains concours.",
+                    action: {
+                        instructions:
+                            'Veuillez trouver votre code de vérification ci-dessous :',
+                        button: {
+                            color: '#7986cb', //22BC66
+                            text: `<span style="font-size: 26px; font-weight: bold; font-family:'Times New Roman', Times, serif;">${sixDigitCode}</span>`,
+                        },
+                    },
+                    outro: "Besoin d'aide ou avez-vous des questions ? Il vous suffit de répondre à cet e-mail, nous serions ravis de vous aider.",
+                    signature: 'Cordialement',
+                },
+            },
+        };
+        const status = await sendMailScript(mailGenBody);
         if(status.accepted.length > 0)
-        {
+        {            
             let hashReturn = await hashPassword(sixDigitCode.toString());
             return hashReturn.hashedpassword;
         }
@@ -391,6 +419,25 @@ const update = async (
     }
 };
 
+const setOrRemoveForgottenPasswordToken = async (
+    id: string,
+    token: string | null
+) => {
+    try {
+        return await prisma.user.update({
+            where: {
+                id: id,
+            },
+            data: {
+                refreshPasswordToken: token,
+            },
+        });
+    } catch (err) {
+        throw err;
+    }
+};
+
+
 const remove = async (id: string) => {
     try {
         return await prisma.user.delete({
@@ -415,11 +462,12 @@ export default {
     getOneEmail,
     getByCandidatId,
     checkRegistration,
-    sendMail,
+    sendAccountVerificationMail,
     create,
     createCandidat,
     linkAttachments,
     createAdmin,
     update,
+    setOrRemoveForgottenPasswordToken,
     remove,
 };

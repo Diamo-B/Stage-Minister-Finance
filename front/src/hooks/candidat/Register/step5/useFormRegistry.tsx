@@ -65,7 +65,7 @@ const useFormRegistry = () => {
         });
         
         fetch(
-            `${import.meta.env.VITE_BackendBaseUrl}/api/v1/user/link/candidat/`,
+            `${import.meta.env.VITE_BackendBaseUrl}/user/link/candidat/`,
             {
                 method: "PATCH",
                 headers: {

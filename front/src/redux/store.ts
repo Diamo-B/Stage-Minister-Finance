@@ -10,6 +10,7 @@ import loadingReducer from "./loading";
 import alertReducer from "./alerts";
 import confirmationPanelReducer from "./confirmationPanel";
 import concoursReducer from "./Admin/concours/create";
+import forgotPasswordReducer from "./forgotPassword";
 
 
 export const store = configureStore({
@@ -25,6 +26,7 @@ export const store = configureStore({
         //----------------create Concours-------------------
         concours: concoursReducer,
         //----------------General-------------------
+        forgotPassword: forgotPasswordReducer,
         loading: loadingReducer,
         alert: alertReducer,
         confirmationPanel: confirmationPanelReducer,

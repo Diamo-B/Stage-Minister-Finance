@@ -32,6 +32,7 @@ model User {
   telephone     String
   candidat      Candidat?
   admin         Admin?
+  refreshPasswordToken String?
 }
 
 model Candidat {

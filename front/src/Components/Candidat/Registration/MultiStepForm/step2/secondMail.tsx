@@ -3,26 +3,50 @@ import { UilCheck } from "@iconscout/react-unicons";
 import useMailValidation from "../../../../../hooks/candidat/Register/step2/useMailValidation";
 import { changeStepStatus } from "../../../../../redux/RegisterationForm/formSteps";
 import { useState } from "react";
+import useFormRegistry from "../../../../../hooks/login/forgotPassword/useFormRegistry";
 
-const SecondMail = () => {
+type Props = {
+    type: "registrationStep2" | "forgotPassword";
+};
+
+const SecondMail = ({type}:Props) => {
     const dispatch = useAppDispatch();
     const [animate, toggleAnimate] = useState<boolean>(false);
     const [clicked, toggleClick] = useState<boolean>(false);
     const { verificationResult } = useAppSelector(state => state.validation);
-    const { sendMail } = useMailValidation();
+    const { email } = useAppSelector(state => state.forgotPassword);
+    const { sendMail:sendRegistryMail } = useMailValidation();
+    const { sendMail:sendForgotPasswordMail } = useFormRegistry();
 
     const triggerResendMail = async () => {
-        dispatch(changeStepStatus({ order: 2, status: "pending" }));
+        if (type === "registrationStep2")
+            dispatch(changeStepStatus({ order: 2, status: "pending" }));
         toggleClick(true);
         toggleAnimate(true);
-        await sendMail()
-            .catch((err: unknown) => console.error(err)) //TODO: handle error
-            .finally(() => {
-                toggleAnimate(false);
-                setTimeout(() => {
-                    toggleClick(false);
-                }, 3000);
-            });
+        //explain: handle registration
+        if (type === "registrationStep2")
+            await sendRegistryMail()
+                .catch((err: unknown) => console.error(err)) //TODO: handle error
+                .finally(() => {
+                    toggleAnimate(false);
+                    setTimeout(() => {
+                        toggleClick(false);
+                    }, 3000);
+                });
+        //explain: handle forgot password
+        else if (type === "forgotPassword" && email) 
+        {
+            sendForgotPasswordMail({
+                emailOrCin: email,
+            })
+                .catch((err: unknown) => console.error(err)) //TODO: handle error
+                .finally(() => {
+                    toggleAnimate(false);
+                    setTimeout(() => {
+                        toggleClick(false);
+                    }, 3000);
+                });
+        }
     };
 
     return (

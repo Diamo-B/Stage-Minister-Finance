@@ -17,7 +17,7 @@ const createTransporter = async () => {
     return transporter;
 };
 
-const sendMailScript = async (recipient, code) => {
+const sendMailScript = async (mailGenBody) => {
     try {
         const MailGenerator = new Mailgen({
             theme: 'default',
@@ -26,29 +26,12 @@ const sendMailScript = async (recipient, code) => {
                 link: 'http://localhost:5173',
             },
         });
-
-        const response = {
-            body: {
-                greeting: `${recipient.titre === "M" ? "Cher" : "chère"} ${recipient.titre}.`,
-                name: `${recipient.prenom} ${recipient.nom}`,
-                intro: "Bienvenue sur la plateforme e-Recrutement du Ministère de l'Économie et des Finances ! Nous vous souhaitons bonne chance pour vos prochains concours.",
-                action: {
-                    instructions: 'Veuillez trouver votre code de vérification ci-dessous :',
-                    button: {
-                        color: '#7986cb', //22BC66
-                        text: `<span style="font-size: 26px; font-weight: bold; font-family:'Times New Roman', Times, serif;">${code}</span>`
-                    },
-                },
-                outro: "Besoin d'aide ou avez-vous des questions ? Il vous suffit de répondre à cet e-mail, nous serions ravis de vous aider.",
-                signature: 'Cordialement',
-            },
-        };
-
-        const mail = MailGenerator.generate(response);
+        
+        const mail = MailGenerator.generate(mailGenBody.response);
         const mailOptions = {
             from: process.env.OUTLOOK_MAIL,
-            to: `${recipient.email}`,
-            subject: 'Plateforme de recrutement MEF',
+            to: mailGenBody.recipientMail,
+            subject: mailGenBody.subject,
             html: mail,
         };
 

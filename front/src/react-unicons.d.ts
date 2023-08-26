@@ -22,4 +22,9 @@ declare module "@iconscout/react-unicons" {
     export const UilAngleRightB: Icons;
     export const UilSearch: Icon;
     export const UilCheckCircle: Icon;
+    export const UilEye: Icon;
+    export const UilEyeSlash: Icon;
+    export const UilSignout: Icon;
+    export const UilSetting: Icon;
+    export const UilSignOutAlt: Icon;
 }

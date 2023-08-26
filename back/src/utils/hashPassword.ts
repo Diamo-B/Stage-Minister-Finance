@@ -16,14 +16,11 @@ export const hashPassword = async (password: string): Promise<hashReturn> => {
     }
 };
 
-export function validateHash(password: string, hash: string) {
-    bcrypt
-        .compare(password, hash)
-        .then(res => {
-            return true;
-        })
-        .catch(err => {
-            console.error('errorHash:', err.message);
-            return false;
-        });
+export const validateHash = async (password: string, hash: string): Promise<boolean> =>{
+    try {
+        const isValid = await bcrypt.compare(password, hash);
+        return isValid;
+    } catch (err:any) {
+        throw err;
+    }
 }

@@ -13,7 +13,7 @@ const useHelpers = () => {
         fetch(
             `${
                 import.meta.env.VITE_BackendBaseUrl
-            }/api/v1/attachment/getAll/candidat`,
+            }/attachment/getAll/candidat`,
             {
                 method: "GET",
                 headers: {
@@ -41,7 +41,7 @@ const useHelpers = () => {
         fetch(
             `${
                 import.meta.env.VITE_BackendBaseUrl
-            }/api/v1/attachment/delete/${id}`,
+            }/attachment/delete/${id}`,
             {
                 method: "DELETE",
                 headers: { "Content-Type": "application/json" },

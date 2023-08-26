@@ -71,8 +71,10 @@ const getAllDiplomeSpecialities = async (
 const create = async (req: Request, res: Response, next: NextFunction) => {
     const { intitule, type, filiere, annee, pays, etablissement, specialite } = req.body;
 
-    const files = req.files?.files as UploadedFile[];
-
+    let files = req.files?.files as UploadedFile[];
+    if(!Array.isArray(files))
+        files = [files];
+    
     try {
         const candidat = (req as CandidatAuthRequest).user.candidatId;
         //explain: saves the attachement in the public folder and returns the paths

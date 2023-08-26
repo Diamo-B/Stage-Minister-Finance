@@ -26,7 +26,7 @@ const confirmationPanel = createSlice({
         },
         setIsConfirmed: state => {
             state.isConfirmed = true;
-        },
+        }
     },
 });
 

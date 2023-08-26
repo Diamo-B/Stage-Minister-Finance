@@ -18,7 +18,7 @@ const useHelpers = ({
     const fetchOnLoad = () => {
         //* step1: fetch directions
         fetch(
-            `${import.meta.env.VITE_BackendBaseUrl}/api/v1/directions/getAll`,
+            `${import.meta.env.VITE_BackendBaseUrl}/directions/getAll`,
             {
                 method: "GET",
             },
@@ -32,7 +32,7 @@ const useHelpers = ({
             });
 
         //* step2: fetch postes
-        fetch(`${import.meta.env.VITE_BackendBaseUrl}/api/v1/postes/getAll`, {
+        fetch(`${import.meta.env.VITE_BackendBaseUrl}/postes/getAll`, {
             method: "GET",
         })
             .then(async res => {
@@ -44,7 +44,7 @@ const useHelpers = ({
             });
 
         //* step3: fetch grades
-        fetch(`${import.meta.env.VITE_BackendBaseUrl}/api/v1/grades/getAll`, {
+        fetch(`${import.meta.env.VITE_BackendBaseUrl}/grades/getAll`, {
             method: "GET",
         })
             .then(async res => {
@@ -56,7 +56,7 @@ const useHelpers = ({
             });
 
         //* step4: fetch branches
-        fetch(`${import.meta.env.VITE_BackendBaseUrl}/api/v1/branches/getAll`, {
+        fetch(`${import.meta.env.VITE_BackendBaseUrl}/branches/getAll`, {
             method: "GET",
         })
             .then(async res => {
@@ -68,7 +68,7 @@ const useHelpers = ({
             });
 
         //* step5: fetch specialites
-        fetch(`${import.meta.env.VITE_BackendBaseUrl}/api/v1/specs/getAll`, {
+        fetch(`${import.meta.env.VITE_BackendBaseUrl}/specs/getAll`, {
             method: "GET",
         })
             .then(async res => {

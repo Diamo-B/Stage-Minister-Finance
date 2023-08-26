@@ -1,11 +1,13 @@
 import { Request, Response, NextFunction } from 'express';
 import httpException from '../../utils/httpException';
 import userService from './service.user';
+import validateUser from './validation.user';
 import attachmentService from '../attachments/service.attachments';
 import { saveFiles } from '../../utils/fileUploaders/saveFiles';
 import { UploadedFile } from 'express-fileupload';
 import { generateJWT } from '../../utils/JWT/generateJWT';
-import { CandidatAuthRequest } from 'utils/interfaces/ModifiedRequestObject';
+import { CandidatAuthRequest } from '../../utils/interfaces/ModifiedRequestObject';
+import { z } from 'zod';
 
 const getAll = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -83,8 +85,10 @@ const checkRegistration = async (
 
 const sendMail = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { recipient } = req.body;
-        const hash = await userService.sendMail(recipient);
+        const {
+            recipient,
+        }: { recipient: z.infer<typeof validateUser.sendMail>['recipient'] } = req.body;
+        const hash = await userService.sendAccountVerificationMail(recipient);
         return res.status(200).json({ hash });
     } catch (err: any) {
         next(new httpException(500, err.message));

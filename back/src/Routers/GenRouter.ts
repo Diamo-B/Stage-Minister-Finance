@@ -12,8 +12,7 @@ import postesRouter from './postesRouter';
 import gradesRouter from './gradesRouter';
 import branchesRouter from './branchesRouter';
 import specialitesRouter from './specialitesRouter';
-
-import { verifyJWT } from '../utils/JWT/verifyJWT';
+import accountsRouter from './accountsRouter';
 
 const router: Router = Router();
 router.use('/user', userRouter);
@@ -28,7 +27,7 @@ router.use('/directions', directionsRouter);
 router.use('/postes', postesRouter);
 router.use('/grades', gradesRouter);
 router.use('/branches', branchesRouter);
-router.use('/specs', specialitesRouter)
-router.get('/verifyToken', verifyJWT);
+router.use('/specs', specialitesRouter);
+router.use('/accounts', accountsRouter);
 
 export default router;

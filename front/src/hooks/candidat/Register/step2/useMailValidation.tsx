@@ -10,7 +10,7 @@ const useMailValidation = () => {
         fetch(
             `${
                 import.meta.env.VITE_BackendBaseUrl
-            }/api/v1/user/register/verification/sendMail`,
+            }/user/register/verification/sendMail`,
             {
                 method: "POST",
                 headers: {
@@ -58,7 +58,7 @@ const useMailValidation = () => {
         fetch(
             `${
                 import.meta.env.VITE_BackendBaseUrl
-            }/api/v1/user/create/candidat`,
+            }/user/create/candidat`,
             {
                 method: "POST",
                 headers: {

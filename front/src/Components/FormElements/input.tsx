@@ -1,5 +1,6 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import { useFormContext } from "react-hook-form";
+import { UilEyeSlash, UilEye } from "@iconscout/react-unicons";
 type InputProps = {
     registerValue?: string;
     placeholder?: string;
@@ -23,6 +24,8 @@ const Input: FC<InputProps> = (props): JSX.Element => {
         formState: { errors },
         getValues,
     } = useFormContext();
+
+    const [showPassword, setShowPassword] = useState<boolean | null>(props.type === "password" ? false : null);
 
     return (
         <div className="form-control w-full flex justify-center items-center">
@@ -80,8 +83,32 @@ const Input: FC<InputProps> = (props): JSX.Element => {
                     >
                         Obligatoire
                     </span>
+                    {showPassword !== null && (
+                        <label className="swap absolute right-3 top-3 z-50">
+                            <input
+                                type="checkbox"
+                                onChange={e => {
+                                    if (e.target.checked) {
+                                        setShowPassword(true);
+                                    } else {
+                                        setShowPassword(false);
+                                    }
+                                }}
+                            />
+                            <UilEye className="swap-on" />
+                            <UilEyeSlash className="swap-off" />
+                        </label>
+                    )}
                     <input
-                        type={props.type ? props.type : "text"}
+                        type={
+                            showPassword === null
+                                ? props.type
+                                    ? props.type
+                                    : "text"
+                                : showPassword
+                                ? "text"
+                                : "password"
+                        }
                         placeholder={props.placeholder}
                         className={`input input-bordered w-72 join-item ${props.customClasses}`}
                         min={props.type === "number" ? props.min : undefined}
@@ -91,15 +118,41 @@ const Input: FC<InputProps> = (props): JSX.Element => {
                     />
                 </div>
             ) : (
-                <input
-                    type={props.type ? props.type : "text"}
-                    placeholder={props.placeholder}
-                    className={`input input-bordered w-72 join-item ${props.customClasses}`}
-                    min={props.type === "number" ? props.min : undefined}
-                    max={props.type === "number" ? props.max : undefined}
-                    value={props.defaultValue}
-                    {...register(props.registerValue as string)}
-                />
+                <div className="relative">
+                    {showPassword !== null && (
+                        <label className="swap absolute right-3 top-3 z-50">
+                            <input
+                                type="checkbox"
+                                onChange={e => {
+                                    if (e.target.checked) {
+                                        setShowPassword(true);
+                                    } else {
+                                        setShowPassword(false);
+                                    }
+                                }}
+                            />
+                            <UilEye className="swap-on" />
+                            <UilEyeSlash className="swap-off" />
+                        </label>
+                    )}
+                    <input
+                        type={
+                            showPassword === null
+                                ? props.type
+                                    ? props.type
+                                    : "text"
+                                : showPassword
+                                ? "text"
+                                : "password"
+                        }
+                        placeholder={props.placeholder}
+                        className={`input input-bordered w-72 join-item ${props.customClasses}`}
+                        min={props.type === "number" ? props.min : undefined}
+                        max={props.type === "number" ? props.max : undefined}
+                        value={props.defaultValue}
+                        {...register(props.registerValue as string)}
+                    />
+                </div>
             )}
             <label className="label">
                 {props.b_left_text && (

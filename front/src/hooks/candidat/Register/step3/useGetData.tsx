@@ -8,7 +8,7 @@ const useGetData = () => {
         fetch(
             `${
                 import.meta.env.VITE_BackendBaseUrl
-            }/api/v1/region/getAll/no-cities`,
+            }/region/getAll/no-cities`,
             {
                 method: "GET",
                 headers: {
@@ -29,7 +29,7 @@ const useGetData = () => {
         fetch(
             `${
                 import.meta.env.VITE_BackendBaseUrl
-            }/api/v1/city/getAll/no-regions`,
+            }/city/getAll/no-regions`,
             {
                 method: "GET",
                 headers: {

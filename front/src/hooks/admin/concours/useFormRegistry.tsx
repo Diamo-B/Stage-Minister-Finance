@@ -171,7 +171,7 @@ const useFormRegistry = () => {
             fd.append("villesIds", JSON.stringify(data.villes));
             fd.append("avis", blob, file.name);
             fetch(
-                `${import.meta.env.VITE_BackendBaseUrl}/api/v1/concours/create`,
+                `${import.meta.env.VITE_BackendBaseUrl}/concours/create`,
                 {
                     method: "POST",
                     body: fd,

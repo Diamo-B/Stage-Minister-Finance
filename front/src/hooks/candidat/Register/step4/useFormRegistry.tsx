@@ -72,7 +72,7 @@ const useFormRegistry = () => {
         .strict();
 
     const FetchDataOnLoad = async () => {
-        fetch(`${import.meta.env.VITE_BackendBaseUrl}/api/v1/country/getAll`, {
+        fetch(`${import.meta.env.VITE_BackendBaseUrl}/country/getAll`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -87,7 +87,7 @@ const useFormRegistry = () => {
             });
 
         fetch(
-            `${import.meta.env.VITE_BackendBaseUrl}/api/v1/university/getAll`,
+            `${import.meta.env.VITE_BackendBaseUrl}/university/getAll`,
             {
                 method: "GET",
                 headers: {
@@ -106,7 +106,7 @@ const useFormRegistry = () => {
         fetch(
             `${
                 import.meta.env.VITE_BackendBaseUrl
-            }/api/v1/diplome/getAll/types`,
+            }/diplome/getAll/types`,
             {
                 method: "GET",
                 headers: {
@@ -125,7 +125,7 @@ const useFormRegistry = () => {
         fetch(
             `${
                 import.meta.env.VITE_BackendBaseUrl
-            }/api/v1/diplome/getAll/specs`,
+            }/diplome/getAll/specs`,
             {
                 method: "GET",
                 headers: {
@@ -144,7 +144,7 @@ const useFormRegistry = () => {
         fetch(
             `${
                 import.meta.env.VITE_BackendBaseUrl
-            }/api/v1/diplome/getAll/filieres`,
+            }/diplome/getAll/filieres`,
             {
                 method: "GET",
                 headers: {
@@ -196,7 +196,7 @@ const useFormRegistry = () => {
         });
 
         await fetch(
-            `${import.meta.env.VITE_BackendBaseUrl}/api/v1/diplome/create`,
+            `${import.meta.env.VITE_BackendBaseUrl}/diplome/create`,
             {
                 method: "POST",
                 headers: {

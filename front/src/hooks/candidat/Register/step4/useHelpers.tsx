@@ -13,7 +13,7 @@ const useHelpers = () => {
         fetch(
             `${
                 import.meta.env.VITE_BackendBaseUrl
-            }/api/v1/diplome/getAll/byCandidat`,
+            }/diplome/getAll/byCandidat`,
             {
                 method: "GET",
                 headers: {
@@ -52,7 +52,7 @@ const useHelpers = () => {
         attachments: { path: string }[],
     ) => {
         dispatch(startLoading());
-        fetch(`${import.meta.env.VITE_BackendBaseUrl}/api/v1/diplome/delete`, {
+        fetch(`${import.meta.env.VITE_BackendBaseUrl}/diplome/delete`, {
             method: "delete",
             headers: {
                 "Content-Type": "application/json",

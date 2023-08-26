@@ -2,6 +2,9 @@ import { z } from "zod";
 import { ILoginForm } from "../../utils/interfaces/Login/ILoginForm";
 import { UseFormReset, UseFormSetFocus } from "react-hook-form";
 import { Dispatch, SetStateAction } from "react";
+import { useNavigate } from "react-router-dom";
+import { startLoading, stopLoading } from "../../redux/loading";
+import { useAppDispatch } from "../redux";
 
 const useFormRegistry = () => {
     const schema = z.object({
@@ -9,19 +12,87 @@ const useFormRegistry = () => {
         password: z.string().min(8,{message:'Le mot de passe doit avoir un minimum de 8 caractères'}).nonempty(),
     });
 
+    const navigate = useNavigate()
+    const dispatch = useAppDispatch()
+
+    const checkToken = () => {
+        try {
+            const token = localStorage.getItem("AccessToken");            
+            if (token) {
+                fetch(
+                    `${
+                        import.meta.env.VITE_BackendBaseUrl
+                    }/accounts/verifyToken`,
+                    {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${token}`,
+                        },
+                    },
+                )
+                    .then(async res => {
+                        const response = await res.json();
+                        if(response.user.candidat?.id){
+                            navigate('/');
+                        }
+                        else if(response.user.admin?.id){
+                            navigate('/admin');
+                        }
+                    })
+                    .catch(async err => {
+                        console.error(err);
+                    });
+            }
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
     const checkLogin = (
         data: ILoginForm,
-        setLoginError: Dispatch<SetStateAction<boolean>>,
+        setLoginError: Dispatch<SetStateAction<string>>,
         reset: UseFormReset<ILoginForm>,
         focus: UseFormSetFocus<ILoginForm>,
-    ) => {
-        console.log(data);
-        setLoginError(true);
-        focus("email",{shouldSelect: true})
-        reset({password: ""});
+    ) =>{
+        dispatch(startLoading())
+        fetch(`${import.meta.env.VITE_BackendBaseUrl}/accounts/login`,{
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                email: data.email,
+                password: data.password,
+            })
+        }).then(async(res)=>{
+            const response = await res.json();
+            
+            if (response.token) {
+                localStorage.setItem("AccessToken", response.token);                
+                setLoginError("");
+                if (response.type === "candidat") {                    
+                    navigate("/");
+                } else if (response.type === "admin") {        
+                    navigate("/admin");
+                }
+            } else {
+                if (response.status === 401) {
+                    setLoginError(response.error);
+                    focus("email", { shouldSelect: true });
+                    reset({ password: "" });
+                }
+            }
+        }).catch((err)=>{
+            console.error(err);
+            setLoginError("Une erreur est survenue. Veuillez réessayer ultérieurement.");
+            reset();
+        }).finally(()=>{
+            dispatch(stopLoading())
+        })
     };
 
-    return { schema, checkLogin };
+    return { schema, checkLogin, checkToken };
 }
  
 export default useFormRegistry;

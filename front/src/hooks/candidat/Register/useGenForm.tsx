@@ -38,7 +38,7 @@ const useGenForm = () => {
             const token = localStorage.getItem("token");
             if (token) {
                 const res = await fetch(
-                    `${import.meta.env.VITE_BackendBaseUrl}/api/v1/verifyToken`,
+                    `${import.meta.env.VITE_BackendBaseUrl}/accounts/verifyToken`,
                     {
                         method: "GET",
                         headers: {
@@ -55,7 +55,7 @@ const useGenForm = () => {
                     const userRes = await fetch(
                         `${
                             import.meta.env.VITE_BackendBaseUrl
-                        }/api/v1/user/getone/candidat/` + candidatId,
+                        }/user/getone/candidat/` + candidatId,
                         {
                             method: "GET",
                             headers: {
