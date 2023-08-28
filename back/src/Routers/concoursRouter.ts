@@ -5,5 +5,7 @@ import validate from '../middlewares/validation.middleware';
 const router = Router();
 
 router.post('/create', validate(schema.create), concoursApis.create);
+router.get('/getAll', concoursApis.getAll);
+router.get('/getAll/useful', concoursApis.getAll_W_UsefulPropsOnly);
 
 export default router;

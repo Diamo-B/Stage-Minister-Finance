@@ -1,14 +1,18 @@
 import { useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
+import { useAppDispatch } from "../../../Hooks/redux";
+import { setUserType } from "../../../Redux/GeneralValues";
 
 type Props = {
-    userType: string;
+    userTypes: string[];
 }
 
-const RouteOutlet = ({userType}:Props) => {
+const RouteOutlet = ({userTypes}:Props) => {
     const navigate = useNavigate();
+    const dispatch = useAppDispatch();
 
     useEffect(() => {
+        
         const token = localStorage.getItem("AccessToken");
         if (token) {
             fetch(
@@ -23,8 +27,18 @@ const RouteOutlet = ({userType}:Props) => {
             )
                 .then(async res => {
                     const response = await res.json();
-                    if (!response.user[userType]?.id) {
+                    console.log(response);
+                    
+                    const userTypesResponse = userTypes.filter(
+                        userType => response.user[userType] !== null && response.user[userType] !== undefined,
+                    );
+                    
+                    if (userTypesResponse.length === 0) {
                         navigate("/login");
+                    } else {
+                        console.log(userTypesResponse[0]);
+                        
+                        dispatch(setUserType(userTypesResponse[0]));
                     }
                 })
                 .catch(async err => {
@@ -33,14 +47,17 @@ const RouteOutlet = ({userType}:Props) => {
         }
         else
         {
-            navigate("/login");
+            if (userTypes.includes("visitor")) {
+                dispatch(setUserType("visitor"));
+            } else {
+                navigate("/login");
+            }
         }
+        
     }, []);
 
     return (
-        <>
-            <Outlet />
-        </>
+        <Outlet />
     );
 };
 

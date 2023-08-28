@@ -11,7 +11,7 @@ import alertReducer from "./alerts";
 import confirmationPanelReducer from "./confirmationPanel";
 import concoursReducer from "./Admin/concours/create";
 import forgotPasswordReducer from "./forgotPassword";
-
+import genValuesReducer from "./GeneralValues";
 
 export const store = configureStore({
     reducer: {
@@ -30,6 +30,7 @@ export const store = configureStore({
         loading: loadingReducer,
         alert: alertReducer,
         confirmationPanel: confirmationPanelReducer,
+        genValues: genValuesReducer,
     },
 });
 

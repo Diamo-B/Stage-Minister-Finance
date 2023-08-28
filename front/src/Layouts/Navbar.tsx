@@ -6,8 +6,8 @@ import {
 } from "@iconscout/react-unicons";
 import { useNavigate } from "react-router-dom";
 import ConfirmationPanel from "../Components/FormElements/confirmationPanel";
-import { useAppDispatch, useAppSelector } from "../hooks/redux";
-import { hideConfirmationPanel, showConfirmationPanel } from "../redux/confirmationPanel";
+import { useAppDispatch, useAppSelector } from "../Hooks/redux";
+import { hideConfirmationPanel, showConfirmationPanel } from "../Redux/confirmationPanel";
 import { useEffect } from "react";
 
 const Navbar = () => {

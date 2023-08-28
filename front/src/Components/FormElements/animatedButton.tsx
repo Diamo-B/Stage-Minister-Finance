@@ -3,7 +3,7 @@ import { ElementType } from "react";
 type Props = {
     btnType?: "button" | "submit" | "reset";
     text: string;
-    onClick?: () => void;
+    onClickFct?: () => void;
     customButtonClasses?: string[];
     Icon: ElementType;
     LoadingState?: boolean;
@@ -11,7 +11,7 @@ type Props = {
 
 const AnimatedButton = ({
     text,
-    onClick,
+    onClickFct,
     Icon,
     customButtonClasses,
     btnType,
@@ -23,7 +23,7 @@ const AnimatedButton = ({
                 customButtonClasses ? customButtonClasses.join(" ") : ""
             }`}
             onClick={() => {
-                onClick && onClick();
+                onClickFct && onClickFct(); // Invoke the function if provided
             }}
             type={btnType ? btnType : "button"}
         >

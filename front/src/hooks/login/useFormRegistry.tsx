@@ -1,9 +1,9 @@
 import { z } from "zod";
-import { ILoginForm } from "../../utils/interfaces/Login/ILoginForm";
+import { ILoginForm } from "../../Utils/interfaces/Login/ILoginForm";
 import { UseFormReset, UseFormSetFocus } from "react-hook-form";
 import { Dispatch, SetStateAction } from "react";
-import { useNavigate } from "react-router-dom";
-import { startLoading, stopLoading } from "../../redux/loading";
+import { useLocation, useNavigate } from "react-router-dom";
+import { startLoading, stopLoading } from "../../Redux/loading";
 import { useAppDispatch } from "../redux";
 
 const useFormRegistry = () => {
@@ -13,6 +13,7 @@ const useFormRegistry = () => {
     });
 
     const navigate = useNavigate()
+    const location = useLocation()
     const dispatch = useAppDispatch()
 
     const checkToken = () => {
@@ -71,7 +72,12 @@ const useFormRegistry = () => {
             if (response.token) {
                 localStorage.setItem("AccessToken", response.token);                
                 setLoginError("");
-                if (response.type === "candidat") {                    
+                const redirectPath = location.state?.from;
+                console.log(redirectPath);
+                if(redirectPath !== undefined){
+                    navigate(`${redirectPath}`);
+                }
+                else if (response.type === "candidat") {                    
                     navigate("/");
                 } else if (response.type === "admin") {        
                     navigate("/admin");

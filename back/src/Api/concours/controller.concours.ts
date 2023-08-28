@@ -64,6 +64,40 @@ const create = async (req: Request, res: Response, next: NextFunction) => {
     } 
 };
 
+const getAll = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const concours = await concoursService.getAll();
+        return res.status(200).json({
+            concours
+        });
+    } catch (err: any) {
+        next(new httpException(500, err.message));
+    }
+};
+
+const getAll_W_UsefulPropsOnly = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    try {
+        const concours = await concoursService.getAll_W_UsefulPropsOnly();
+        return res.status(200).json({
+            concours
+        });
+    } catch (err: any) {
+        if(err instanceof httpException) {
+            return res.status(err.status).json({
+                message: err.message
+            });
+        }
+        next(new httpException(500, err.message));
+    }
+};
+
+
 export default {
+    getAll,
+    getAll_W_UsefulPropsOnly,
     create,
 };

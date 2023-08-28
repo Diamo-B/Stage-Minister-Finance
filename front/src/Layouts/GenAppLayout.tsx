@@ -1,5 +1,5 @@
 import GenPageloader from "../Components/GenPageLoading";
-import { useAppSelector } from "../hooks/redux";
+import { useAppSelector } from "../Hooks/redux";
 import { Outlet } from "react-router-dom";
 import Footer from "./Footer";
 const GenAppLayout = () => {

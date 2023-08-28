@@ -2,7 +2,7 @@ import { Outlet, Link } from "react-router-dom";
 
 const NeutralNavbar = () => {
     return (
-        <>
+        <div className="flex flex-col w-full">
             <div className="navbar bg-base-200 border-b-2 border-neutral-content">
                 <div className="navbar-start">
                     <a className="btn btn-ghost normal-case text-xl">
@@ -16,10 +16,7 @@ const NeutralNavbar = () => {
                     </div>
                 </div>
             </div>
-            <div className="w-full py-10 flex flex-col justify-center items-center">
-                <Outlet />
-            </div>
-        </>
+        </div>
     );
 };
 
