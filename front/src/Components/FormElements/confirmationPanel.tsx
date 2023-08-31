@@ -2,8 +2,8 @@ import { UilExclamationOctagon } from "@iconscout/react-unicons";
 import {
     hideConfirmationPanel,
     setIsConfirmed,
-} from "../../redux/confirmationPanel";
-import { useAppDispatch, useAppSelector } from "../../hooks/redux";
+} from "../../Redux/confirmationPanel";
+import { useAppDispatch, useAppSelector } from "../../Hooks/redux";
 
 type Props = {
     customConfirmButton?: string;
@@ -17,7 +17,7 @@ const ConfirmationPanel = ({ customConfirmButton }: Props) => {
     );
 
     return (
-        <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center z-40 bg-slate-700/50 inset-0">
+        <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center z-50 bg-slate-700/50 inset-0">
             <div className="card w-96 bg-base-300 ">
                 <div className="card-body items-center text-center !gap-5">
                     <h2 className="card-title">
@@ -42,7 +42,7 @@ const ConfirmationPanel = ({ customConfirmButton }: Props) => {
                                 {loading ? (
                                     <span className="loading loading-spinner loading-sm text-error"></span>
                                 ) : (
-                                    customConfirmButton? customConfirmButton : "annuler"
+                                    customConfirmButton? customConfirmButton : "Supprimer"
                                 )}
                             </span>
                         </button>

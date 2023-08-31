@@ -1,5 +1,5 @@
 import { useDroppable } from "@dnd-kit/core";
-import { TCity } from "../../../../../../redux/Admin/concours/types/create";
+import { TCity } from "../../../../../../Redux/Admin/concours/types/create";
 import Search from "../../Search";
 import { useEffect, useState } from "react";
 

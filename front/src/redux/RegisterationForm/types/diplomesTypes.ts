@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { city } from "./detailsTypes";
-import { file } from "../../../utils/interfaces/IFileUpload";
+import { file } from "../../../Utils/interfaces/IFileUpload";
 
 type country = {
     id: number;

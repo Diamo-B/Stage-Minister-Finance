@@ -2,14 +2,14 @@ import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 dayjs.extend(customParseFormat);
 import { z } from "zod";
-import IRegistrationForm from "../../../../utils/interfaces/RegistrationForm/IRegistrationForm";
+import IRegistrationForm from "../../../../Utils/interfaces/RegistrationForm/IRegistrationForm";
 import { UseFormSetError } from "react-hook-form";
 import { useAppSelector, useAppDispatch } from "../../../redux";
-import { setUser } from "../../../../redux/user";
+import { setUser } from "../../../../Redux/user";
 import {
     changeStepStatus,
     incrementStep,
-} from "../../../../redux/RegisterationForm/formSteps";
+} from "../../../../Redux/RegisterationForm/formSteps";
 
 const useFormRegistry = () => {
     const dispatch = useAppDispatch();

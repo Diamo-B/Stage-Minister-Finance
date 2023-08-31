@@ -1,5 +1,5 @@
 import { useFormContext } from "react-hook-form";
-import { filière } from "../../../../../../redux/RegisterationForm/types/diplomesTypes";
+import { filière } from "../../../../../../Redux/RegisterationForm/types/diplomesTypes";
 
 type option = {
     id: string | number;

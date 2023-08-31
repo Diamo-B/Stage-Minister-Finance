@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { TCity } from "../../../../../../redux/Admin/concours/types/create";
+import { TCity } from "../../../../../../Redux/Admin/concours/types/create";
 import Search from "../../Search";
 import DraggableCityItem from "./DraggableCityItem";
 

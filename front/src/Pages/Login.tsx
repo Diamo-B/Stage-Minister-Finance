@@ -1,28 +1,29 @@
 import { useEffect, useState } from "react";
 import LoginForm from "../Components/loginForm";
-import useFormRegistry from "../hooks/login/useFormRegistry";
+import useFormRegistry from "../Hooks/login/useFormRegistry";
 import ForgetPassword from "./forgotPassword";
 import AnimatedButton from "../Components/FormElements/animatedButton";
-import { UilArrowRight } from "@iconscout/react-unicons";
-import { Link } from "react-router-dom";
+import { UilArrowLeft, UilArrowRight } from "@iconscout/react-unicons";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const Login = () => {
 
     const {checkToken} = useFormRegistry();
     const [forgotPassword, setForgotPassword] = useState<boolean>(false);
-    useEffect(()=>{
+    const location = useLocation();
+    useEffect(()=>{        
         checkToken();
     },[])
 
-    {
-        /* responsive tailwind reference example ( only approx. ) */
+    const navigate = useNavigate();
+    const sendToRegistrationPage = () => {
+        const redirectPath = location.state?.from;
+        if(redirectPath)
+            navigate('/register', {state: {from: redirectPath}});
+        else
+            navigate('/register')
     }
-    {
-        /* class xl: my laptop 1366*768 -> 55 inch huge screen*/
-    }
-    {
-        /* class 2xl: 55 inch and higher */
-    }
+
     return (
         <>
             <div className="bg-base-200 flex flex-col justify-center items-center w-full flex-1 py-10">
@@ -51,16 +52,40 @@ const Login = () => {
                             compte, soit vous inscrire si vous n'en avez pas
                             encore.
                         </p>
-                        <div className="flex justify-center mt-6 space-x-4">
-                            <Link className="link" to={"/register"}>
-                                <AnimatedButton
-                                    customButtonClasses={["!btn-wide","btn-info", 'border-2', "hover:btn-ghost",'text-neutral']}
-                                    Icon={() => (
-                                        <UilArrowRight className="mx-auto w-10 h-10 text-white " />
-                                    )}
-                                    text="S'inscrire"
-                                />
-                            </Link>
+                        <div className="flex flex-col justify-center items-center mt-6 space-x-4">
+                            <AnimatedButton
+                                customButtonClasses={[
+                                    "!btn-wide",
+                                    "btn-info",
+                                    "border-2",
+                                    "hover:btn-info",
+                                    "text-neutral",
+                                ]}
+                                Icon={() => (
+                                    <UilArrowRight className="mx-auto w-10 h-10 text-white " />
+                                )}
+                                text="S'inscrire"
+                                onClickFct={() => sendToRegistrationPage()}
+                            />
+
+                            <AnimatedButton
+                                customButtonClasses={[
+                                    "!btn-wide",
+                                    "btn-info",
+                                    "border-2",
+                                    "hover:btn-info",
+                                    "text-neutral",
+                                    "!ml-0",
+                                ]}
+                                Icon={() => (
+                                    <UilArrowLeft className="mx-auto w-10 h-10 text-white " />
+                                )}
+                                text="Consulter les offres"
+                                onClickFct={() => {
+                                    navigate("/concours");
+                                }}
+                                ReverseAnimationDirection={true}
+                            />
                         </div>
                     </div>
                     <div className="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100">

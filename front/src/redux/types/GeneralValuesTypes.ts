@@ -1,4 +1,4 @@
 export interface GenValues {
     isDarkMode: boolean;
-    userType: "admin" | "candidat" | "visitor";
+    userType: "admin" | "candidat" | "visitor" | null;
 } 

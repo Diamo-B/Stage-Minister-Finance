@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { UilAngleRightB } from "@iconscout/react-unicons";
-import { TCity } from "../../../../../redux/Admin/concours/types/create";
+import { TCity } from "../../../../../Redux/Admin/concours/types/create";
 import { DndContext, DragEndEvent } from "@dnd-kit/core";
 import { restrictToHorizontalAxis, snapCenterToCursor } from "@dnd-kit/modifiers";
 import DroppingContainer from "./droppinArea/droppingContainer";
-import useCitiesHelpers from "../../../../../hooks/admin/concours/useCitiesDragNDropHelpers";
+import useCitiesHelpers from "../../../../../Hooks/admin/concours/useCitiesDragNDropHelpers";
 import DraggingContainer from "./draggingArea/draggingContainer";
 import { useFormContext } from "react-hook-form";
 

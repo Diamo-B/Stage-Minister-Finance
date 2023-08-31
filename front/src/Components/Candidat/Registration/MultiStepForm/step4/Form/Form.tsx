@@ -3,11 +3,11 @@ import FileUpload from "../../../../../fileUploader/fileUploader";
 import { useForm, FormProvider, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
-import { IDiplomeForm } from "../../../../../../utils/interfaces/RegistrationForm/IDiplomeForm";
-import useFormRegistry from "../../../../../../hooks/candidat/Register/step4/useFormRegistry";
-import { useAppDispatch, useAppSelector } from "../../../../../../hooks/redux";
-import { stopLoading } from "../../../../../../redux/loading";
-import { changeStepStatus } from "../../../../../../redux/RegisterationForm/formSteps";
+import { IDiplomeForm } from "../../../../../../Utils/interfaces/RegistrationForm/IDiplomeForm";
+import useFormRegistry from "../../../../../../Hooks/candidat/Register/step4/useFormRegistry";
+import { useAppDispatch, useAppSelector } from "../../../../../../Hooks/redux";
+import { stopLoading } from "../../../../../../Redux/loading";
+import { changeStepStatus } from "../../../../../../Redux/RegisterationForm/formSteps";
 
 const Form = () => {
     const dispatch = useAppDispatch();

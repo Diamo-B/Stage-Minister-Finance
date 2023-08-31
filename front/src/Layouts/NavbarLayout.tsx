@@ -1,32 +1,32 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import Navbar from "./Navbar";
-import { useEffect } from "react";
-import { useAppDispatch, useAppSelector } from "../Hooks/redux";
-import { startGenPageLoading, stopGenPageLoading } from "../Redux/loading";
+import { useAppSelector } from "../Hooks/redux";
 import NeutralNavbar from "./NeutralNavbar";
+import RegisterNavbar from "./RegisterNavbar";
+import { useEffect } from "react";
 
 const NavbarLayout = () => {
     const { userType } = useAppSelector(state => state.genValues);
-    const { GenPageloading } = useAppSelector(state => state.loading);
-    const dispatch = useAppDispatch();
-    useEffect(() => {
-        if (!userType)
-            dispatch(startGenPageLoading())
-        setTimeout(() => {
-            dispatch(stopGenPageLoading())
-        }, 3000);
-    }, [userType]);
-
-    return (
+    const location = useLocation();
+    useEffect(()=>{
+        console.log(location.pathname);
+    },[])
+    return ( 
         <>
             {
-                userType === "candidat" || userType === 'admin' ? 
-                    <Navbar /> 
+                location.pathname === "/register" ?
+                    <RegisterNavbar />
                 :
-                    userType === "visitor" ?
-                        <NeutralNavbar />
+                userType &&
+                (
+                    userType === "candidat" || userType === 'admin' ? 
+                        <Navbar /> 
                     :
-                        <></>
+                        userType === "visitor" ?
+                            <NeutralNavbar />
+                        :
+                            <></>
+                )
             }
             <div className="w-full py-10 flex flex-col justify-center items-center">
                 <Outlet />

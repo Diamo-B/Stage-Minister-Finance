@@ -1,6 +1,6 @@
 import { IntroJs } from "intro.js";
-import { useAppDispatch, useAppSelector } from "../../../../hooks/redux";
-import { setTab } from "../../../../redux/RegisterationForm/formTabs";
+import { useAppDispatch, useAppSelector } from "../../../../Hooks/redux";
+import { setTab } from "../../../../Redux/RegisterationForm/formTabs";
 
 type Props = {
     tab1Text: string;

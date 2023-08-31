@@ -1,5 +1,5 @@
 import { InputRef } from "../../../../Components/Candidat/Registration/MultiStepForm/step2/Validate";
-import { verificationIdle } from "../../../../redux/RegisterationForm/Validate";
+import { verificationIdle } from "../../../../Redux/RegisterationForm/Validate";
 import { useAppDispatch } from "../../../redux";
 
 type Props = {

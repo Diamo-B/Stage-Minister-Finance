@@ -1,21 +1,21 @@
 import { useEffect, useState } from "react";
 import { useForm, FormProvider, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { IStep5Form } from "../../../../../utils/interfaces/RegistrationForm/IStep5Form";
-import useFormRegistry from "../../../../../hooks/candidat/Register/step5/useFormRegistry";
+import { IStep5Form } from "../../../../../Utils/interfaces/RegistrationForm/IStep5Form";
+import useFormRegistry from "../../../../../Hooks/candidat/Register/step5/useFormRegistry";
 import CINCard from "./CINCard";
 import CVCard from "./CVCard";
-import { useAppDispatch, useAppSelector } from "../../../../../hooks/redux";
+import { useAppDispatch, useAppSelector } from "../../../../../Hooks/redux";
 import {
     changeStepStatus,
     incrementStep,
     stopSubmit,
-} from "../../../../../redux/RegisterationForm/formSteps";
+} from "../../../../../Redux/RegisterationForm/formSteps";
 import Tabs from "../tabs";
-import { setHint, setTab } from "../../../../../redux/RegisterationForm/formTabs";
+import { setHint, setTab } from "../../../../../Redux/RegisterationForm/formTabs";
 import Table from "../Table";
-import useHelpers from "../../../../../hooks/candidat/Register/step5/useHelpers";
-import AddedAttachment from "../../../../../utils/tours/RegistrationForm/attachments/AddedAttachment";
+import useHelpers from "../../../../../Hooks/candidat/Register/step5/useHelpers";
+import AddedAttachment from "../../../../../Utils/tours/RegistrationForm/attachments/AddedAttachment";
 
 const Form = () => {
     const dispatch = useAppDispatch();

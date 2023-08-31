@@ -1,9 +1,10 @@
-import { useAppSelector, useAppDispatch } from "../../../../../hooks/redux";
+import { useAppSelector, useAppDispatch } from "../../../../../Hooks/redux";
 import { UilCheck } from "@iconscout/react-unicons";
-import useMailValidation from "../../../../../hooks/candidat/Register/step2/useMailValidation";
-import { changeStepStatus } from "../../../../../redux/RegisterationForm/formSteps";
+
+import { changeStepStatus } from "../../../../../Redux/RegisterationForm/formSteps";
 import { useState } from "react";
-import useFormRegistry from "../../../../../hooks/login/forgotPassword/useFormRegistry";
+import useFormRegistry from "../../../../../Hooks/login/forgotPassword/useFormRegistry";
+import useMailValidation from "../../../../../Hooks/candidat/Register/step2/useMailValidation";
 
 type Props = {
     type: "registrationStep2" | "forgotPassword";

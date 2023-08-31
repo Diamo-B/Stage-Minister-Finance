@@ -8,9 +8,9 @@ import {
 } from "@iconscout/react-unicons";
 import { useDropzone } from "react-dropzone";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import useHelpers from "../../hooks/fileUploader/useHelpers";
+import useHelpers from "../../Hooks/fileUploader/useHelpers";
 import ErrorsPanel from "./errorsPanel";
-import { fileField, errorsField } from "../../utils/interfaces/IFileUpload";
+import { fileField, errorsField } from "../../Utils/interfaces/IFileUpload";
 import { useFormContext } from "react-hook-form";
 
 type Props = {

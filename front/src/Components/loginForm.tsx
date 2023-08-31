@@ -1,10 +1,10 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import Input from "./FormElements/input";
 import { FormProvider, useForm } from "react-hook-form";
-import useFormRegistry from "../hooks/login/useFormRegistry";
-import { ILoginForm } from "../utils/interfaces/Login/ILoginForm";
+import useFormRegistry from "../Hooks/login/useFormRegistry";
+import { ILoginForm } from "../Utils/interfaces/Login/ILoginForm";
 import { Dispatch, SetStateAction, useState } from "react";
-import { useAppSelector } from "../hooks/redux";
+import { useAppSelector } from "../Hooks/redux";
 import AnimatedButton from "./FormElements/animatedButton";
 import { UilSignOutAlt } from "@iconscout/react-unicons";
 
@@ -68,7 +68,7 @@ const LoginForm = ({ forgotPassword, setForgotPassword }: Props) => {
                             "!btn-wide",
                             "btn-info",
                             "border-2",
-                            "hover:btn-ghost",
+                            "hover:btn-info",
                             "text-neutral",
                             "rounded-full",
                         ]}

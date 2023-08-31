@@ -1,4 +1,4 @@
-import { setRegions, setCities } from "../../../../redux/RegisterationForm/Details";
+import { setRegions, setCities } from "../../../../Redux/RegisterationForm/Details";
 import { useAppDispatch } from "../../../redux";
 
 const useGetData = () => {

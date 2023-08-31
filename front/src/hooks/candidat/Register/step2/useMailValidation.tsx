@@ -1,5 +1,5 @@
 import { useAppSelector, useAppDispatch } from "../../../redux";
-import { mailSent } from "../../../../redux/user";
+import { mailSent } from "../../../../Redux/user";
 import bcrypt from "bcryptjs";
 
 const useMailValidation = () => {
@@ -80,7 +80,7 @@ const useMailValidation = () => {
                 const response = await res.json();
                 if (res.ok) {
                     localStorage.removeItem("verificationToken");
-                    localStorage.setItem("token", response.token);
+                    localStorage.setItem("RegistrationToken", response.token);
                 }
             })
             .catch(err => {

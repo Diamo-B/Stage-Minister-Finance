@@ -84,7 +84,8 @@ const Input: FC<InputProps> = (props): JSX.Element => {
                         Obligatoire
                     </span>
                     {showPassword !== null && (
-                        <label className="swap absolute right-3 top-3 z-50">
+                        <label className="swap absolute right-3 top-3 z-30"
+                        >
                             <input
                                 type="checkbox"
                                 onChange={e => {
@@ -120,7 +121,8 @@ const Input: FC<InputProps> = (props): JSX.Element => {
             ) : (
                 <div className="relative">
                     {showPassword !== null && (
-                        <label className="swap absolute right-3 top-3 z-50">
+                        <label className="swap absolute right-3 top-3 z-50"
+                        >
                             <input
                                 type="checkbox"
                                 onChange={e => {

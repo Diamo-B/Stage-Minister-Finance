@@ -1,11 +1,11 @@
 import { z } from "zod";
-import { IDetailsForm } from "../../../../utils/interfaces/RegistrationForm/IDetailsForm";
+import { IDetailsForm } from "../../../../Utils/interfaces/RegistrationForm/IDetailsForm";
 import { useAppSelector, useAppDispatch } from "../../../redux";
-import { setUserDetails } from "../../../../redux/user";
+import { setUserDetails } from "../../../../Redux/user";
 import {
     changeStepStatus,
     incrementStep,
-} from "../../../../redux/RegisterationForm/formSteps";
+} from "../../../../Redux/RegisterationForm/formSteps";
 
 const useManipForm = () => {
     const dispatch = useAppDispatch();
@@ -20,23 +20,18 @@ const useManipForm = () => {
     });
 
     const saveUserDetails = (data: IDetailsForm) => {
-        fetch(
-            `${
-                import.meta.env.VITE_BackendBaseUrl
-            }/user/update/candidat`,
-            {
-                method: "PATCH",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `${localStorage.getItem("token")}`,
-                },
-                body: JSON.stringify({
-                    adresse: data.adresse1 + ", " + data.adresse2,
-                    ville: data.ville,
-                    zip: data.zip,
-                }),
+        fetch(`${import.meta.env.VITE_BackendBaseUrl}/user/update/candidat`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `${localStorage.getItem("RegistrationToken")}`,
             },
-        )
+            body: JSON.stringify({
+                adresse: data.adresse1 + ", " + data.adresse2,
+                ville: data.ville,
+                zip: data.zip,
+            }),
+        })
             .then(async res => {
                 if (res.ok) {
                     const user = await res.json();

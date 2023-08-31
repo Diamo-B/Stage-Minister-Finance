@@ -1,24 +1,24 @@
-import { activateAlert } from "../../../../redux/alerts";
-import { decrementHint, setHint } from "../../../../redux/RegisterationForm/formTabs";
-import { removeAttachmentRecord } from "../../../../redux/RegisterationForm/lastStep";
-import { startLoading, stopLoading } from "../../../../redux/loading";
+import { activateAlert } from "../../../../Redux/alerts";
+import { decrementHint, setHint } from "../../../../Redux/RegisterationForm/formTabs";
+import { removeAttachmentRecord } from "../../../../Redux/RegisterationForm/lastStep";
+import { startLoading, stopLoading } from "../../../../Redux/loading";
 import { useAppDispatch } from "../../../redux";
-import { setAttachmentRecords } from "../../../../redux/RegisterationForm/lastStep";
-import { attachmentRecord } from "../../../../redux/RegisterationForm/types/lastStepTypes";
+import { setAttachmentRecords } from "../../../../Redux/RegisterationForm/lastStep";
+import { attachmentRecord } from "../../../../Redux/RegisterationForm/types/lastStepTypes";
 
 const useHelpers = () => {
     const dispatch = useAppDispatch();
 
     const FetchOnLoadData = async () => {
         fetch(
-            `${
-                import.meta.env.VITE_BackendBaseUrl
-            }/attachment/getAll/candidat`,
+            `${import.meta.env.VITE_BackendBaseUrl}/attachment/getAll/candidat`,
             {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
-                    Authorization: `Bearer ${localStorage.getItem("token")}`,
+                    Authorization: `Bearer ${localStorage.getItem(
+                        "RegistrationToken",
+                    )}`,
                 },
             },
         )

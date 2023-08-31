@@ -1,7 +1,7 @@
 import { useEffect } from "react";
-import { useAppDispatch, useAppSelector } from "../../hooks/redux";
+import { useAppDispatch, useAppSelector } from "../../Hooks/redux";
 import { UilInfoCircle } from "@iconscout/react-unicons";
-import { disableAlert } from "../../redux/alerts";
+import { disableAlert } from "../../Redux/alerts";
 const Alert = () => {
     const dispatch = useAppDispatch();
     const { alert } = useAppSelector(state => state.alert);

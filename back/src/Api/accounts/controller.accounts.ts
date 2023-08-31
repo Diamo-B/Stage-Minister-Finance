@@ -23,6 +23,22 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
     }
 };
 
+const registered = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const { candidatId } = (req as CandidatAuthRequest).user;
+        const user = await accountsService.registered(candidatId);
+        if(user)
+        {
+            let AccessToken = generateJWT({ user }, '2d'); 
+            return res.status(201).json({AccessToken});
+        }
+        
+    } catch (err:any) {
+        if(err instanceof httpException) next(err);
+        next(new httpException(500, err.message));
+    }
+};
+
 const sendForgotPasswordEmail = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { emailOrCin } = req.body; 
@@ -72,6 +88,7 @@ const resetPassword = async (req: Request, res: Response, next: NextFunction) =>
 
 export default {
     login,
+    registered,
     sendForgotPasswordEmail,
     verifyResetPasswordToken,
     resetPassword,

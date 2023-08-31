@@ -5,8 +5,8 @@ import { useForm, FormProvider } from "react-hook-form";
 import Input from "../Components/FormElements/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { startLoading, stopLoading } from "../redux/loading";
-import { useAppDispatch, useAppSelector } from "../hooks/redux";
+import { startLoading, stopLoading } from "../Redux/loading";
+import { useAppDispatch, useAppSelector } from "../Hooks/redux";
 import AnimatedButton from "../Components/FormElements/animatedButton";
 
 const ResetPassword = () => {

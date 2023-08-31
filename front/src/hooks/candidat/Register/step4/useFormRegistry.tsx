@@ -1,21 +1,21 @@
 import { z } from "zod";
 import dayjs from "dayjs";
 import { Dispatch, SetStateAction } from "react";
-import { IDiplomeForm } from "../../../../utils/interfaces/RegistrationForm/IDiplomeForm";
+import { IDiplomeForm } from "../../../../Utils/interfaces/RegistrationForm/IDiplomeForm";
 import { useAppDispatch } from "../../../redux";
-import { addDiplome } from "../../../../redux/RegisterationForm/diplomes";
-import { startLoading, stopLoading } from "../../../../redux/loading";
-import { addHint } from "../../../../redux/RegisterationForm/formTabs";
+import { addDiplome } from "../../../../Redux/RegisterationForm/diplomes";
+import { startLoading, stopLoading } from "../../../../Redux/loading";
+import { addHint } from "../../../../Redux/RegisterationForm/formTabs";
 import {
     setCountries,
     setFilières,
     setSpécialités,
     setTypes,
     setUniversities,
-} from "../../../../redux/RegisterationForm/diplomes";
-import { filière } from "../../../../redux/RegisterationForm/types/diplomesTypes";
-import AddedDiploma from "../../../../utils/tours/RegistrationForm/diplomes/AddedDiplomaTour";
-import { base64ToBlob } from "../../../../utils/base64ToBlobs";
+} from "../../../../Redux/RegisterationForm/diplomes";
+import { filière } from "../../../../Redux/RegisterationForm/types/diplomesTypes";
+import AddedDiploma from "../../../../Utils/tours/RegistrationForm/diplomes/AddedDiplomaTour";
+import { base64ToBlob } from "../../../../Utils/base64ToBlobs";
 
 const useFormRegistry = () => {
     const dispatch = useAppDispatch();
@@ -195,16 +195,15 @@ const useFormRegistry = () => {
             formData.append("files", blob, file.name);
         });
 
-        await fetch(
-            `${import.meta.env.VITE_BackendBaseUrl}/diplome/create`,
-            {
-                method: "POST",
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem("token")}`,
-                },
-                body: formData,
+        await fetch(`${import.meta.env.VITE_BackendBaseUrl}/diplome/create`, {
+            method: "POST",
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem(
+                    "RegistrationToken",
+                )}`,
             },
-        )
+            body: formData,
+        })
             .then(async res => {
                 const response = await res.json();
                 dispatch(
@@ -220,8 +219,7 @@ const useFormRegistry = () => {
                         attachments: response.attachments,
                     }),
                 );
-                console.log('done');
-                
+                console.log("done");
             })
             .catch(err => {
                 console.error(err);

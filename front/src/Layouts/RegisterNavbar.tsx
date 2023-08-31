@@ -2,18 +2,17 @@ import { Link } from "react-router-dom";
 import AnimatedButton from "../Components/FormElements/animatedButton";
 import { UilSignOutAlt } from "@iconscout/react-unicons";
 
-const NeutralNavbar = () => {
+const RegistrationNavbar = () => {
     return (
         <div className="flex flex-col w-full">
             <div className="navbar bg-base-200 border-b-2 border-neutral-content">
                 <div className="navbar-start">
                     <a className="btn btn-ghost normal-case text-xl">
-                        Ministère de l'Économie et des Finances
+                        Inscription à la plateforme E-Recrutement du Ministère de l'Économie et des Finances
                     </a>
                 </div>
                 <div className="navbar-end">
                     <div className="flex items-center gap-5">
-                        <p>Connecté en tant que visiteur</p>
                         <Link to={"/login"}>
                             <AnimatedButton
                                 customButtonClasses={[
@@ -41,4 +40,4 @@ const NeutralNavbar = () => {
     );
 };
 
-export default NeutralNavbar;
+export default RegistrationNavbar;

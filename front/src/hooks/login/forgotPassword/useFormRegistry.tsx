@@ -1,8 +1,8 @@
 import { z } from "zod";
-import { IForgotPassword } from "../../../utils/interfaces/Login/IForgotPassword";
+import { IForgotPassword } from "../../../Utils/interfaces/Login/IForgotPassword";
+import { setEmail } from "../../../Redux/forgotPassword";
+import { stopLoading } from "../../../Redux/loading";
 import { useAppDispatch } from "../../redux";
-import { setEmail } from "../../../redux/forgotPassword";
-import { stopLoading } from "../../../redux/loading";
 
 const useFormRegistry = () => {
     const schema = z.object({

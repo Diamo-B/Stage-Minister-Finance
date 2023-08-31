@@ -1,7 +1,7 @@
 import { UilTimesCircle } from "@iconscout/react-unicons";
-import { useAppDispatch } from "../hooks/redux";
+import { useAppDispatch } from "../Hooks/redux";
 import { useEffect } from "react";
-import { disableAlert } from "../redux/alerts";
+import { disableAlert } from "../Redux/alerts";
 
 type Props = {
     text: string;

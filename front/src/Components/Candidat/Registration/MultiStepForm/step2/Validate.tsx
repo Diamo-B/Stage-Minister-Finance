@@ -1,5 +1,5 @@
 import Input from "./input";
-import { useAppDispatch, useAppSelector } from "../../../../../hooks/redux";
+import { useAppDispatch, useAppSelector } from "../../../../../Hooks/redux";
 import { createRef, useEffect, useState } from "react";
 import {
     verificationFailure,
@@ -7,18 +7,18 @@ import {
     verificationSuccess,
     disableFields,
     enableFields,
-} from "../../../../../redux/RegisterationForm/Validate";
-import { startLoading, stopLoading } from "../../../../../redux/loading";
-import { mailSent } from "../../../../../redux/user";
-import useMailValidation from "../../../../../hooks/candidat/Register/step2/useMailValidation";
-import useCodeEntry from "../../../../../hooks/candidat/Register/step2/useCodeEntry";
-import mailErrorTour from "../../../../../utils/tours/RegistrationForm/emails/errorTour";
-import mailSuccessTour from "../../../../../utils/tours/RegistrationForm/emails/successTour";
+} from "../../../../../Redux/RegisterationForm/Validate";
+import { startLoading, stopLoading } from "../../../../../Redux/loading";
+import { mailSent } from "../../../../../Redux/user";
+import useMailValidation from "../../../../../Hooks/candidat/Register/step2/useMailValidation";
+import useCodeEntry from "../../../../../Hooks/candidat/Register/step2/useCodeEntry";
+import mailErrorTour from "../../../../../Utils/tours/RegistrationForm/emails/errorTour";
+import mailSuccessTour from "../../../../../Utils/tours/RegistrationForm/emails/successTour";
 import {
     changeStepStatus,
     incrementStep,
     stopSubmit,
-} from "../../../../../redux/RegisterationForm/formSteps";
+} from "../../../../../Redux/RegisterationForm/formSteps";
 
 export type InputRef = {
     ref: React.RefObject<HTMLInputElement>;

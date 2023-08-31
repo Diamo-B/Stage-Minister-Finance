@@ -1,5 +1,6 @@
 import { file } from "../../IFileUpload";
 
+
 export interface IConcours {
     intitulé: string;
     direction: string;

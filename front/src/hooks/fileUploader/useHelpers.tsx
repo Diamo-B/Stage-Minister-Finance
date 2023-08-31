@@ -3,14 +3,14 @@ import {
     fileField,
     errorsField,
     error,
-} from "../../utils/interfaces/IFileUpload";
+} from "../../Utils/interfaces/IFileUpload";
 import { FileRejection } from "react-dropzone";
 
 import {
     addFile as addFileStep4,
     removeFile as removeFileStep4,
     resetFiles as resetFilesStep4,
-} from "../../redux/RegisterationForm/diplomes";
+} from "../../Redux/RegisterationForm/diplomes";
 import {
     addCINFile as addCINFileStep5,
     addCVFile as addCVFileStep5,
@@ -18,11 +18,11 @@ import {
     removeCVFile as removeCVFileStep5,
     resetCINFiles as resetCINFilesStep5,
     resetCVFiles as resetCVFilesStep5,
-} from "../../redux/RegisterationForm/lastStep";
+} from "../../Redux/RegisterationForm/lastStep";
 
+import convertBase64 from "../../Utils/convertBase64";
+import { addAvis, removeAvis, resetAvis } from "../../Redux/Admin/concours/create";
 import { useAppDispatch } from "../redux";
-import convertBase64 from "../../utils/convertBase64";
-import { addAvis, removeAvis, resetAvis } from "../../redux/Admin/concours/create";
 
 type Props = {
     reg: string;

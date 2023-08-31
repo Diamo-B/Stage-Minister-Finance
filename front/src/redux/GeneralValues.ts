@@ -6,7 +6,7 @@ const GeneralValues = createSlice({
   name: 'genValues',
   initialState:{
     isDarkMode: false,
-    userType: 'visitor',
+    userType: null,
   } as GenValues,
   reducers: {
     toggleDarkMode: (state) => {

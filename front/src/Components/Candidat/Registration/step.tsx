@@ -1,4 +1,4 @@
-import { useAppSelector } from "../../../hooks/redux";
+import { useAppSelector } from "../../../Hooks/redux";
 import { useState, useEffect } from "react";
 
 type props = {

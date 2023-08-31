@@ -7,7 +7,7 @@ const ConcoursHome = () => {
             <LatestConcours />
             <div className="divider"></div>
             <ConcoursResults />
-        </div>
+        </div>  
     );
 };
 

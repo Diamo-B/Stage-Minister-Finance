@@ -5,17 +5,17 @@ import { UilMinusCircle } from "@iconscout/react-unicons";
 import {
     attachmentRecord,
     attachmentRecordValidation,
-} from "../../../../redux/RegisterationForm/types/lastStepTypes";
+} from "../../../../Redux/RegisterationForm/types/lastStepTypes";
 import {
     diplomeRecord,
     diplomeRecordValidation,
-} from "../../../../redux/RegisterationForm/types/diplomesTypes";
+} from "../../../../Redux/RegisterationForm/types/diplomesTypes";
 import ConfirmationPanel from "../../../FormElements/confirmationPanel";
-import { useAppDispatch, useAppSelector } from "../../../../hooks/redux";
+import { useAppDispatch, useAppSelector } from "../../../../Hooks/redux";
 import {
     hideConfirmationPanel,
     showConfirmationPanel,
-} from "../../../../redux/confirmationPanel";
+} from "../../../../Redux/confirmationPanel";
 
 /* 
     !important: this component is used in step 4 and step 5 (View and delete added files)
@@ -132,17 +132,17 @@ const Table = ({ deleteRecord, Records }: any) => {
                                         <td>
                                             <div className="w-full flex items-center justify-center gap-5">
                                                 <Link
-                                                    to={`${
-                                                        import.meta.env
-                                                            .VITE_BackendBaseUrl
-                                                    }${Record.path.replace(
+                                                    to={`${import.meta.env.VITE_BackendBaseUrl.replace(
+                                                        "/api/v1",
+                                                        "",
+                                                    )}${Record.path.replace(
                                                         "public",
                                                         "",
                                                     )}`}
                                                     target="_blank"
                                                 >
                                                     <button className="w-20 text-sm capitalize font-medium border-1 py-1 rounded-md text-primary hover:bg-primary hover:text-white">
-                                                            afficher
+                                                        afficher
                                                     </button>
                                                 </Link>
                                                 <button

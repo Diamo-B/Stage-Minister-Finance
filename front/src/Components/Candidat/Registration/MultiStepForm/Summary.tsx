@@ -1,7 +1,18 @@
 import { UilCheckCircle } from "@iconscout/react-unicons";
 import { useEffect, useState } from "react";
+import { useLocation, useNavigate, Navigate } from "react-router-dom";
 const Summary = () => {
     const [countdownValue, setCountdownValue] = useState<number>(3);
+    const [prevLocation, setPrevLocation] = useState<string>("");
+    const [redirect, setRedirect] = useState<boolean>(false);
+    //explain: updates the countdown each second, then redirects to the next page 
+    const navigate = useNavigate();
+    const location = useLocation();
+
+    useEffect(() => {
+        setPrevLocation(location.state?.from || "/login");
+    }, [location]);
+
     useEffect(()=>{
         if (countdownValue!==0) {
             setTimeout(() => {
@@ -9,9 +20,42 @@ const Summary = () => {
             }, 1000);
         }
         if (countdownValue===0) {
-            console.log('redirect');
+              //* Auto log the candidat in
+                fetch(
+                    `${
+                        import.meta.env.VITE_BackendBaseUrl
+                    }/accounts/registered`,
+                    {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${localStorage.getItem(
+                                "RegistrationToken",
+                            )}`,
+                        },
+                    },
+                )
+                    .then(async res => {
+                        let response = await res.json();
+                        console.log(response);
+                        removeRegisterLocalStorageData()
+                        //explain: goes to the condidat dashboard or to the page where he was before if he was redirected to the registration process by an action he choosed previously
+                        localStorage.setItem('AccessToken',response.AccessToken)
+                        setRedirect(true)
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        navigate("/login");
+                    });
         }
     },[countdownValue])
+
+    const removeRegisterLocalStorageData = () => {
+        localStorage.removeItem("step");
+        localStorage.removeItem("RegistrationToken");
+        localStorage.removeItem("verificationToken");
+    };
+
     return (
         <div className="flex flex-col justify-center items-center mb-5">
             <div className="flex justify-center items-center gap-6 rounded-xl bg-white p-10 mb-10">
@@ -45,6 +89,9 @@ const Summary = () => {
                 Si vous n'êtes pas redirigé automatiquement après 3 secondes,
                 cliquez ici
             </p>
+            {
+                redirect ? <Navigate to={prevLocation} /> : null
+            }
         </div>
     );
 };

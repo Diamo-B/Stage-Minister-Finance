@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useAppSelector } from "../../../hooks/redux";
+import { useAppSelector } from "../../../Hooks/redux";
 import Steps from "./stepsLine";
 import Form from "./MultiStepForm/step1/Form";
 import Form5 from "./MultiStepForm/step5/Form";
@@ -7,7 +7,7 @@ import DetailsForm from "./MultiStepForm/step3/form";
 import Validate from "./MultiStepForm/step2/Validate";
 import SecondMail from "./MultiStepForm/step2/secondMail";
 import Diplomes from "./MultiStepForm/step4/DiplomesForm";
-import useGenForm from "../../../hooks/candidat/Register/useGenForm";
+import useGenForm from "../../../Hooks/candidat/Register/useGenForm";
 import Alert from "../../FormElements/alert";
 import Summary from "./MultiStepForm/Summary";
 
@@ -25,7 +25,7 @@ const GenForm = () => {
         <div
             className={`${
                 (current === 4 && tab === 2) || current === 5
-                    ? "lg:w-full lg:mx-6 2xl:w-3/4"
+                    ? "lg:w-full lg:mx-10 2xl:w-3/4"
                     : "lg:w-3/4 2xl:w-2/4"
             } lg:py-4 2xl:py-10 bg-primary-content dark:bg-neutral flex flex-col justify-center items-center rounded-2xl shadow-md`}
         >

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { TCity } from "../../../redux/Admin/concours/types/create";
+import { TCity } from "../../../Redux/Admin/concours/types/create";
 
 const useCitiesHelpers = () => {
     const [cities, setCities] = useState<TCity[]>([]);

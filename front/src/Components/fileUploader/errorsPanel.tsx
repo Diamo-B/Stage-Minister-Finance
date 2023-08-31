@@ -1,5 +1,5 @@
 import { UilExclamationOctagon } from "@iconscout/react-unicons";
-import { errorsField } from "../../utils/interfaces/IFileUpload";
+import { errorsField } from "../../Utils/interfaces/IFileUpload";
 import { useFormContext } from "react-hook-form";
 
 type Props = {

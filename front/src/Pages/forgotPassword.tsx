@@ -2,12 +2,12 @@ import { Dispatch, MouseEvent, SetStateAction, useRef } from "react";
 import Input from "../Components/FormElements/input";
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import useFormRegistry from "../hooks/login/forgotPassword/useFormRegistry";
-import { IForgotPassword } from "../utils/interfaces/Login/IForgotPassword";
+import useFormRegistry from "../Hooks/login/forgotPassword/useFormRegistry";
+import { IForgotPassword } from "../Utils/interfaces/Login/IForgotPassword";
 import SecondMail from "../Components/Candidat/Registration/MultiStepForm/step2/secondMail";
-import { useAppDispatch, useAppSelector } from "../hooks/redux";
-import { resetEmail } from "../redux/forgotPassword";
-import { startLoading } from "../redux/loading";
+import { useAppDispatch, useAppSelector } from "../Hooks/redux";
+import { resetEmail } from "../Redux/forgotPassword";
+import { startLoading } from "../Redux/loading";
 
 type Props = {
     setForgotPassword: Dispatch<SetStateAction<boolean>>;

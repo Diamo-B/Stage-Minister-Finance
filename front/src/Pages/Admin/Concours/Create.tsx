@@ -4,15 +4,15 @@ import { useForm, FormProvider } from "react-hook-form";
 import Select from "../../../Components/admin/Concours/create/Select";
 import FileUpload from "../../../Components/fileUploader/fileUploader";
 import { zodResolver } from "@hookform/resolvers/zod";
-import useFormRegistry from "../../../hooks/admin/concours/useFormRegistry";
-import cityChoiceHint from "../../../utils/tours/Admin/Concours/cityChoiceHint";
+import useFormRegistry from "../../../Hooks/admin/concours/useFormRegistry";
+import cityChoiceHint from "../../../Utils/tours/Admin/Concours/cityChoiceHint";
 import DragNDropCities from "../../../Components/admin/Concours/create/citiesDragNDrop/citiesDragNDrop";
-import { useAppSelector } from "../../../hooks/redux";
-import { IConcours } from "../../../utils/interfaces/Admin/concours/IConcours";
-import useHelpers from "../../../hooks/admin/concours/useHelpers";
-import { IFormType } from "../../../utils/interfaces/Admin/concours/IFormTypes";
+import { useAppSelector } from "../../../Hooks/redux";
+import useHelpers from "../../../Hooks/admin/concours/useHelpers";
+import { IFormType } from "../../../Utils/interfaces/Admin/concours/IFormTypes";
 import IntitulePanel from "../../../Components/admin/Concours/create/intitulePanel";
 import Toast from "../../../Components/toast";
+import { IConcours } from "../../../Utils/interfaces/Admin/concours/IConcours";
 
 const CreateConcours = () => {
     const [directions, setDirections] = useState<IFormType[]>([]);

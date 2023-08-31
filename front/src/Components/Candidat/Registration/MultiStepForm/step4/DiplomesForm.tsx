@@ -1,16 +1,16 @@
 import Table from "../Table";
 import { useEffect } from "react";
 import AddForm from "./Form/Form";
-import { useAppDispatch, useAppSelector } from "../../../../../hooks/redux";
-import { resetFiles } from "../../../../../redux/RegisterationForm/diplomes";
+import { useAppDispatch, useAppSelector } from "../../../../../Hooks/redux";
+import { resetFiles } from "../../../../../Redux/RegisterationForm/diplomes";
 import {
     changeStepStatus,
     incrementStep,
     stopSubmit,
-} from "../../../../../redux/RegisterationForm/formSteps";
+} from "../../../../../Redux/RegisterationForm/formSteps";
 import Tabs from "../tabs";
-import useHelpers from "../../../../../hooks/candidat/Register/step4/useHelpers";
-import AddedDiploma from "../../../../../utils/tours/RegistrationForm/diplomes/AddedDiplomaTour";
+import useHelpers from "../../../../../Hooks/candidat/Register/step4/useHelpers";
+import AddedDiploma from "../../../../../Utils/tours/RegistrationForm/diplomes/AddedDiplomaTour";
 
 const Form = () => {
     const dispatch = useAppDispatch();
@@ -38,7 +38,7 @@ const Form = () => {
     //explain: this fetches the diplomas of the candidat if he entered this step before
     useEffect(() => {
         if (diplomes.length > 0) return;
-        const token = localStorage.getItem("token");
+        const token = localStorage.getItem("RegistrationToken");
         if (token) {
             getCandidatDiplomas(token);
         }

@@ -5,14 +5,14 @@ import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 dayjs.extend(customParseFormat);
 import { useEffect } from "react";
-import useFormRegistry from "../../../../../hooks/candidat/Register/step1/useFormRegistry";
-import IRegistrationForm from "../../../../../utils/interfaces/RegistrationForm/IRegistrationForm";
-import { useAppDispatch, useAppSelector } from "../../../../../hooks/redux";
+import useFormRegistry from "../../../../../Hooks/candidat/Register/step1/useFormRegistry";
+import IRegistrationForm from "../../../../../Utils/interfaces/RegistrationForm/IRegistrationForm";
+import { useAppDispatch, useAppSelector } from "../../../../../Hooks/redux";
 import {
     changeStep,
     changeStepStatus,
     stopSubmit,
-} from "../../../../../redux/RegisterationForm/formSteps";
+} from "../../../../../Redux/RegisterationForm/formSteps";
 import Radios from "./Radios";
 
 const Form = () => {

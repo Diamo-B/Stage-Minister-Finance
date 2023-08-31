@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { file } from "../../../utils/interfaces/IFileUpload";
+import { file } from "../../../Utils/interfaces/IFileUpload";
 
 enum AttachmentType {
     CIN = "CIN",

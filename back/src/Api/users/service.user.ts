@@ -202,8 +202,6 @@ const checkRegistration = async (email: string, cin: string) => {
 };
 
 const sendAccountVerificationMail = async (recipient: z.infer<typeof schema.sendMail>['recipient']) => {
-    console.log('hi');
-    
     try {
         let sixDigitCode = Math.floor(100000 + Math.random() * 900000).toString();   
         const mailGenBody = {

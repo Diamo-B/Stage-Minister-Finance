@@ -4,24 +4,24 @@ import { ChangeEvent, useEffect } from "react";
 //? react-hook-form adn zod validation
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { IDetailsForm } from "../../../../../utils/interfaces/RegistrationForm/IDetailsForm";
+import { IDetailsForm } from "../../../../../Utils/interfaces/RegistrationForm/IDetailsForm";
 
 //? Redux
-import { useAppDispatch, useAppSelector } from "../../../../../hooks/redux";
+import { useAppDispatch, useAppSelector } from "../../../../../Hooks/redux";
 import {
     filterCities,
     resetFilterCities,
     selectCityId,
     selectRegionId,
-} from "../../../../../redux/RegisterationForm/Details";
+} from "../../../../../Redux/RegisterationForm/Details";
 import {
     changeStepStatus,
     stopSubmit,
-} from "../../../../../redux/RegisterationForm/formSteps";
+} from "../../../../../Redux/RegisterationForm/formSteps";
 
 //? Custom Hooks
-import useGetData from "../../../../../hooks/candidat/Register/step3/useGetData";
-import useManipForm from "../../../../../hooks/candidat/Register/step3/useManipForm";
+import useGetData from "../../../../../Hooks/candidat/Register/step3/useGetData";
+import useManipForm from "../../../../../Hooks/candidat/Register/step3/useManipForm";
 
 const Form = () => {
     const dispatch = useAppDispatch();

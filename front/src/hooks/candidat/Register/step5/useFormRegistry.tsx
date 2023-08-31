@@ -1,12 +1,12 @@
 import { z } from "zod";
 import { useAppDispatch, useAppSelector } from "../../../redux";
-import { IStep5Form } from "../../../../utils/interfaces/RegistrationForm/IStep5Form";
-import { changeStepStatus } from "../../../../redux/RegisterationForm/formSteps";
-import { startLoading, stopLoading } from "../../../../redux/loading";
-import { setAttachmentRecords } from "../../../../redux/RegisterationForm/lastStep";
-import { setHint } from "../../../../redux/RegisterationForm/formTabs";
-import AddedAttachment from "../../../../utils/tours/RegistrationForm/attachments/AddedAttachment";
-import { base64ToBlob } from "../../../../utils/base64ToBlobs";
+import { IStep5Form } from "../../../../Utils/interfaces/RegistrationForm/IStep5Form";
+import { changeStepStatus } from "../../../../Redux/RegisterationForm/formSteps";
+import { startLoading, stopLoading } from "../../../../Redux/loading";
+import { setAttachmentRecords } from "../../../../Redux/RegisterationForm/lastStep";
+import { setHint } from "../../../../Redux/RegisterationForm/formTabs";
+import AddedAttachment from "../../../../Utils/tours/RegistrationForm/attachments/AddedAttachment";
+import { base64ToBlob } from "../../../../Utils/base64ToBlobs";
 
 const useFormRegistry = () => {
     const schema = z.object({
@@ -64,16 +64,15 @@ const useFormRegistry = () => {
             formData.append("cinFiles", blob, file.name);
         });
         
-        fetch(
-            `${import.meta.env.VITE_BackendBaseUrl}/user/link/candidat/`,
-            {
-                method: "PATCH",
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem("token")}`,
-                },
-                body: formData,
+        fetch(`${import.meta.env.VITE_BackendBaseUrl}/user/link/candidat/`, {
+            method: "PATCH",
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem(
+                    "RegistrationToken",
+                )}`,
             },
-        )
+            body: formData,
+        })
             .then(async res => {
                 const response = await res.json();
                 dispatch(setAttachmentRecords(response.Attachments));

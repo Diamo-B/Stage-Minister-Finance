@@ -2,9 +2,9 @@ import {
     changeStep,
     changeStepStatus,
     resetSteps,
-} from "../../../redux/RegisterationForm/formSteps";
-import { startGenPageLoading, stopGenPageLoading } from "../../../redux/loading";
-import { mailSent, setUser, setUserDetails } from "../../../redux/user";
+} from "../../../Redux/RegisterationForm/formSteps";
+import { startGenPageLoading, stopGenPageLoading } from "../../../Redux/loading";
+import { mailSent, setUser, setUserDetails } from "../../../Redux/user";
 import { useAppDispatch } from "../../redux";
 
 const useGenForm = () => {
@@ -26,7 +26,7 @@ const useGenForm = () => {
             }
         } else {
             dispatch(resetSteps());
-            localStorage.removeItem("token");
+            localStorage.removeItem("RegistrationToken");
             localStorage.removeItem("step");
         }
         dispatch(stopGenPageLoading());
@@ -35,7 +35,7 @@ const useGenForm = () => {
     const checkUserState = async () => {
         let id = null;
         try {
-            const token = localStorage.getItem("token");
+            const token = localStorage.getItem("RegistrationToken");
             if (token) {
                 const res = await fetch(
                     `${import.meta.env.VITE_BackendBaseUrl}/accounts/verifyToken`,

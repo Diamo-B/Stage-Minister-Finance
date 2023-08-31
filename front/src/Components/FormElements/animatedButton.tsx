@@ -7,6 +7,7 @@ type Props = {
     customButtonClasses?: string[];
     Icon: ElementType;
     LoadingState?: boolean;
+    ReverseAnimationDirection?: boolean;
 };
 
 const AnimatedButton = ({
@@ -15,7 +16,8 @@ const AnimatedButton = ({
     Icon,
     customButtonClasses,
     btnType,
-    LoadingState
+    LoadingState,
+    ReverseAnimationDirection,
 }: Props) => {
     return (
         <button
@@ -27,7 +29,15 @@ const AnimatedButton = ({
             }}
             type={btnType ? btnType : "button"}
         >
-            <div className="absolute w-1/3 left-0 top-1/2 transform -translate-y-1/2 invisible group-hover:visible group-hover:translate-x-full transition-transform duration-300">
+            <div
+                className={`absolute w-1/3 ${
+                    ReverseAnimationDirection ? "right-0" : "left-0"
+                } top-1/2 transform -translate-y-1/2 invisible group-hover:visible ${
+                    ReverseAnimationDirection
+                        ? "group-hover:-translate-x-full"
+                        : "group-hover:translate-x-full"
+                } transition-transform duration-300`}
+            >
                 <Icon />
             </div>
             <p className="group-hover:invisible">

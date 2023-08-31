@@ -7,6 +7,7 @@ import { AuthMiddleware } from '../middlewares/auth.middleware';
 const router: Router = Router();
 
 router.post('/login', validate(schema.loginSchema), accountsApis.login);
+router.get('/registered', AuthMiddleware, accountsApis.registered);
 router.post(
     '/forgotPassword',
     validate(schema.forgetPasswordSchema),

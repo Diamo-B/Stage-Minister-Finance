@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { UilSearch } from "@iconscout/react-unicons";
-import { TCity } from "../../../../redux/Admin/concours/types/create";
+import { TCity } from "../../../../Redux/Admin/concours/types/create";
 import { SetStateAction } from "react";
 
 type Props = {

@@ -1,4 +1,4 @@
-import { file } from "../../../../utils/interfaces/IFileUpload";
+import { file } from "../../../../Utils/interfaces/IFileUpload";
 
 export type TCity = {
     id: string;

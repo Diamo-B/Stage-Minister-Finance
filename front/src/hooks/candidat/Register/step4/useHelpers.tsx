@@ -1,9 +1,9 @@
 import {
     removeDiplome,
     setDiplomes,
-} from "../../../../redux/RegisterationForm/diplomes";
-import { decrementHint, setHint } from "../../../../redux/RegisterationForm/formTabs";
-import { startLoading, stopLoading } from "../../../../redux/loading";
+} from "../../../../Redux/RegisterationForm/diplomes";
+import { decrementHint, setHint } from "../../../../Redux/RegisterationForm/formTabs";
+import { startLoading, stopLoading } from "../../../../Redux/loading";
 import { useAppDispatch } from "../../../redux";
 
 const useHelpers = () => {

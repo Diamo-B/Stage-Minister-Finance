@@ -9,7 +9,7 @@ import AdminHome from "./Pages/Admin/Home";
 import CreateConcours from "./Pages/Admin/Concours/Create";
 import Login from "./Pages/Login";
 import NavbarLayout from "./Layouts/NavbarLayout";
-import RouteOutlet from "./Utils/Middlewares/Routes/RouteOutlet";
+import WithAuthCheck from "./Utils/Middlewares/Routes/withAuthCheck";
 import ConcoursHome from "./Pages/Home/ConcoursHome";
 import ResetPassword from "./Pages/resetPassword";
 
@@ -20,15 +20,22 @@ function App() {
                 <Routes>
                     <Route element={<GenAppLayout />}>
                         <Route path="/login" element={<Login />} />
-                        <Route path="/register" element={<Register />} />
                         <Route
                             path="/reset-password"
                             element={<ResetPassword />}
                         />
 
                         <Route
+                            element={<WithAuthCheck userTypes={["visitor"]} />}
+                        >
+                            <Route element={<NavbarLayout />}>
+                                <Route path="/register" element={<Register />} />
+                            </Route>
+                        </Route>
+
+                        <Route
                             path="/"
-                            element={<RouteOutlet userTypes={["candidat"]} />}
+                            element={<WithAuthCheck userTypes={["candidat"]} />}
                         >
                             <Route element={<NavbarLayout />}>
                                 <Route index element={<Home />} />
@@ -37,7 +44,11 @@ function App() {
 
                         <Route
                             path="/"
-                            element={<RouteOutlet userTypes={["candidat",'visitor']} />}
+                            element={
+                                <WithAuthCheck
+                                    userTypes={["candidat", "visitor"]}
+                                />
+                            }
                         >
                             <Route element={<NavbarLayout />}>
                                 <Route
@@ -49,7 +60,7 @@ function App() {
 
                         <Route
                             path="/admin"
-                            element={<RouteOutlet userTypes={["admin"]} />}
+                            element={<WithAuthCheck userTypes={["admin"]} />}
                         >
                             <Route element={<NavbarLayout />}>
                                 <Route index element={<AdminHome />} />

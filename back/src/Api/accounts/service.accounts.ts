@@ -42,6 +42,39 @@ const verifyAccount = async (email: string, password: string) => {
     }
 };
 
+const registered = async (candidatId: string) => {
+    try {
+        const user = await prisma.user.findFirst({
+            where: {
+                candidat: {
+                    id:candidatId
+                },
+            },
+            select: {
+                id: true,
+                titre: true,
+                nom: true,
+                prenom: true,
+                email: true,
+                candidat: {
+                    select: {
+                        id: true,
+                    },
+                },
+                admin: {
+                    select: {
+                        id: true,
+                    },
+                },
+            }
+        })
+        if(!user) throw new httpException(404,'candidat introuvable');
+        return user;
+    } catch (err) {
+        return err;
+    } 
+}
+
 const sendForgotPasswordEmail = async (
     emailOrCin: string,
     isEmail: boolean
@@ -136,4 +169,10 @@ const resetPassword = async (id: string, newPassword: string) => {
     return user.id;
 }
 
-export default { verifyAccount, sendForgotPasswordEmail, resetPassword, verifyResetPasswordToken };
+export default {
+    verifyAccount,
+    sendForgotPasswordEmail,
+    resetPassword,
+    verifyResetPasswordToken,
+    registered,
+};
