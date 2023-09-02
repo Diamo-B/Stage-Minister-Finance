@@ -6,18 +6,18 @@ const GeneralValues = createSlice({
   name: 'genValues',
   initialState:{
     isDarkMode: false,
-    userType: null,
+    connectedUser: null,
   } as GenValues,
   reducers: {
     toggleDarkMode: (state) => {
       state.isDarkMode = !state.isDarkMode;
     },
-    setUserType: (state, action) => {
-      state.userType = action.payload;
+    setConnectedUser: (state, action) => {
+      state.connectedUser = action.payload;
     }
   }
 });
 
-export const {toggleDarkMode, setUserType} = GeneralValues.actions
+export const {toggleDarkMode, setConnectedUser} = GeneralValues.actions
 
 export default GeneralValues.reducer

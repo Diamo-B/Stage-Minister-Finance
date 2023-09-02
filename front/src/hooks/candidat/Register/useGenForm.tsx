@@ -11,7 +11,7 @@ const useGenForm = () => {
     const dispatch = useAppDispatch();
 
     const regainStepState = async () => {
-        dispatch(startGenPageLoading());
+        /* dispatch(startGenPageLoading());
         const candidatId = await checkUserState();
         if (candidatId) {
             const step = localStorage.getItem("step");
@@ -29,7 +29,7 @@ const useGenForm = () => {
             localStorage.removeItem("RegistrationToken");
             localStorage.removeItem("step");
         }
-        dispatch(stopGenPageLoading());
+        dispatch(stopGenPageLoading()); */
     };
 
     const checkUserState = async () => {

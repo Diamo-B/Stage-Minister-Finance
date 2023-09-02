@@ -182,7 +182,6 @@ const useFormRegistry = () => {
         formData.append("annee", data.annee);
         formData.append("specialite", data.specialite);
         formData.append("filiere", data.filiere);
-        console.log(data.files);
         
         // Append each file object to the FormData
         data.files.forEach(file => {
@@ -219,7 +218,6 @@ const useFormRegistry = () => {
                         attachments: response.attachments,
                     }),
                 );
-                console.log("done");
             })
             .catch(err => {
                 console.error(err);

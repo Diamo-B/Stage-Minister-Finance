@@ -35,6 +35,7 @@ const Form = () => {
 
     //explain this sets the step number inside the localStorage
     useEffect(() => {
+        console.log("setting step in step 3");
         localStorage.setItem("step", "3");
     }, []);
 
@@ -42,7 +43,7 @@ const Form = () => {
 
     const { getRegions, getCities } = useGetData();
 
-    //explain: the useEffect is used to get the regions and cities from the API
+    //explain: the useEffect is used to get the regions and cities from the backend
     useEffect(() => {
         if (regions.length == 0) getRegions();
         if (cities.length == 0) getCities();

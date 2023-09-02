@@ -47,7 +47,7 @@ const Validate = () => {
         inputRefs,
         setCount,
     });
-    const { checkCode, sendMail, saveUserInDB } = useMailValidation();
+    const { checkCode, sendMail, saveCandidatInDB } = useMailValidation();
 
     useEffect(() => {
         dispatch(stopLoading());
@@ -83,7 +83,7 @@ const Validate = () => {
                 if (result) {
                     //explain: code is correct
                     dispatch(verificationSuccess());
-                    saveUserInDB();
+                    saveCandidatInDB();
                     setTimeout(() => {
                         dispatch(stopLoading());
                         mailSuccessTour.start();

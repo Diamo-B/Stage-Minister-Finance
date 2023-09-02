@@ -20,7 +20,7 @@ const Summary = () => {
             }, 1000);
         }
         if (countdownValue===0) {
-              //* Auto log the candidat in
+              //explain: Changes the candidat's status to 'Active' then logs him in automatically
                 fetch(
                     `${
                         import.meta.env.VITE_BackendBaseUrl
@@ -37,7 +37,6 @@ const Summary = () => {
                 )
                     .then(async res => {
                         let response = await res.json();
-                        console.log(response);
                         removeRegisterLocalStorageData()
                         //explain: goes to the condidat dashboard or to the page where he was before if he was redirected to the registration process by an action he choosed previously
                         localStorage.setItem('AccessToken',response.AccessToken)

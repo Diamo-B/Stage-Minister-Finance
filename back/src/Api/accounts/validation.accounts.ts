@@ -10,6 +10,10 @@ const loginSchema = z.object({
         .nonempty('Vous devez specifier un mot de passe'),
 });
 
+const VerifyCandidatId = z.object({
+    candidatId: z.string().uuid("l'id du candidat doit absolument être un UUID").nonempty('Vous devez specifier un candidatId'),
+});
+
 const forgetPasswordSchema = z.object({
     emailOrCin: z
         .string()
@@ -23,4 +27,4 @@ const forgetPasswordSchema = z.object({
         ),
 });
 
-export default { loginSchema, forgetPasswordSchema };
+export default { loginSchema, forgetPasswordSchema, VerifyCandidatId };

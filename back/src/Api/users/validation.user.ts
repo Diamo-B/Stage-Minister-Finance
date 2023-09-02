@@ -1,3 +1,4 @@
+import { UserStatus } from '@prisma/client';
 import { z } from 'zod';
 
 const getOneId = z.object({
@@ -67,6 +68,10 @@ const update = z.object({
     zip: z.number().int().positive().gt(10000).lte(99999)
 });
 
+const changeStatus = z.object({
+    status: z.nativeEnum(UserStatus)
+});
+
 const remove = z.object({
     id: z.string().uuid(),
 });
@@ -84,6 +89,7 @@ export default {
     linkAttachments,
     createAdmin,
     update,
+    changeStatus,
     remove,
     removeMany,
 };

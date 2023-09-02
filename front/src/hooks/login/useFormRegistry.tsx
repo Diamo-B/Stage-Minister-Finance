@@ -33,7 +33,7 @@ const useFormRegistry = () => {
                     },
                 )
                     .then(async res => {
-                        const response = await res.json();
+                        const response = await res.json();                        
                         if(response.user.candidat?.id){
                             navigate('/');
                         }
@@ -67,15 +67,13 @@ const useFormRegistry = () => {
                 password: data.password,
             })
         }).then(async(res)=>{
-            const response = await res.json();
-            
+            const response = await res.json();            
             if (response.token) {
                 localStorage.setItem("AccessToken", response.token);                
                 setLoginError("");
                 const redirectPath = location.state?.from;
-                console.log(redirectPath);
                 if(redirectPath !== undefined){
-                    navigate(`${redirectPath}`);
+                    navigate(`${redirectPath}`); 
                 }
                 else if (response.type === "candidat") {                    
                     navigate("/");

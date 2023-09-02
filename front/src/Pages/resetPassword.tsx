@@ -68,7 +68,6 @@ const ResetPassword = () => {
         )
             .then(async res => {
                 const response = await res.json();
-                console.log('res',response);
                 if (response.status === 401) {
                     setExpired(true)
                     return;

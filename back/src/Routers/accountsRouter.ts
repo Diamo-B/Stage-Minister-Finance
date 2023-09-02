@@ -7,7 +7,8 @@ import { AuthMiddleware } from '../middlewares/auth.middleware';
 const router: Router = Router();
 
 router.post('/login', validate(schema.loginSchema), accountsApis.login);
-router.get('/registered', AuthMiddleware, accountsApis.registered);
+router.post('/generateRegistrationToken',validate(schema.VerifyCandidatId),accountsApis.generateRegistrationToken);
+router.get('/registered', AuthMiddleware, accountsApis.genAccessToken);
 router.post(
     '/forgotPassword',
     validate(schema.forgetPasswordSchema),
@@ -16,5 +17,10 @@ router.post(
 router.post('/password/reset', accountsApis.resetPassword);
 router.get('/password/verifyToken', AuthMiddleware,accountsApis.verifyResetPasswordToken);
 router.get('/verifyToken', verifyJWT);
-
+router.get(
+    '/continueRegistration',
+    AuthMiddleware,
+    accountsApis.findCorrectRegistrationStep
+);
+router.get('/visitors/verifyPastRegistration', AuthMiddleware, accountsApis.verifyPastRegistration);
 export default router;

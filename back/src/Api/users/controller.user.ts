@@ -199,6 +199,21 @@ const updateCandidat = async (
     }
 };
 
+const changeCandidatStatus = async (  
+    req: Request,
+    res: Response,  
+    next: NextFunction
+) => {
+    try {
+        const id = (req as CandidatAuthRequest).user.candidatId;
+        const { status } = req.body;
+        const updatedCandidat = await userService.changeCandidatStatus(id, status);
+        return res.status(200).json(updatedCandidat);
+    } catch (err: any) {
+        next(new httpException(500, err.message));
+    }
+};
+
 const linkAttachmentsToCandidat = async (
     req: Request,
     res: Response,
@@ -277,6 +292,7 @@ export default {
     removeMany,
     removeAll,
     createCandidat,
+    changeCandidatStatus,
     updateCandidat,
     linkAttachmentsToCandidat,
     /*   createAdmin, */

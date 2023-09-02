@@ -7,7 +7,7 @@ export const verifyJWT = (req: Request, res: Response, next: NextFunction) => {
     if (!token) {
         throw new httpException(401, 'No token provided');
     }
-    jwt.verify(
+    jwt.verify( 
         token,
         process.env.JWT_SECRET as string,
         (err: any, decoded: any) => {
@@ -16,13 +16,14 @@ export const verifyJWT = (req: Request, res: Response, next: NextFunction) => {
                     // Token has expired
                     throw new httpException(
                         403,
-                        'Token expired'
+                        'Token expired' 
                     );
                 } else {
                     // Other verification error
                     throw new httpException(403, 'Unauthorized');
                 }
             }
+            console.log(decoded);
             return res.status(200).json(decoded);
         }
     );

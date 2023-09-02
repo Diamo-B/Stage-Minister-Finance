@@ -6,6 +6,7 @@ const sendMailScript = require('../../utils/mailer/nodemailerOutlook.js'); // Pr
 import { hashPassword } from '../../utils/hashPassword';
 import { z } from 'zod';
 import schema from './validation.user'
+import { UserStatus } from '@prisma/client';
 
 const getAll = async () => {
     try {
@@ -326,6 +327,26 @@ const createCandidat = async (
     }
 };
 
+//explain: changes candidats status to 'None', 'Verified', 'Registred' or 'Active'
+const changeCandidatStatus = async( candidatId: string, status: UserStatus) => {
+    try {
+        const candidat = await prisma.candidat.update({
+            where:{
+                id:candidatId
+            },
+            data:{
+                status: status
+            },
+            include:{
+                user: true,
+            }
+        });
+        return candidat;                
+    } catch (err) {
+        throw err;
+    }
+}
+
 //explain: Linking attachments to candidats
 //* step1: Linking CIN files to candidat (creating attachment record, saving the file in public folder, then linking it to candidat)
 const linkAttachments = async (candidatId: string, AttachmentsIDS: string[]) => {
@@ -389,9 +410,9 @@ const createAdmin = async (id: string, isSuperAdmin: boolean) => {
 
 const update = async (
     id: string,
-    adresse: string, 
-    ville: string, 
-    zip: number
+    adresse?: string, 
+    ville?: string, 
+    zip?: number,
 ) => {
     try {
         let user = await prisma.user.update({
@@ -463,6 +484,7 @@ export default {
     sendAccountVerificationMail,
     create,
     createCandidat,
+    changeCandidatStatus, 
     linkAttachments,
     createAdmin,
     update,

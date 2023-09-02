@@ -16,17 +16,28 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
         {
             //explain: Generates token
             const token = generateJWT({ user }, '2d');
-            return res.status(200).json({ token, type: user.candidat? 'candidat' : 'admin' });
+            return res.status(200).json({ token, type: user.candidat? 'candidat' : 'admin', status: user.candidat? user.candidat.status : null, candidatId: user.candidat? user.candidat.id : null });
         }
     } catch (err: any) {
         next(new httpException(500, err.message));
     }
 };
 
-const registered = async (req: Request, res: Response, next: NextFunction) => {
+const generateRegistrationToken = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const {candidatId} = req.body;
+        const token = generateJWT({ candidatId }, '2d');
+        return res.status(200).json({ token });
+    } catch (err:any) {
+        if (err instanceof httpException) next(err);
+        next(new httpException(500, err.message));
+    }
+}
+
+const genAccessToken = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { candidatId } = (req as CandidatAuthRequest).user;
-        const user = await accountsService.registered(candidatId);
+        const user = await accountsService.genAccessToken(candidatId);  
         if(user)
         {
             let AccessToken = generateJWT({ user }, '2d'); 
@@ -86,10 +97,51 @@ const resetPassword = async (req: Request, res: Response, next: NextFunction) =>
     }
 }
 
+const findCorrectRegistrationStep = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    try {
+        const {user} = (req as CandidatAuthRequest).user;
+         console.log('user: ',user);
+         
+        const step = await accountsService.findCorrectRegistrationStep(
+            user.candidat.id
+        );
+        
+        const token = generateJWT({ candidatId: user.candidat.id }, '2d');
+        return res.status(200).json({ token, step });
+    } catch (err: any) {
+        if (err instanceof httpException) next(err);
+        next(new httpException(500, err.message));
+    }
+};
+
+const verifyPastRegistration = async (
+    req: Request,
+    res: Response,  
+    next: NextFunction
+) => {
+    try {
+        const { candidatId } = (req as CandidatAuthRequest).user;
+        const user = await accountsService.verifyPastRegistration(candidatId)
+        const token = generateJWT({ user }, '2d');
+        return res.status(200).json({ token, user });
+    }
+    catch (err: any) {
+        if (err instanceof httpException) next(err);
+        next(new httpException(500, err.message));
+    }
+};
+
 export default {
     login,
-    registered,
+    generateRegistrationToken,
+    genAccessToken,
     sendForgotPasswordEmail,
     verifyResetPasswordToken,
     resetPassword,
+    findCorrectRegistrationStep,
+    verifyPastRegistration,
 };

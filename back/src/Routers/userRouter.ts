@@ -39,6 +39,13 @@ router.patch(
     usersApis.updateCandidat
 );
 
+router.patch(
+    '/update/candidat/status',
+    AuthMiddleware,
+    validate(schema.changeStatus),
+    usersApis.changeCandidatStatus
+)
+
 //explain: Adds CIN and CV to candidat
 router.patch(
     '/link/candidat',

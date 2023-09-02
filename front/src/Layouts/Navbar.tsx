@@ -7,16 +7,37 @@ import {
 import { useNavigate } from "react-router-dom";
 import ConfirmationPanel from "../Components/FormElements/confirmationPanel";
 import { useAppDispatch, useAppSelector } from "../Hooks/redux";
-import { hideConfirmationPanel, showConfirmationPanel } from "../Redux/confirmationPanel";
+import {
+    hideConfirmationPanel,
+    showConfirmationPanel,
+} from "../Redux/confirmationPanel";
 import { useEffect } from "react";
+import { startGenPageLoading, stopGenPageLoading } from "../Redux/loading";
+import { setConnectedUser } from "../Redux/GeneralValues";
+import { resetSteps } from "../Redux/RegisterationForm/formSteps";
 
 const Navbar = () => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
-    const { show,isConfirmed } = useAppSelector(state => state.confirmationPanel)
+    const { show, isConfirmed } = useAppSelector(
+        state => state.confirmationPanel,
+    );
+    const { connectedUser } = useAppSelector(state => state.genValues);
+
+    //explain: shows the loading panel
+    useEffect(() => {
+        dispatch(startGenPageLoading());
+    }, []);
+
+    //explain: stops the loading page when the connectedUser has a valid value
+    useEffect(() => {
+        if (connectedUser) {
+            dispatch(stopGenPageLoading());
+        }
+    }, [connectedUser]);
 
     useEffect(() => {
-        if(isConfirmed){
+        if (isConfirmed) {
             /*
                 ! Not reading this will absolutely lead you to bugs. They will be annoying to debug. Trust me, I've been there. :D
 
@@ -36,18 +57,23 @@ const Navbar = () => {
                 => So whenever you execute the logic that is triggered using the confirmation button of the ConfirmationPanel, call the redux action 'hideConfirmationPanel' at then end. This will ensure that the isConfirmed property is reset to false whenever the ConfirmationPanel component is unmounted.
             */
             localStorage.removeItem("AccessToken");
-            dispatch(hideConfirmationPanel()); 
+            localStorage.removeItem("RegistrationToken");
+            localStorage.removeItem("step");
+            dispatch(setConnectedUser(null));
+            dispatch(hideConfirmationPanel());
+            dispatch(resetSteps());
             navigate("/login");
         }
-    }, [isConfirmed])
-
+    }, [isConfirmed]);
 
     const logout = () => {
-        dispatch(showConfirmationPanel({
-            text: "Voulez-vous vraiment vous déconnecter ?",
-            itemIdentifier: null,
-            functionParams: null,
-        }))
+        dispatch(
+            showConfirmationPanel({
+                text: "Voulez-vous vraiment vous déconnecter ?",
+                itemIdentifier: null,
+                functionParams: null,
+            }),
+        );
     };
 
     return (
@@ -64,6 +90,28 @@ const Navbar = () => {
                     </a>
                 </div>
                 <div className="navbar-end">
+                    {connectedUser && typeof connectedUser === "object" && (
+                        <>
+                            <p className="text-base text-base-100 mr-5 badge badge-lg badge-success flex gap-1">
+                                Connecté en tant que
+                                <span className="font-bold">
+                                    {`${connectedUser.email}`}
+                                </span>
+                            </p>
+
+                            {/*  <p className="text-base font-medium text-base-100 mr-5 badge badge-lg badge-error">
+                                { 
+                                    connectedUser.candidat !== null ?
+                                        'Candidat'
+                                    :
+                                        connectedUser.admin !== null ?
+                                            'Administrateur'
+                                        :
+                                        ''
+                                }
+                            </p> */}
+                        </>
+                    )}
                     <div className="dropdown dropdown-end">
                         <label
                             tabIndex={0}

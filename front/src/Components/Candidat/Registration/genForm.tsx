@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { useAppSelector } from "../../../Hooks/redux";
 import Steps from "./stepsLine";
 import Form from "./MultiStepForm/step1/Form";
@@ -7,7 +6,6 @@ import DetailsForm from "./MultiStepForm/step3/form";
 import Validate from "./MultiStepForm/step2/Validate";
 import SecondMail from "./MultiStepForm/step2/secondMail";
 import Diplomes from "./MultiStepForm/step4/DiplomesForm";
-import useGenForm from "../../../Hooks/candidat/Register/useGenForm";
 import Alert from "../../FormElements/alert";
 import Summary from "./MultiStepForm/Summary";
 
@@ -15,11 +13,6 @@ const GenForm = () => {
     const { current } = useAppSelector(state => state.formSteps);
     const { tab } = useAppSelector(state => state.formTabs);
     const { alert } = useAppSelector(state => state.alert);
-
-    const { regainStepState } = useGenForm();
-    useEffect(() => {
-        regainStepState();
-    }, []);
 
     return (
         <div

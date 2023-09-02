@@ -26,29 +26,24 @@ const useHelpers = () => {
         })
             .then(async res => {
                 const response = await res.json();
-                console.log(response);
                 setConcours(response.concours);
             })
             .catch(err => {
-                console.log(err);
+                console.error(err);
             });
     };
 
-    const {userType} = useAppSelector(state => state.genValues);
+    const {connectedUser} = useAppSelector(state => state.genValues);
     const navigate = useNavigate();
     const postuler = () => {
-        if(userType === 'visitor')
-        {
+        if (connectedUser === "visitor") {
             //explain: redirect to login page while passing the current path as a state so that we can redirect the user back to the current path after login
-            navigate("/login", {state: { from: '/concours' }});
-        }
-        else{
-            const token = localStorage.getItem('AccessToken');
-            if(token )
-            {
+            navigate("/login", { state: { from: "/concours" } });
+        } else {
+            const token = localStorage.getItem("AccessToken");
+            if (token) {
                 //Todo: postuler
-                console.log('postuler');
-                
+                console.log("postuler");
             }
         }
     };

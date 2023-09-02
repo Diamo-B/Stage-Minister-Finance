@@ -13,19 +13,19 @@ const NeutralNavbar = () => {
                 </div>
                 <div className="navbar-end">
                     <div className="flex items-center gap-5">
-                        <p>Connecté en tant que visiteur</p>
+                        <p className="font-bold ">Connecté en tant que visiteur</p>
                         <Link to={"/login"}>
                             <AnimatedButton
                                 customButtonClasses={[
                                     "!btn-sm",
-                                    "mt-0",
+                                    '!m-0',
                                     "btn-info",
-                                    "border-2",
+                                    "!border-2",
                                     "btn-outline",
                                     "!text-neutral",
                                     "border-neutral",
                                     "rounded-lg",
-                                    "hover:border-2",
+                                    "!hover:border-2",
                                     "hover:btn-info",
                                 ]}
                                 Icon={() => (

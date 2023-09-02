@@ -35,6 +35,13 @@ model User {
   refreshPasswordToken String?
 }
 
+enum UserStatus {
+  None
+  Verified
+  Registred
+  Active
+}
+
 model Candidat {
   id             String       @id @default(uuid())
   userId         String       @unique
@@ -42,6 +49,7 @@ model Candidat {
   Attachments    Attachment[]
   concoursActifs Concours[]
   diplomes       Diplome[]
+  status        UserStatus @default(None)
 }
 
 model Admin {

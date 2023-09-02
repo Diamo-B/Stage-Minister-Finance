@@ -1,7 +1,8 @@
 import { useEffect } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../../Hooks/redux";
-import { setUserType } from "../../../Redux/GeneralValues";
+import { setConnectedUser } from "../../../Redux/GeneralValues";
+import { startGenPageLoading } from "../../../Redux/loading";
 
 type Props = {
     userTypes: string[];
@@ -11,12 +12,9 @@ const WithAuthCheck = ({ userTypes }: Props) => {
     const navigate = useNavigate();
     const location = useLocation(); //? used only with the purpose of being inside the deps of the useEffect to force a re-render whenever the location changes
     const dispatch = useAppDispatch();
-
-    useEffect(() => {
-        console.log('WithAuthCheck');
-        
-        const token = localStorage.getItem("AccessToken");
-
+    useEffect(() => {        
+        dispatch(startGenPageLoading());
+        const token = localStorage.getItem("AccessToken");        
         if (token) {
             fetch(
                 `${import.meta.env.VITE_BackendBaseUrl}/accounts/verifyToken`,
@@ -30,6 +28,7 @@ const WithAuthCheck = ({ userTypes }: Props) => {
             )
                 .then(async res => {
                     const response = await res.json();
+                    dispatch(setConnectedUser(response.user))
 
                     const userTypesResponse = userTypes.filter(
                         userType =>
@@ -39,8 +38,16 @@ const WithAuthCheck = ({ userTypes }: Props) => {
 
                     if (userTypesResponse.length === 0) {
                         navigate("/login");
-                    } else {
-                        dispatch(setUserType(userTypesResponse[0]));
+                    } else {                        
+                        if(userTypesResponse.includes('candidat'))
+                        {
+                            if(response.user.candidat.status === 'Verified' && !location.state?.continueRegistration){
+                                navigate('/register',{state:{continueRegistration:true}});
+                            }else if(response.user.candidat.status === 'Active' && location.pathname !== '/')
+                            {
+                                navigate("/");
+                            }
+                        }
                     }
                 })
                 .catch(async err => {
@@ -48,7 +55,7 @@ const WithAuthCheck = ({ userTypes }: Props) => {
                 });
         } else {
             if (userTypes.includes("visitor")) {
-                dispatch(setUserType("visitor"));
+                dispatch(setConnectedUser("visitor"));
             } else {
                 navigate("/login");
             }

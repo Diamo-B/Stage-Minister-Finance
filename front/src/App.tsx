@@ -26,7 +26,7 @@ function App() {
                         />
 
                         <Route
-                            element={<WithAuthCheck userTypes={["visitor"]} />}
+                            element={<WithAuthCheck userTypes={["visitor", 'candidat']} />}
                         >
                             <Route element={<NavbarLayout />}>
                                 <Route path="/register" element={<Register />} />

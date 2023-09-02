@@ -54,7 +54,7 @@ const useMailValidation = () => {
         });
     };
 
-    const saveUserInDB = async () => {
+    const saveCandidatInDB = async () => {
         fetch(
             `${
                 import.meta.env.VITE_BackendBaseUrl
@@ -79,8 +79,25 @@ const useMailValidation = () => {
             .then(async res => {
                 const response = await res.json();
                 if (res.ok) {
-                    localStorage.removeItem("verificationToken");
-                    localStorage.setItem("RegistrationToken", response.token);
+                    //explain: makes a request to the backend to change the user's status to "Verified"
+                    fetch(`${import.meta.env.VITE_BackendBaseUrl}/user/update/candidat/status`, {
+                        method: "PATCH",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${response.token}`,
+                        },
+                        body: JSON.stringify({
+                            status: "Verified",
+                        }),
+                    }).then(async res => {
+                        localStorage.removeItem("verificationToken");
+                        localStorage.setItem(
+                            "RegistrationToken",
+                            response.token,
+                        );
+                    }).catch(err => {
+                        console.error(err);
+                    });
                 }
             })
             .catch(err => {
@@ -88,7 +105,7 @@ const useMailValidation = () => {
             });
     };
 
-    return { sendMail, checkCode, saveUserInDB };
+    return { sendMail, checkCode, saveCandidatInDB };
 };
 
 export default useMailValidation;

@@ -21,6 +21,7 @@ const verifyAccount = async (email: string, password: string) => {
                 candidat: {
                     select: {
                         id: true,
+                        status: true
                     },
                 },
                 admin: {
@@ -42,38 +43,32 @@ const verifyAccount = async (email: string, password: string) => {
     }
 };
 
-const registered = async (candidatId: string) => {
+const genAccessToken = async (candidatId: string) => {
     try {
-        const user = await prisma.user.findFirst({
-            where: {
+        const user = await userService.changeCandidatStatus(
+            candidatId,
+            'Active'
+        );
+        if (!user) throw new httpException(404, 'candidat introuvable');
+        else {
+            return {
+                id: user.id,
+                titre: user.user.titre,
+                nom: user.user.nom,
+                prenom: user.user.prenom,
+                email: user.user.email,
                 candidat: {
-                    id:candidatId
-                },
-            },
-            select: {
-                id: true,
-                titre: true,
-                nom: true,
-                prenom: true,
-                email: true,
-                candidat: {
-                    select: {
-                        id: true,
-                    },
+                    id: user.id,
                 },
                 admin: {
-                    select: {
-                        id: true,
-                    },
+                    id: null,
                 },
-            }
-        })
-        if(!user) throw new httpException(404,'candidat introuvable');
-        return user;
+            };
+        }
     } catch (err) {
         return err;
-    } 
-}
+    }
+};
 
 const sendForgotPasswordEmail = async (
     emailOrCin: string,
@@ -169,10 +164,81 @@ const resetPassword = async (id: string, newPassword: string) => {
     return user.id;
 }
 
+const findCorrectRegistrationStep = async (id: string) => {
+    try {
+        const candidat = await prisma.candidat.findFirst({
+            where: {
+                id: id,
+            },
+            select: {
+                id: true,
+                user: {
+                    select: {
+                        adresse: true,
+                        ville: true,
+                        codePostal: true,
+                    },
+                },
+            },
+        });
+        if (!candidat) throw new httpException(404, 'Candidat introuvable');
+        //explain: determining the correct step to send the user to
+        let step;
+        if (
+            candidat.user.adresse &&
+            candidat.user.ville &&
+            candidat.user.codePostal
+        )
+            step = 4;
+        else step = 3;
+
+        return step;
+    } catch (err) {
+        throw err;
+    }
+};
+
+const verifyPastRegistration = async (id: string) => {
+    try {
+        const candidat = await prisma.user.findFirst({
+            where: {
+                candidat:{
+                    id: id,
+                }
+            },
+            select: {
+                id: true,
+                titre: true,
+                nom: true,
+                prenom: true,
+                email: true,
+                candidat: {
+                    select: {
+                        id: true,
+                        status: true,
+                    }
+                },
+                admin: {
+                    select: {
+                        id: true,
+                    }
+                }
+            },
+        });
+        if (!candidat) throw new httpException(404, 'Candidat introuvable');
+        return candidat
+    } catch (err) {
+        throw err;
+    }
+}
+
+
 export default {
     verifyAccount,
     sendForgotPasswordEmail,
     resetPassword,
     verifyResetPasswordToken,
-    registered,
+    genAccessToken,
+    findCorrectRegistrationStep,
+    verifyPastRegistration
 };
