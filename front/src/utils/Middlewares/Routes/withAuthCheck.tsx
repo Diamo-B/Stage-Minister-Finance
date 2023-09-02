@@ -30,6 +30,8 @@ const WithAuthCheck = ({ userTypes }: Props) => {
             )
                 .then(async res => {
                     const response = await res.json();
+                    console.log(response);
+                    
                     dispatch(setConnectedUser(response.user))
 
                     const userTypesResponse = userTypes.filter(
@@ -37,7 +39,8 @@ const WithAuthCheck = ({ userTypes }: Props) => {
                             response.user[userType] !== null &&
                             response.user[userType] !== undefined,
                     );
-
+                    console.log(userTypesResponse);
+                    
                     if (userTypesResponse.length === 0) {
                         navigate("/login");
                     } else {                        
@@ -45,9 +48,6 @@ const WithAuthCheck = ({ userTypes }: Props) => {
                         {
                             if(response.user.candidat.status === 'Verified' && !location.state?.continueRegistration){
                                 navigate('/register',{state:{continueRegistration:true}});
-                            }else if(response.user.candidat.status === 'Active' && location.pathname !== '/')
-                            {
-                                navigate("/");
                             }
                         }
                     }
