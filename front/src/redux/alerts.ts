@@ -7,6 +7,7 @@ export const alertSlice = createSlice({
         alert: {
             status: false,
             message: "",
+            level: undefined,
         },
     } as alertState,
     reducers: {

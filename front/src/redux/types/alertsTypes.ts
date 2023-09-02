@@ -1,7 +1,7 @@
 export type alert = {
     status: boolean;
     message: string;
-    level?: "success" | "error" | "warning" | "info";
+    level?: "alert-success" | "alert-error" | "alert-warning" | "alert-info";
 };
 
 export interface alertState {

@@ -6,8 +6,7 @@ import { IConcours } from "../../../Utils/interfaces/Admin/concours/IConcours";
 import { base64ToBlob } from "../../../Utils/base64ToBlobs";
 import { stopLoading } from "../../../Redux/loading";
 import { useAppDispatch } from "../../redux";
-import { Dispatch, SetStateAction } from "react";
-import { activateAlert } from "../../../Redux/alerts";
+
 
 const useFormRegistry = () => {
     const schema = z
@@ -146,8 +145,6 @@ const useFormRegistry = () => {
         const saveConcours = (
             data: IConcours,
             emptyFields: () => void,
-            showIntitulePanel: Dispatch<SetStateAction<boolean>>,
-            showCustomLabelInput: Dispatch<SetStateAction<boolean>>,
         ) => {
             const file = data.avis[0];
             const base64Data = file.file.replace(/^data:.*;base64,/, ""); //explain: Remove data URL prefix for any type
@@ -186,10 +183,7 @@ const useFormRegistry = () => {
                 })
                 .finally(() => {
                     emptyFields();
-                    showIntitulePanel(false);
-                    showCustomLabelInput(false);
                     dispatch(stopLoading());
-                    dispatch(activateAlert({message:'Concours ajouté avec succès',level:'success'}))
                 });
         }; 
 

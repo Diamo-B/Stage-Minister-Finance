@@ -13,6 +13,8 @@ import { IFormType } from "../../../Utils/interfaces/Admin/concours/IFormTypes";
 import IntitulePanel from "../../../Components/admin/Concours/create/intitulePanel";
 import Toast from "../../../Components/toast";
 import { IConcours } from "../../../Utils/interfaces/Admin/concours/IConcours";
+import { z } from "zod";
+import { TCity } from "../../../Redux/Admin/concours/types/create";
 
 const CreateConcours = () => {
     const [directions, setDirections] = useState<IFormType[]>([]);
@@ -45,7 +47,7 @@ const CreateConcours = () => {
     });
 
     const submit = (data: IConcours) => {
-        saveConcours(data, emptyFields, showIntitulePanel, showCustomLabelInput);
+        saveConcours(data, emptyFields);
     };
 
     //explain: This is used to add the cityChoiceHint tour
@@ -62,6 +64,7 @@ const CreateConcours = () => {
     const emptyFields = (): void => {
         shouldEmptyFiles(true);
         methods.reset();
+        setSelectedCities([]); //? this for preventing the cities table from being undefined and triggering an error on submit when it shouldn't
     };
 
     //explain: This is used to trigger the validation of the form before submitting
@@ -70,12 +73,53 @@ const CreateConcours = () => {
         methods.setValue("avis", avis);
         methods.trigger().then(() => {
             const errorKeys = Object.keys(methods.formState.errors);
+            console.log(errorKeys);
+            
             if (errorKeys.length === 1 && errorKeys[0] === "intitulé") {
                 showIntitulePanel(true);
                 methods.clearErrors();
             }
         });
     };
+
+    //explain: These are the props values for the intitulePanel with their update
+    const [selectedDirection, setSelectedDirection] = useState<string>("");
+    const [selectedPoste, setSelectedPoste] = useState <string>("");
+    const [selectedGrade, setSelectedGrade] = useState<string>("");
+
+    useEffect(()=>{
+        const schema = z.string().uuid();
+        if(directions && postes && grades)
+        {
+            if (schema.safeParse(methods.getValues("direction")).success === true ) {
+                setSelectedDirection(
+                    directions.filter(
+                        d => d.id === methods.getValues("direction"),
+                    )[0].label as string,
+                );
+            }
+            if (schema.safeParse(methods.getValues("poste")).success === true) {
+                setSelectedPoste(
+                    postes.filter(p => p.id === methods.getValues("poste"))[0]
+                        .label as string,
+                );
+            }
+            if (schema.safeParse(methods.getValues("grade")).success === true) {
+                setSelectedGrade(
+                    grades.filter(g => g.id === methods.getValues("grade"))[0]
+                        .label as string,
+                );
+            }
+        }
+    },[methods.getValues("direction"),methods.getValues("poste"),methods.getValues("grade")])
+
+
+    //explain: this is the state used to track selected cities
+    const [selectedCities, setSelectedCities] = useState<TCity[]>([]);
+
+    useEffect(() => {
+        console.log(methods.formState.errors);
+    }, [methods.formState.errors]);
 
     return (
         <div className="w-full px-5">
@@ -191,7 +235,10 @@ const CreateConcours = () => {
                                 </div>
                             </div>
                             <div className="mt-5 p-5 rounded-xl bg-white w-full col-span-3">
-                                <DragNDropCities />
+                                <DragNDropCities
+                                    selectedCities={selectedCities}
+                                    setSelectedCities={setSelectedCities}
+                                />
                             </div>
                         </div>
                         <div className="flex justify-center mt-5">
@@ -205,25 +252,9 @@ const CreateConcours = () => {
                         {intitulePanel && (
                             <IntitulePanel
                                 showIntitulePanel={showIntitulePanel}
-                                direction={
-                                    directions.filter(
-                                        d =>
-                                            d.id ===
-                                            methods.getValues("direction"),
-                                    )[0].label as string
-                                }
-                                poste={
-                                    postes.filter(
-                                        p =>
-                                            p.id === methods.getValues("poste"),
-                                    )[0].label as string
-                                }
-                                grade={
-                                    grades.filter(
-                                        g =>
-                                            g.id === methods.getValues("grade"),
-                                    )[0].label as string
-                                }
+                                direction={selectedDirection}
+                                poste={selectedPoste}
+                                grade={selectedGrade}
                                 CustomLabelInput={CustomLabelInput}
                                 showCustomLabelInput={showCustomLabelInput}
                             />
@@ -231,9 +262,8 @@ const CreateConcours = () => {
                     </form>
                 </FormProvider>
             </div>
-            {
-                alert.status &&
-                <Toast text="Concours créé avec succès" type="success" />
+            {alert.status && 
+                <Toast />
             }
         </div>
     );

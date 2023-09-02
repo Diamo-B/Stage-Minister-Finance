@@ -8,7 +8,12 @@ import useCitiesHelpers from "../../../../../Hooks/admin/concours/useCitiesDragN
 import DraggingContainer from "./draggingArea/draggingContainer";
 import { useFormContext } from "react-hook-form";
 
-const DragNDropCities = () => {
+type Props = {
+    selectedCities :  TCity[];
+    setSelectedCities : React.Dispatch<React.SetStateAction<TCity[]>>;
+};
+
+const DragNDropCities = ({selectedCities, setSelectedCities}:Props) => {
     const { setValue } = useFormContext();
     const {memoizedCityList} = useCitiesHelpers();
 
@@ -18,11 +23,18 @@ const DragNDropCities = () => {
         setCities(memoizedCityList);
     },[memoizedCityList]) 
 
-    const [selectedCities, setSelectedCities] = useState<TCity[]>([]);
+   
 
     //explain: This is updating the form data whenever the selected cities change
     useEffect(() => {
-        setValue("villes", selectedCities.map(city => city.id));
+        console.log("selectedCities changed:", selectedCities);
+        if(selectedCities)
+        {
+            setValue("villes", selectedCities.map(city => city.id)); 
+        }
+        else{
+            setValue("villes", []);
+        }
     }, [selectedCities]);
 
     //? This function is used to add a city to the selectedCities array when it's dropped in the droppingArea

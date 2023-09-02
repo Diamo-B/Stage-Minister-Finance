@@ -1,16 +1,10 @@
 import { Outlet } from "react-router-dom";
 import Navbar from "./Navbar";
-import { useAppDispatch, useAppSelector } from "../Hooks/redux";
+import { useAppSelector } from "../Hooks/redux";
 import NeutralNavbar from "./NeutralNavbar";
-import { useEffect } from "react";
-import { stopGenPageLoading } from "../Redux/loading";
 
 const NavbarLayout = () => {
     const { connectedUser } = useAppSelector(state => state.genValues);
-    const dispatch = useAppDispatch();
-    useEffect(() => {
-        dispatch(stopGenPageLoading());
-    }, []);
     return (
         <>
             {connectedUser && typeof connectedUser === "object" ? (

@@ -3,10 +3,12 @@ import AnimatedButton from "../../../Components/FormElements/animatedButton";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import useHelpers, { concours } from "../../../Hooks/Home/useHelpers";
+import { useAppSelector } from "../../../Hooks/redux";
 
 const LatestConcoursTable = () => {
     const { getConcours, postuler } = useHelpers();
     const [concours, setConcours] = useState<concours[]>([]);
+    const {loading} = useAppSelector(state => state.loading)
     useEffect(() => {
         getConcours(setConcours);
     },[])
@@ -30,8 +32,7 @@ const LatestConcoursTable = () => {
                         </tr>
                     </thead>
                     <tbody className="text-center">
-                        {concours &&
-                            concours.length > 0 &&
+                        {concours && concours.length > 0 ? (
                             concours.map(concour => (
                                 <tr className="hover" key={concour.id}>
                                     <td className="text-left font-bold">
@@ -39,10 +40,10 @@ const LatestConcoursTable = () => {
                                     </td>
                                     <td>
                                         <Link
-                                            to={`${
-                                                (import.meta.env
-                                                    .VITE_BackendBaseUrl).replace('/api/v1','')
-                                            }${concour.avis.path.replace(
+                                            to={`${import.meta.env.VITE_BackendBaseUrl.replace(
+                                                "/api/v1",
+                                                "",
+                                            )}${concour.avis.path.replace(
                                                 "./public",
                                                 "",
                                             )}`}
@@ -97,11 +98,24 @@ const LatestConcoursTable = () => {
                                                 "hover:!border-2",
                                             ]}
                                             text="Postuler"
-                                            onClickFct={()=>postuler()}
+                                            onClickFct={() => postuler()}
                                         />
                                     </td>
                                 </tr>
-                            ))}
+                            ))
+                        ) : (
+                            <tr>
+                                <td colSpan={8} className="text-center">
+                                    {loading ? (
+                                        <span className="loading loading-spinner loading-md"></span>
+                                    ) : (
+                                        <p className="my-5 font-medium capitalize text-lg text-neutral">
+                                            Aucun concours disponible
+                                        </p>
+                                    )}
+                                </td>
+                            </tr>
+                        )}
                     </tbody>
                 </table>
             </div>

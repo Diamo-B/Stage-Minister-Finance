@@ -1,6 +1,7 @@
 import { Dispatch, SetStateAction } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAppSelector } from "../redux";
+import { useAppDispatch, useAppSelector } from "../redux";
+import { startLoading, stopLoading } from "../../Redux/loading";
 
 export type concours = {
     id: string;
@@ -16,8 +17,10 @@ export type concours = {
 }
 
 const useHelpers = () => {
+    const dispatch = useAppDispatch();
 
     const getConcours = (setConcours:Dispatch<SetStateAction<concours[]>>) => {
+        dispatch(startLoading());
         fetch(`${import.meta.env.VITE_BackendBaseUrl}/concours/getAll/useful`, {
             method: "GET",
             headers: {
@@ -30,8 +33,14 @@ const useHelpers = () => {
             })
             .catch(err => {
                 console.error(err);
-            });
+            }).finally(()=>{
+                dispatch(stopLoading())
+            })
     };
+
+    const getConcoursResults = (setConcoursResults:Dispatch<SetStateAction<any[]>>) => {
+        
+    }
 
     const {connectedUser} = useAppSelector(state => state.genValues);
     const navigate = useNavigate();
@@ -48,7 +57,7 @@ const useHelpers = () => {
         }
     };
 
-    return { getConcours, postuler };
+    return { getConcours, postuler, getConcoursResults };
 }
  
 export default useHelpers;

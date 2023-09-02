@@ -12,7 +12,6 @@ import {
     showConfirmationPanel,
 } from "../Redux/confirmationPanel";
 import { useEffect } from "react";
-import { startGenPageLoading, stopGenPageLoading } from "../Redux/loading";
 import { setConnectedUser } from "../Redux/GeneralValues";
 import { resetSteps } from "../Redux/RegisterationForm/formSteps";
 
@@ -24,17 +23,6 @@ const Navbar = () => {
     );
     const { connectedUser } = useAppSelector(state => state.genValues);
 
-    //explain: shows the loading panel
-    useEffect(() => {
-        dispatch(startGenPageLoading());
-    }, []);
-
-    //explain: stops the loading page when the connectedUser has a valid value
-    useEffect(() => {
-        if (connectedUser) {
-            dispatch(stopGenPageLoading());
-        }
-    }, [connectedUser]);
 
     useEffect(() => {
         if (isConfirmed) {

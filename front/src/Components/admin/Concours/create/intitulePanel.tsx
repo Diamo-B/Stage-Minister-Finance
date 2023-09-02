@@ -4,6 +4,7 @@ import { useFormContext } from "react-hook-form";
 import { resetLoading, startLoading } from "../../../../Redux/loading";
 import { useAppDispatch, useAppSelector } from "../../../../Hooks/redux";
 import { UilCheckCircle } from "@iconscout/react-unicons";
+import { activateAlert } from "../../../../Redux/alerts";
 
 type Props = {
     showIntitulePanel: Dispatch<SetStateAction<boolean>>;
@@ -34,7 +35,14 @@ const IntitulePanel = ({
             setTimeout(() => {
                 dispatch(resetLoading());
                 animate(false);
+                showCustomLabelInput(false);
                 showIntitulePanel(false);
+                dispatch(
+                    activateAlert({
+                        message: "Concours ajouté avec succès",
+                        level: "alert-success",
+                    }),
+                );
             }, 2000);
         }
     }, [loading])
@@ -72,7 +80,7 @@ const IntitulePanel = ({
                                         `Concours des ${poste} de ${direction}, ${grade}`,
                                     );
                                     dispatch(startLoading());
-                                }}
+                            }}
                             >
                                 {loading ? (
                                     <span className="loading loading-spinner loading-sm"></span>

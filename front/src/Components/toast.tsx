@@ -1,31 +1,29 @@
 import { UilTimesCircle } from "@iconscout/react-unicons";
-import { useAppDispatch } from "../Hooks/redux";
+import { useAppDispatch, useAppSelector } from "../Hooks/redux";
 import { useEffect } from "react";
 import { disableAlert } from "../Redux/alerts";
 
-type Props = {
-    text: string;
-    type: string;
-};
-const Toast = ({ text, type }: Props) => {
+const Toast = () => {
     const dispatch = useAppDispatch();
-
+    const { alert } = useAppSelector(state => state.alert);
     useEffect(() => {
 
         setTimeout(() => {
             dispatch(disableAlert());
-        },5000) 
+        },3000) 
 
     }, []);
 
+    const classNames=['alert', alert.level?alert.level:'' ,'flex' ,'justify-center' ,'hover:alert-error' ,'hover:cursor-pointer ','min-w-full','group','relative']
+                
     return (
         <div className="toast w-80">
             <div
-                className={`alert alert-${type} flex justify-center hover:alert-error hover:cursor-pointer min-w-full group relative`}
+                className={classNames.join(' ')}
                 onClick={() => dispatch(disableAlert())}
             >
                 <span className="text-white font-bold text-center group-hover:hidden">
-                    {text}
+                    {alert.message}
                 </span>
                 <span className="text-white font-bold invisible group-hover:visible">
                     <UilTimesCircle className="w-8 h-8"/>
