@@ -47,7 +47,7 @@ const WithAuthCheck = ({ userTypes }: Props) => {
                         if(userTypesResponse.includes('candidat'))
                         {
                             if(response.user.candidat.status === 'Verified' && !location.state?.continueRegistration){
-                                navigate('/register',{state:{continueRegistration:true}});
+                                navigate('/register',{state:{continueRegistration:true, from:location.pathname}});
                             }
                         }
                     }

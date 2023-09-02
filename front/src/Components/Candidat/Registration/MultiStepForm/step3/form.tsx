@@ -22,6 +22,7 @@ import {
 //? Custom Hooks
 import useGetData from "../../../../../Hooks/candidat/Register/step3/useGetData";
 import useManipForm from "../../../../../Hooks/candidat/Register/step3/useManipForm";
+import useGenForm from "../../../../../Hooks/candidat/Register/useGenForm";
 
 const Form = () => {
     const dispatch = useAppDispatch();
@@ -38,6 +39,12 @@ const Form = () => {
         console.log("setting step in step 3");
         localStorage.setItem("step", "3");
     }, []);
+
+    const {regainStepState} = useGenForm();
+    //explain: This signs the user in if he's got a valid registration token and has verified his email (status of 'Verified')
+    useEffect(() => {
+        regainStepState();
+    },[])
 
     //!------------------------------------------------------------------------------------------------------
 

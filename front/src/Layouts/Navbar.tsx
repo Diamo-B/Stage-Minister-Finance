@@ -45,8 +45,6 @@ const Navbar = () => {
                 => So whenever you execute the logic that is triggered using the confirmation button of the ConfirmationPanel, call the redux action 'hideConfirmationPanel' at then end. This will ensure that the isConfirmed property is reset to false whenever the ConfirmationPanel component is unmounted.
             */
             localStorage.removeItem("AccessToken");
-            localStorage.removeItem("RegistrationToken");
-            localStorage.removeItem("step");
             dispatch(setConnectedUser(null));
             dispatch(hideConfirmationPanel());
             dispatch(resetSteps());
