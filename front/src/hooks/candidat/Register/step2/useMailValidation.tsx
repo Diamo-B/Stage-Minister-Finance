@@ -89,7 +89,7 @@ const useMailValidation = () => {
                         body: JSON.stringify({
                             status: "Verified",
                         }),
-                    }).then(async res => {
+                    }).then(() => {
                         localStorage.removeItem("verificationToken");
                         localStorage.setItem(
                             "RegistrationToken",

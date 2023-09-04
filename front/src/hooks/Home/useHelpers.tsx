@@ -2,6 +2,7 @@ import { Dispatch, SetStateAction } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../redux";
 import { startLoading, stopLoading } from "../../Redux/loading";
+import { showPostuler } from "../../Redux/Concours/postuler";
 
 export type concours = {
     id: string;
@@ -38,26 +39,35 @@ const useHelpers = () => {
             })
     };
 
-    const getConcoursResults = (setConcoursResults:Dispatch<SetStateAction<any[]>>) => {
+    const getConcoursResults = () => {
         
     }
 
     const {connectedUser} = useAppSelector(state => state.genValues);
     const navigate = useNavigate();
-    const postuler = () => {
+
+    const showPanel_redirect = (id: string, title: string) => {
         if (connectedUser === "visitor") {
             //explain: redirect to login page while passing the current path as a state so that we can redirect the user back to the current path after login
-            navigate("/login", { state: { from: "/concours" } });
+            navigate("/login", { state: { from: "/concours", concoursChoisi: id } });
         } else {
             const token = localStorage.getItem("AccessToken");
             if (token) {
-                //Todo: postuler
-                console.log("postuler");
+                //explain: shows the confirmation panel
+                dispatch(showPostuler({
+                    concoursId: id,
+                    concoursTitle: title,
+                }))
             }
         }
+    }
+
+    const { concoursId } = useAppSelector(state => state.postuler);
+    const postuler = () => {
+        console.log(concoursId);
     };
 
-    return { getConcours, postuler, getConcoursResults };
+    return { getConcours, postuler, showPanel_redirect, getConcoursResults };
 }
  
 export default useHelpers;

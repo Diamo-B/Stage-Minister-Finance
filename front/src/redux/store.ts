@@ -11,6 +11,7 @@ import alertReducer from "./alerts";
 import confirmationPanelReducer from "./confirmationPanel";
 import concoursReducer from "./Admin/concours/create";
 import forgotPasswordReducer from "./forgotPassword";
+import postulerReducer from './Concours/postuler';
 import genValuesReducer from "./GeneralValues";
 
 export const store = configureStore({
@@ -23,6 +24,8 @@ export const store = configureStore({
         diplomes: diplomesState,
         lastStep: lastStepReducer,
         formTabs: formTabsReducer,
+        //----------------Apply to concours-------------------
+        postuler: postulerReducer,
         //----------------create Concours-------------------
         concours: concoursReducer,
         //----------------General-------------------

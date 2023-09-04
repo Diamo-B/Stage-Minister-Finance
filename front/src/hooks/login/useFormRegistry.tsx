@@ -71,9 +71,19 @@ const useFormRegistry = () => {
             if (response.token) {
                 localStorage.setItem("AccessToken", response.token);                
                 setLoginError("");
+                //explain: redirect to the previous page if the user was redirected to the login page by another action
                 const redirectPath = location.state?.from;
                 if(redirectPath !== undefined){
-                    navigate(`${redirectPath}`); 
+                    if(redirectPath === "/concours")
+                    {
+                        //explain: if the user was redirected to the login page because he wanted to apply for a concours, we redirect him to the concours page after login and pass the concours id as a state so that we can show the confirmation panel.
+                        const concoursChoisi = location.state?.concoursChoisi;
+                        navigate(`${redirectPath}`, {state: {concoursChoisi}});
+                    }            
+                    else{
+                        navigate(`${redirectPath}`);
+                    }
+
                 }
                 else if (response.type === "candidat") {                    
                     navigate("/");

@@ -50,6 +50,8 @@ const Validate = () => {
     const { checkCode, sendMail, saveCandidatInDB } = useMailValidation();
 
     useEffect(() => {
+        dispatch(enableFields());
+        dispatch(verificationIdle());
         dispatch(stopLoading());
     }, []);
 

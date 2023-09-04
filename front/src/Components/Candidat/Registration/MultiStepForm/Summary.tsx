@@ -4,6 +4,7 @@ import { useLocation, useNavigate, Navigate } from "react-router-dom";
 const Summary = () => {
     const [countdownValue, setCountdownValue] = useState<number>(3);
     const [prevLocation, setPrevLocation] = useState<string>("");
+    const [prevStates, setPrevStates] = useState({});
     const [redirect, setRedirect] = useState<boolean>(false);
     //explain: updates the countdown each second, then redirects to the next page 
     const navigate = useNavigate();
@@ -11,6 +12,7 @@ const Summary = () => {
 
     useEffect(() => {
         setPrevLocation(location.state?.from || "/login");
+        setPrevStates(location.state || {});
     }, [location]);
 
     useEffect(()=>{
@@ -89,7 +91,7 @@ const Summary = () => {
                 cliquez ici
             </p>
             {
-                redirect ? <Navigate to={prevLocation} /> : null
+                redirect ? <Navigate to={prevLocation} state={prevStates}/> : null
             }
         </div>
     );

@@ -17,9 +17,10 @@ const Login = () => {
 
     const navigate = useNavigate();
     const sendToRegistrationPage = () => {
-        const redirectPath = location.state?.from;
-        if(redirectPath)
-            navigate('/register', {state: {from: redirectPath}});
+        const states = location.state;
+        
+        if(states)
+            navigate('/register', {state: {...states} });
         else
             navigate('/register')
     }

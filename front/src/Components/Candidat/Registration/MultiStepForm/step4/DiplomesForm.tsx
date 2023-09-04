@@ -2,7 +2,7 @@ import Table from "../Table";
 import { useEffect } from "react";
 import AddForm from "./Form/Form";
 import { useAppDispatch, useAppSelector } from "../../../../../Hooks/redux";
-import { resetFiles } from "../../../../../Redux/RegisterationForm/diplomes";
+import { resetFiles, setDiplomes } from "../../../../../Redux/RegisterationForm/diplomes";
 import {
     changeStepStatus,
     incrementStep,
@@ -11,6 +11,7 @@ import {
 import Tabs from "../tabs";
 import useHelpers from "../../../../../Hooks/candidat/Register/step4/useHelpers";
 import AddedDiploma from "../../../../../Utils/tours/RegistrationForm/diplomes/AddedDiplomaTour";
+import { setHint } from "../../../../../Redux/RegisterationForm/formTabs";
 
 const Form = () => {
     const dispatch = useAppDispatch();
@@ -20,8 +21,10 @@ const Form = () => {
 
     const { deleteDiplome, getCandidatDiplomas } = useHelpers();
 
-    //explain: this sets the step number inside the localStorage
-    useEffect(() => {
+    //explain: this resets the diplomes array and the hint count on load and finally sets the step number inside the localStorage
+    useEffect(()=>{
+        dispatch(setHint(0));
+        dispatch(setDiplomes([]));
         localStorage.setItem("step", "4");
         dispatch(resetFiles());
     }, []);

@@ -21,7 +21,10 @@ const Steps = () => {
 
     const navigate = useNavigate();
     useEffect(()=>{
-        if(isConfirmed)
+        //! this is important to read
+        //explain: Only at step 1, if the user clicks on the cancel registration button (Annuler), he gets a ConfirmationPanel component, when he confirms it, it takes him to the login page
+        //! removing the current===1 part will result in bad bugs throughout the whole app
+        if(isConfirmed && current === 1)
         {
             dispatch(hideConfirmationPanel());
             navigate("/login");
