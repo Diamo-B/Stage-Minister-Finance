@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-const connectedUserSchema = z.object({
+export const connectedUserSchema = z.object({
     id: z.string().uuid().nonempty(),
     nom: z.string().nonempty(),
     prenom: z.string().nonempty(),

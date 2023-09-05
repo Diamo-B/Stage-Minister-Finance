@@ -72,6 +72,10 @@ const changeStatus = z.object({
     status: z.nativeEnum(UserStatus)
 });
 
+const linkConcoursToCandidat = z.object({
+    concoursIds : z.array(z.string().uuid("l'Id d'un concours doit être un valid UUID").nonempty("Un concours doit absolument avoir un Id")).nonempty({message: 'Vous devez choisir au moins un concours.'})
+})
+
 const remove = z.object({
     id: z.string().uuid(),
 });
@@ -87,6 +91,7 @@ export default {
     create,
     createCandidat,
     linkAttachments,
+    linkConcoursToCandidat,
     createAdmin,
     update,
     changeStatus,

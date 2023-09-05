@@ -4,6 +4,7 @@ import httpException from '../../utils/httpException';
 import { UploadedFile } from 'express-fileupload';
 import attachmentsService from '../attachments/service.attachments';
 import { saveFiles } from '../../utils/fileUploaders/saveFiles';
+import { CandidatAuthRequest } from '../../utils/interfaces/ModifiedRequestObject';
 
 const create = async (req: Request, res: Response, next: NextFunction) => {
     const {
@@ -21,7 +22,7 @@ const create = async (req: Request, res: Response, next: NextFunction) => {
     } = req.body;
     try {
         const avis = req.files?.avis as UploadedFile;
-        
+
         //* step0: Get the villesId then parse it since it came as a JSON string
         const villesIdsArr = JSON.parse(villesIds);
 
@@ -57,18 +58,18 @@ const create = async (req: Request, res: Response, next: NextFunction) => {
         );
 
         return res.status(201).json({
-            concours
+            concours,
         });
     } catch (err: any) {
         next(new httpException(500, err.message));
-    } 
+    }
 };
 
 const getAll = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const concours = await concoursService.getAll();
         return res.status(200).json({
-            concours
+            concours,
         });
     } catch (err: any) {
         next(new httpException(500, err.message));
@@ -83,21 +84,37 @@ const getAll_W_UsefulPropsOnly = async (
     try {
         const concours = await concoursService.getAll_W_UsefulPropsOnly();
         return res.status(200).json({
-            concours
+            concours,
         });
     } catch (err: any) {
-        if(err instanceof httpException) {
+        if (err instanceof httpException) {
             return res.status(err.status).json({
-                message: err.message
+                message: err.message,
             });
         }
         next(new httpException(500, err.message));
     }
 };
 
+const getAll_W_usefulProps_userAssignments = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    try {
+        const { user: decodedToken } = req as CandidatAuthRequest;
+        const candidatId = decodedToken.user.candidat?.id;
+        const concours =await concoursService.getAll_W_usefulProps_userAssignments(candidatId);
+        return res.status(200).json({ concours });
+    } catch (err: any) {
+        if (err instanceof httpException) next(err);
+        next(new httpException(500, err.message));
+    }
+};
 
 export default {
     getAll,
     getAll_W_UsefulPropsOnly,
+    getAll_W_usefulProps_userAssignments,
     create,
 };

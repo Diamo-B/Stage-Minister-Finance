@@ -1,5 +1,6 @@
 export interface PostulerState {
     show: boolean;
-    concoursId: number | null;
+    concoursId: string | null;
     concoursTitle: string | null;
+    showAlreadyApplied: boolean;
 }

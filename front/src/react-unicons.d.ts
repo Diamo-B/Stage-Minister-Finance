@@ -28,4 +28,5 @@ declare module "@iconscout/react-unicons" {
     export const UilSetting: Icon;
     export const UilSignOutAlt: Icon;
     export const UilFileDownload: Icon;
+    export const UilLink: Icon;
 }

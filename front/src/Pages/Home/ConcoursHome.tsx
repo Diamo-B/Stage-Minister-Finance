@@ -1,5 +1,5 @@
-import LatestConcours from "./latestConcours/latestConcours";
-import ConcoursResults from "./ConcoursResults/ConcoursResults";
+import LatestConcours from "../../Components/Concours/latestConcours/latestConcours";
+import ConcoursResults from "../../Components/Concours/ConcoursResults/ConcoursResults";
 
 const ConcoursHome = () => {
     return (

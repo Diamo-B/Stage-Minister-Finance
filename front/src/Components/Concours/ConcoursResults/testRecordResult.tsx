@@ -1,6 +1,6 @@
 import { UilFileDownload } from "@iconscout/react-unicons";
 import { Link } from "react-router-dom";
-import AnimatedButton from "../../../Components/FormElements/animatedButton";
+import AnimatedButton from "../../FormElements/animatedButton";
 
 const TestResult = () => {
     return (

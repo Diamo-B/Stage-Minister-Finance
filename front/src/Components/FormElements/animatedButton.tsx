@@ -8,6 +8,7 @@ type Props = {
     Icon: ElementType;
     LoadingState?: boolean;
     ReverseAnimationDirection?: boolean;
+    disabled?: boolean;
 };
 
 const AnimatedButton = ({
@@ -18,6 +19,7 @@ const AnimatedButton = ({
     btnType,
     LoadingState,
     ReverseAnimationDirection,
+    disabled
 }: Props) => {
     return (
         <button
@@ -28,6 +30,7 @@ const AnimatedButton = ({
                 onClickFct && onClickFct(); // Invoke the function if provided
             }}
             type={btnType ? btnType : "button"}
+            disabled={disabled}
         >
             <div
                 className={`absolute w-1/3 ${

@@ -5,13 +5,14 @@ dayjs.extend(customParseFormat);
 const sendMailScript = require('../../utils/mailer/nodemailerOutlook.js'); // Provide the correct path if needed
 import { hashPassword } from '../../utils/hashPassword';
 import { z } from 'zod';
-import schema from './validation.user'
+import schema from './validation.user';
 import { UserStatus } from '@prisma/client';
+import httpException from '../../utils/httpException';
 
 const getAll = async () => {
     try {
         return await prisma.user.findMany({
-            select:{
+            select: {
                 titre: true,
                 id: true,
                 cin: true,
@@ -27,9 +28,9 @@ const getAll = async () => {
                 ville: {
                     select: {
                         nom: true,
-                    }
-                }
-            }
+                    },
+                },
+            },
         });
     } catch (err) {
         throw err;
@@ -69,7 +70,6 @@ const getOneId = async (id: string) => {
 };
 
 const getByCandidatId = async (id: string) => {
-    
     try {
         let user = await prisma.candidat.findFirst({
             where: {
@@ -89,7 +89,7 @@ const getByCandidatId = async (id: string) => {
                         dateNaissance: true,
                         codePostal: true,
                         villeId: false,
-                        titre:true,
+                        titre: true,
                         ville: {
                             select: {
                                 id: true,
@@ -100,19 +100,15 @@ const getByCandidatId = async (id: string) => {
                 },
             },
         });
-        if(!user)
-        {
-            throw new Error("User not found");
-        }
-        else
-            return user;
+        if (!user) {
+            throw new Error('User not found');
+        } else return user;
     } catch (err) {
         throw err;
     }
+};
 
-}
-
-const getOneCIN =async (cin:string) => {
+const getOneCIN = async (cin: string) => {
     try {
         return await prisma.user.findUnique({
             where: {
@@ -141,7 +137,7 @@ const getOneCIN =async (cin:string) => {
     } catch (err) {
         throw err;
     }
-}
+};
 
 const getOneEmail = async (email: string) => {
     try {
@@ -178,36 +174,38 @@ const checkRegistration = async (email: string, cin: string) => {
     try {
         let user = await prisma.user.findFirst({
             where: {
-                OR:[
+                OR: [
                     {
                         email: email,
                     },
                     {
                         cin: cin,
-                    }
-                ]
-            }
+                    },
+                ],
+            },
         });
         let returnObj = {
             cin: false,
-            email: false
+            email: false,
         };
-        if(user?.cin === cin)
-            returnObj.cin = true;
-        if(user?.email === email)
-            returnObj.email = true;
+        if (user?.cin === cin) returnObj.cin = true;
+        if (user?.email === email) returnObj.email = true;
         return returnObj;
     } catch (err) {
         throw err;
     }
 };
 
-const sendAccountVerificationMail = async (recipient: z.infer<typeof schema.sendMail>['recipient']) => {
+const sendAccountVerificationMail = async (
+    recipient: z.infer<typeof schema.sendMail>['recipient']
+) => {
     try {
-        let sixDigitCode = Math.floor(100000 + Math.random() * 900000).toString();   
+        let sixDigitCode = Math.floor(
+            100000 + Math.random() * 900000
+        ).toString();
         const mailGenBody = {
             subject: 'Code de vérification',
-            recipientMail: recipient.email, 
+            recipientMail: recipient.email,
             response: {
                 body: {
                     greeting: `${recipient.titre === 'M' ? 'Cher' : 'chère'} ${
@@ -229,22 +227,19 @@ const sendAccountVerificationMail = async (recipient: z.infer<typeof schema.send
             },
         };
         const status = await sendMailScript(mailGenBody);
-        if(status.accepted.length > 0)
-        {            
+        if (status.accepted.length > 0) {
             let hashReturn = await hashPassword(sixDigitCode.toString());
             return hashReturn.hashedpassword;
-        }
-        else
-            throw status
-    } catch (err:any) {
+        } else throw status;
+    } catch (err: any) {
         throw new Error('Failed to send mail: ' + err.message);
     }
 };
 
 enum Titre {
-    M='M',
-    Mme='Mme',
-    Mlle='Mlle',
+    M = 'M',
+    Mme = 'Mme',
+    Mlle = 'Mlle',
 }
 const create = async (
     titre: Titre,
@@ -317,45 +312,48 @@ const createCandidat = async (
                             : [],
                 },
             },
-            include:{
+            include: {
                 user: true,
-            }
+            },
         });
-        return candidat;    
+        return candidat;
     } catch (err) {
         throw err;
     }
 };
 
 //explain: changes candidats status to 'None', 'Verified', 'Registred' or 'Active'
-const changeCandidatStatus = async( candidatId: string, status: UserStatus) => {
+const changeCandidatStatus = async (candidatId: string, status: UserStatus) => {
     try {
         const candidat = await prisma.candidat.update({
-            where:{
-                id:candidatId
+            where: {
+                id: candidatId,
             },
-            data:{
-                status: status
+            data: {
+                status: status,
             },
-            include:{
+            include: {
                 user: true,
-            }
+            },
         });
-        return candidat;                
+        return candidat;
     } catch (err) {
         throw err;
     }
-}
+};
 
 //explain: Linking attachments to candidats
 //* step1: Linking CIN files to candidat (creating attachment record, saving the file in public folder, then linking it to candidat)
-const linkAttachments = async (candidatId: string, AttachmentsIDS: string[]) => {
+const linkAttachments = async (
+    candidatId: string,
+    AttachmentsIDS: string[]
+) => {
     try {
         let candidat = await prisma.candidat.update({
-            where:{
-                id: candidatId
+            where: {
+                id: candidatId,
             },
-            data:{
+            data: {
                 Attachments: {
                     connect:
                         AttachmentsIDS && AttachmentsIDS.length > 0
@@ -363,27 +361,49 @@ const linkAttachments = async (candidatId: string, AttachmentsIDS: string[]) => 
                             : [],
                 },
             },
-            select:{
+            select: {
                 userId: false,
                 id: true,
-                Attachments:{
-                    where:{
+                Attachments: {
+                    where: {
                         type: {
-                            in: ["CV","CIN"]
-                        }
+                            in: ['CV', 'CIN'],
+                        },
                     },
-                    select:{
+                    select: {
                         path: true,
                         type: true,
                         id: true,
-                    }
+                    },
                 },
                 diplomes: false,
                 concoursActifs: false,
-                user: false
-            }
-        })
+                user: false,
+            },
+        });
 
+        return candidat;
+    } catch (err) {
+        throw err;
+    }
+};
+
+const linkConcours = async (candidatId: string, concoursIds: string[]) => {
+    try {
+        const candidat = await prisma.candidat.update({
+            where: {
+                id: candidatId,
+            },
+            data: {
+                concoursActifs: {
+                    connect:
+                        concoursIds && concoursIds.length > 0
+                            ? concoursIds.map(id => ({ id }))
+                            : [],
+                },
+            },
+        });
+        if(!candidat) throw new httpException(404, 'Candidat not found');
         return candidat;
     } catch (err) {
         throw err;
@@ -410,9 +430,9 @@ const createAdmin = async (id: string, isSuperAdmin: boolean) => {
 
 const update = async (
     id: string,
-    adresse?: string, 
-    ville?: string, 
-    zip?: number,
+    adresse?: string,
+    ville?: string,
+    zip?: number
 ) => {
     try {
         let user = await prisma.user.update({
@@ -422,15 +442,15 @@ const update = async (
             data: {
                 adresse: adresse,
                 ville: {
-                    connect:{
+                    connect: {
                         id: ville,
-                    }
+                    },
                 },
                 codePostal: zip,
             },
             include: {
-                ville: true
-            }
+                ville: true,
+            },
         });
         return user;
     } catch (err) {
@@ -456,7 +476,6 @@ const setOrRemoveForgottenPasswordToken = async (
     }
 };
 
-
 const remove = async (id: string) => {
     try {
         return await prisma.user.delete({
@@ -464,15 +483,13 @@ const remove = async (id: string) => {
                 id: id,
             },
         });
-    } catch (err:any) {
-        if(err.code === "P2025")
-        {
-            throw {message: `No user with the id '${id}' was found`};
+    } catch (err: any) {
+        if (err.code === 'P2025') {
+            throw { message: `No user with the id '${id}' was found` };
         }
         throw err;
     }
 };
-
 
 export default {
     getAll,
@@ -484,8 +501,9 @@ export default {
     sendAccountVerificationMail,
     create,
     createCandidat,
-    changeCandidatStatus, 
+    changeCandidatStatus,
     linkAttachments,
+    linkConcours,
     createAdmin,
     update,
     setOrRemoveForgottenPasswordToken,

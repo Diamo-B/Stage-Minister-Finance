@@ -262,6 +262,24 @@ const linkAttachmentsToCandidat = async (
     }
 };
 
+const linkConcourstoCandidat = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    try {
+        const {user:decodedToken} = (req as CandidatAuthRequest);
+        const candidatId = decodedToken.user.candidat?.id;
+        const { concoursIds } = req.body;
+        const updatedCandidat = await userService.linkConcours(candidatId, concoursIds);
+        return res.status(200).json(updatedCandidat);
+    } catch (err: any) {
+        if(err instanceof httpException)
+            next(err);
+        next(new httpException(500, err.message));
+    }
+};
+
 const remove = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { id } = req.params;
@@ -295,5 +313,6 @@ export default {
     changeCandidatStatus,
     updateCandidat,
     linkAttachmentsToCandidat,
+    linkConcourstoCandidat,
     /*   createAdmin, */
 };

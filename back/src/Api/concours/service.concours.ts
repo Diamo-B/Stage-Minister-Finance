@@ -1,6 +1,7 @@
 import { concoursStatus } from '@prisma/client';
 import { prisma } from '../../prisma/db.prisma';
 import dayjs from 'dayjs';
+import httpException from '../../utils/httpException';
 
 const getAll = async () => {
     const concours = await prisma.concours.findMany({
@@ -39,6 +40,42 @@ const getAll_W_UsefulPropsOnly = async () => {
     });
     return concours;
 };
+
+const getAll_W_usefulProps_userAssignments = async (userId: string) => {
+    try {
+        const concours = await prisma.concours.findMany({
+            select: {
+                id: true,
+                label: true,
+                status: true,
+                datePublication: true,
+                dateLimiteInscription: true,
+                dateConcours: true,
+                limiteAge: true,
+                limitePlaces: true,
+                campagneId: true,
+                avis: {
+                    select:{
+                        path: true,
+                    }
+                },
+                candidats: {
+                    select: {
+                        id: true,                      
+                    },
+                    where: {
+                        id: userId,
+                    },
+                },
+            },
+        });
+        if(!concours || concours.length === 0)
+            throw new httpException(404, "Aucun concours n'est trouvé");
+        return concours;
+    } catch (err) {
+        throw err
+    }
+}
 
 const create = async (
     label: string,
@@ -102,5 +139,6 @@ const create = async (
 export default {
     getAll,
     getAll_W_UsefulPropsOnly,
+    getAll_W_usefulProps_userAssignments,
     create,
 };

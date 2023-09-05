@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { UilFileDownload } from "@iconscout/react-unicons";
-import AnimatedButton from "../../../Components/FormElements/animatedButton";
+import AnimatedButton from "../../FormElements/animatedButton";
 import { useEffect, useState } from "react";
 import useHelpers from "../../../Hooks/Home/useHelpers";
 import { useAppSelector } from "../../../Hooks/redux";

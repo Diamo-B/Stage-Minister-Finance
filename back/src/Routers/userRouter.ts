@@ -53,6 +53,14 @@ router.patch(
     usersApis.linkAttachmentsToCandidat
 );
 
+//explain: Links concours to candidats
+router.patch(
+    '/link/concours',
+    AuthMiddleware,
+    validate(schema.linkConcoursToCandidat),
+    usersApis.linkConcourstoCandidat
+);
+
 /*
 router.post(
     '/create/admin',

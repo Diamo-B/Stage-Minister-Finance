@@ -2,7 +2,8 @@ import {
     UilEllipsisH,
     UilBars,
     UilSignout,
-    UilSetting,
+    UilSetting, 
+    UilLink,
 } from "@iconscout/react-unicons";
 import { useNavigate } from "react-router-dom";
 import ConfirmationPanel from "../Components/FormElements/confirmationPanel";
@@ -79,23 +80,11 @@ const Navbar = () => {
                     {connectedUser && typeof connectedUser === "object" && (
                         <>
                             <p className="text-base text-base-100 mr-5 badge badge-lg badge-success flex gap-1">
-                                Connecté en tant que
+                                <UilLink className='text-white'/>
                                 <span className="font-bold">
                                     {`${connectedUser.email}`}
                                 </span>
                             </p>
-
-                            {/*  <p className="text-base font-medium text-base-100 mr-5 badge badge-lg badge-error">
-                                { 
-                                    connectedUser.candidat !== null ?
-                                        'Candidat'
-                                    :
-                                        connectedUser.admin !== null ?
-                                            'Administrateur'
-                                        :
-                                        ''
-                                }
-                            </p> */}
                         </>
                     )}
                     <div className="dropdown dropdown-end">

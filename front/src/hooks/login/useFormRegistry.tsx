@@ -8,17 +8,26 @@ import { useAppDispatch } from "../redux";
 
 const useFormRegistry = () => {
     const schema = z.object({
-        email: z.string().email({message:'Adresse email invalide'}).nonempty(),
-        password: z.string().min(8,{message:'Le mot de passe doit avoir un minimum de 8 caractères'}).nonempty(),
+        email: z
+            .string()
+            .email({ message: "Adresse email invalide" })
+            .nonempty(),
+        password: z
+            .string()
+            .min(8, {
+                message:
+                    "Le mot de passe doit avoir un minimum de 8 caractères",
+            })
+            .nonempty(),
     });
 
-    const navigate = useNavigate()
-    const location = useLocation()
-    const dispatch = useAppDispatch()
+    const navigate = useNavigate();
+    const location = useLocation();
+    const dispatch = useAppDispatch();
 
     const checkToken = () => {
         try {
-            const token = localStorage.getItem("AccessToken");            
+            const token = localStorage.getItem("AccessToken");
             if (token) {
                 fetch(
                     `${
@@ -33,12 +42,11 @@ const useFormRegistry = () => {
                     },
                 )
                     .then(async res => {
-                        const response = await res.json();                        
-                        if(response.user.candidat?.id){
-                            navigate('/');
-                        }
-                        else if(response.user.admin?.id){
-                            navigate('/admin');
+                        const response = await res.json();
+                        if (response.user.candidat?.id) {
+                            navigate("/");
+                        } else if (response.user.admin?.id) {
+                            navigate("/admin");
                         }
                     })
                     .catch(async err => {
@@ -48,16 +56,16 @@ const useFormRegistry = () => {
         } catch (err) {
             console.error(err);
         }
-    }
+    };
 
     const checkLogin = (
         data: ILoginForm,
         setLoginError: Dispatch<SetStateAction<string>>,
         reset: UseFormReset<ILoginForm>,
         focus: UseFormSetFocus<ILoginForm>,
-    ) =>{
-        dispatch(startLoading())
-        fetch(`${import.meta.env.VITE_BackendBaseUrl}/accounts/login`,{
+    ) => {
+        dispatch(startLoading());
+        fetch(`${import.meta.env.VITE_BackendBaseUrl}/accounts/login`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -65,48 +73,43 @@ const useFormRegistry = () => {
             body: JSON.stringify({
                 email: data.email,
                 password: data.password,
-            })
-        }).then(async(res)=>{
-            const response = await res.json();            
-            if (response.token) {
-                localStorage.setItem("AccessToken", response.token);                
-                setLoginError("");
-                //explain: redirect to the previous page if the user was redirected to the login page by another action
-                const redirectPath = location.state?.from;
-                if(redirectPath !== undefined){
-                    if(redirectPath === "/concours")
-                    {
-                        //explain: if the user was redirected to the login page because he wanted to apply for a concours, we redirect him to the concours page after login and pass the concours id as a state so that we can show the confirmation panel.
-                        const concoursChoisi = location.state?.concoursChoisi;
-                        navigate(`${redirectPath}`, {state: {concoursChoisi}});
-                    }            
-                    else{
-                        navigate(`${redirectPath}`);
-                    }
-
-                }
-                else if (response.type === "candidat") {                    
-                    navigate("/");
-                } else if (response.type === "admin") {        
-                    navigate("/admin");
-                }
-            } else {
-                if (response.status === 401) {
-                    setLoginError(response.error);
-                    focus("email", { shouldSelect: true });
-                    reset({ password: "" });
-                }
-            }
-        }).catch((err)=>{
-            console.error(err);
-            setLoginError("Une erreur est survenue. Veuillez réessayer ultérieurement.");
-            reset();
-        }).finally(()=>{
-            dispatch(stopLoading())
+            }),
         })
+            .then(async res => {
+                const response = await res.json();
+                if (response.token) {
+                    localStorage.setItem("AccessToken", response.token);
+                    setLoginError("");
+                    //explain: redirect to the previous page if the user was redirected to the login page by another action
+                    const redirectPath = location.state?.from;
+                    if (redirectPath !== undefined) {
+                        navigate(`${redirectPath}`);
+                    } else if (response.type === "candidat") {
+                        navigate("/");
+                    } else if (response.type === "admin") {
+                        navigate("/admin");
+                    }
+                } else {
+                    if (response.status === 401) {
+                        setLoginError(response.error);
+                        focus("email", { shouldSelect: true });
+                        reset({ password: "" });
+                    }
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                setLoginError(
+                    "Une erreur est survenue. Veuillez réessayer ultérieurement.",
+                );
+                reset();
+            })
+            .finally(() => {
+                dispatch(stopLoading());
+            });
     };
 
     return { schema, checkLogin, checkToken };
-}
- 
+};
+
 export default useFormRegistry;
