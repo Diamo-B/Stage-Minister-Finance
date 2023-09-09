@@ -4,7 +4,7 @@ import diplomaService from './service.diplomas';
 import attachmentService from '../attachments/service.attachments';
 import { saveFiles } from '../../utils/fileUploaders/saveFiles';
 import { UploadedFile } from 'express-fileupload';
-import { CandidatAuthRequest } from '../../utils/interfaces/ModifiedRequestObject';
+import { UserAuthRequest } from '../../utils/interfaces/ModifiedRequestObject';
 
 const getAll = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -21,7 +21,7 @@ const getAllByCandidatId = async (
     next: NextFunction
 ) => {
     try {
-        const id = (req as CandidatAuthRequest).user.candidatId;
+        const id = (req as UserAuthRequest).user.candidatId;
         const diplomes = await diplomaService.getAllByCandidatId(id);
         res.status(200).json(diplomes);
     } catch (err: any) {
@@ -76,7 +76,7 @@ const create = async (req: Request, res: Response, next: NextFunction) => {
         files = [files];
     
     try {
-        const candidat = (req as CandidatAuthRequest).user.candidatId;
+        const candidat = (req as UserAuthRequest).user.candidatId;
         //explain: saves the attachement in the public folder and returns the paths
         const dirPath = `public/candidat_${candidat}/Diplomes/`;
         const filesPaths = saveFiles(dirPath, files);

@@ -2,19 +2,32 @@ import { concoursStatus } from '@prisma/client';
 import { prisma } from '../../prisma/db.prisma';
 import dayjs from 'dayjs';
 import httpException from '../../utils/httpException';
+import { rm } from 'fs';
 
 const getAll = async () => {
     const concours = await prisma.concours.findMany({
-        include: {
+        select: {
+            id: true,
+            label: true,
             direction: true,
             poste: true,
             grade: true,
             specialite: true,
             branche: true,
-            villes: true,
-            avis: true,
-            campagne: true
-        },
+            avis: {
+                select:{
+                    id: true,
+                    path: true,
+                }
+            },
+            candidats: true,
+            dateConcours: true,
+            datePublication: true,
+            dateLimiteInscription: true,
+            limiteAge: true,
+            limitePlaces:true,
+            status: true
+        }
     });
     return concours;
 };
@@ -56,6 +69,7 @@ const getAll_W_usefulProps_userAssignments = async (userId: string) => {
                 campagneId: true,
                 avis: {
                     select:{
+                        id: true,
                         path: true,
                     }
                 },
@@ -136,9 +150,36 @@ const create = async (
     return concours;
 };
 
+const remove = async (id: string) => {
+    try {
+        
+        const concours = await prisma.concours.delete({
+            where: {
+                id: id,
+            },
+        });
+        if(!concours)
+            throw new httpException(404, "Aucun concours ne possède l'id: " + id);
+        else
+        {
+            //explain: removes the concours folder (avis) from the public folder
+            const dirPath = `./public/Concours/concours_${concours.id}/`;
+            rm(dirPath, { recursive: true }, 
+                (err) => {
+                    if (err) throw err;
+                }
+            );
+        }
+        return concours;
+    } catch (err) {
+        throw err;    
+    }
+}
+
 export default {
     getAll,
     getAll_W_UsefulPropsOnly,
     getAll_W_usefulProps_userAssignments,
     create,
+    remove,
 };

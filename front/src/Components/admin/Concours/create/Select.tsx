@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 
 type option = {
@@ -7,15 +8,24 @@ type option = {
 
 type Props = {
     options: option[];
+    defaultValue?: option;
     label: string;
     reg: string;
 };
 
-const Select = ({ options, label, reg }: Props) => {
+const Select = ({ options, label, reg, defaultValue }: Props) => {
     const {
         register,
         formState: { errors },
     } = useFormContext();
+
+    const [selectedValue, setSelectedValue] = useState<string | undefined>(
+        defaultValue?.id || ""
+    );
+
+    const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setSelectedValue(e.target.value);
+    };
 
     return (
         <div className="form-control">
@@ -31,14 +41,19 @@ const Select = ({ options, label, reg }: Props) => {
                     Obligatoire
                 </span>
                 <select
-                    className="select select-bordered w-64 "
+                    className="select select-bordered w-64"
                     {...register(reg)}
+                    value={selectedValue}
+                    onChange={handleSelectChange}
                 >
-                    <option hidden value={undefined}>
+                    <option hidden value="">
                         _ _ _ _ _ _
                     </option>
-                    {options.map(option => (
-                        <option key={option.id} value={option.id}>
+                    {options.map((option) => (
+                        <option
+                            key={option.id}
+                            value={option.id}
+                        >
                             {option.label}
                         </option>
                     ))}

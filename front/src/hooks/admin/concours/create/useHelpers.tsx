@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction } from "react";
-import { IFormType } from "../../../Utils/interfaces/Admin/concours/IFormTypes";
+import { IFormType } from "../../../../Utils/interfaces/Admin/concours/IFormTypes";
 
 type loadFetchProps = {
     setDirections: Dispatch<SetStateAction<IFormType[]>>;

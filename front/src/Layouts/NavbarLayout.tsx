@@ -13,7 +13,7 @@ const NavbarLayout = () => {
             ) : (
                 <NeutralNavbar />
             )}
-            <div className="w-full py-10 flex flex-col justify-center items-center">
+            <div className="flex-grow w-full flex flex-col justify-center items-center">
                 <Outlet />
             </div>
         </>

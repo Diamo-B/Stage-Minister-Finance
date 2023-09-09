@@ -62,15 +62,11 @@ const create = z.object({
     villesIds: z.string()
 });
 
-/* const BlobSchema = z.custom((value, ctx) => {
-    if (value instanceof Blob) {
-        // You can perform additional checks on the Blob properties here if needed
-        return { success: true, data: value };
-    } else {
-        return { success: false, message: 'Invalid Blob object' };
-    }
-}); */
+const remove = z.object({
+    id: z.string().uuid({ message: 'L\'id du concours doit absolument être un UUID' }).nonempty({ message: 'L\'id du concours est obligatoire' })
+})
 
 export default {
-    create
+    create,
+    remove
 }

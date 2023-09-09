@@ -4,7 +4,7 @@ import { TCity } from "../../../../../Redux/Admin/concours/types/create";
 import { DndContext, DragEndEvent } from "@dnd-kit/core";
 import { restrictToHorizontalAxis, snapCenterToCursor } from "@dnd-kit/modifiers";
 import DroppingContainer from "./droppinArea/droppingContainer";
-import useCitiesHelpers from "../../../../../Hooks/admin/concours/useCitiesDragNDropHelpers";
+import useCitiesHelpers from "../../../../../Hooks/admin/concours/create/useCitiesDragNDropHelpers";
 import DraggingContainer from "./draggingArea/draggingContainer";
 import { useFormContext } from "react-hook-form";
 
@@ -27,7 +27,6 @@ const DragNDropCities = ({selectedCities, setSelectedCities}:Props) => {
 
     //explain: This is updating the form data whenever the selected cities change
     useEffect(() => {
-        console.log("selectedCities changed:", selectedCities);
         if(selectedCities)
         {
             setValue("villes", selectedCities.map(city => city.id)); 
@@ -82,7 +81,6 @@ const DragNDropCities = ({selectedCities, setSelectedCities}:Props) => {
                         Facultatif
                     </div>
                     <h2
-                        id="cityChoiceTitle"
                         className="text-lg font-bold py-1 border-2 border-neutral-content rounded-full text-center"
                     >
                         Villes autorisées à passer le concours

@@ -2,6 +2,38 @@ import { AttachmentTypes } from '@prisma/client';
 import { prisma } from '../../prisma/db.prisma';
 import fs from "fs";
 
+const getById = async (id: string) => {
+    try {
+        return await prisma.attachment.findUnique({
+            where: {
+                id: id,
+            },
+            select: {
+                id: true,
+                path: true,
+                type: true,
+            },
+        });
+    } catch (err) {
+        throw err;
+    }
+}
+
+const getAttachmentDataByID = async (id: string) => {
+    try {
+        return await prisma.attachment.findUnique({
+            where: {
+                id: id,
+            },
+            select: {
+                data_base64: true,
+            },
+        });
+    } catch (err) {
+        throw err;
+    }
+}
+
 const getByCandidatID = async (candidatId: string) => {
     try {
         return await prisma.attachment.findMany({
@@ -117,6 +149,8 @@ const deleteAttachments_byDiplome = async (diplomeId: string, paths: string[]) =
 
 
 export default {
+    getById,
+    getAttachmentDataByID,
     getByCandidatID,
     create,
     deleteAttachments_byDiplome,

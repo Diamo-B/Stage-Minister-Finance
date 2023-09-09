@@ -24,7 +24,7 @@ const useHelpers = () => {
 
     const getConcours = () => {
         dispatch(startGenPageLoading());
-        //explain: if the user is a visitor, we show all the concours.
+        //explain: if the user is a visitor, we show all the concours. If it's a candidat or an admin we add the list of users linked to the concours
         if (connectedUser !== null && connectedUser !== undefined) {
             fetch(
                 `${import.meta.env.VITE_BackendBaseUrl}/concours/getAll/useful${connectedUser !== "visitor" ? "/withUserAssignments" : ""}`,

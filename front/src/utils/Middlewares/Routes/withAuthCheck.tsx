@@ -30,17 +30,12 @@ const WithAuthCheck = ({ userTypes }: Props) => {
             )
                 .then(async res => {
                     const response = await res.json();
-                    console.log(response);
-                    
                     dispatch(setConnectedUser(response.user))
-
                     const userTypesResponse = userTypes.filter(
                         userType =>
                             response.user[userType] !== null &&
                             response.user[userType] !== undefined,
                     );
-                    console.log(userTypesResponse);
-                    
                     if (userTypesResponse.length === 0) {
                         navigate("/login");
                     } else {                        

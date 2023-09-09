@@ -18,8 +18,9 @@ type Props = {
     shouldEmptyFiles: Dispatch<SetStateAction<boolean>>;
     numberOfFiles?: number;
     reg: string;
+    fileShowCase?: File | File[] |undefined; 
 };
-const FileUpload = ({ emptyFiles, shouldEmptyFiles, reg, numberOfFiles }: Props) => {
+const FileUpload = ({ emptyFiles, shouldEmptyFiles, reg, numberOfFiles, fileShowCase }: Props) => {
     const [files, setFiles] = useState<fileField[]>([]);
     const [show, setShow] = useState<boolean>(false);
     const [errors, setErrors] = useState<errorsField | null>(null);
@@ -35,7 +36,29 @@ const FileUpload = ({ emptyFiles, shouldEmptyFiles, reg, numberOfFiles }: Props)
         setFiles,
         setShow,
         setErrors,
+        numberOfFiles
     });
+
+    useEffect(() => {  
+            
+        if(fileShowCase !== undefined && files.length === 0)
+        {
+            //put the fileShowCase in the format of {file: fileShowcase}
+            let tempFiles: fileField[] = [];
+            if(Array.isArray(fileShowCase))
+            {
+                fileShowCase.forEach(file => {
+                    tempFiles.push({file: file});   
+                });
+            }
+            else
+            {
+                tempFiles.push({file: fileShowCase});
+            }
+            setFiles(tempFiles);
+            setShow(true);
+        }
+    },[fileShowCase])
 
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
         onDrop,
@@ -81,7 +104,7 @@ const FileUpload = ({ emptyFiles, shouldEmptyFiles, reg, numberOfFiles }: Props)
     } else {
         return (
             <div className="w-full">
-                {show && files.length > 0 ? (
+                {(show && files.length > 0 )? (
                     /* 
                         explain: This is the container where you can view the selected files 
                     */

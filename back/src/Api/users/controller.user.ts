@@ -6,7 +6,7 @@ import attachmentService from '../attachments/service.attachments';
 import { saveFiles } from '../../utils/fileUploaders/saveFiles';
 import { UploadedFile } from 'express-fileupload';
 import { generateJWT } from '../../utils/JWT/generateJWT';
-import { CandidatAuthRequest } from '../../utils/interfaces/ModifiedRequestObject';
+import { UserAuthRequest } from '../../utils/interfaces/ModifiedRequestObject';
 import { z } from 'zod';
 
 const getAll = async (req: Request, res: Response, next: NextFunction) => {
@@ -184,7 +184,7 @@ const updateCandidat = async (
     next: NextFunction
 ) => {
     try {
-        const id = (req as CandidatAuthRequest).user.candidatId;
+        const id = (req as UserAuthRequest).user.candidatId;
         const { adresse, ville, zip } = req.body;
         const candidat = await userService.getByCandidatId(id);
         const updatedUser = await userService.update(
@@ -205,7 +205,7 @@ const changeCandidatStatus = async (
     next: NextFunction
 ) => {
     try {
-        const id = (req as CandidatAuthRequest).user.candidatId;
+        const id = (req as UserAuthRequest).user.candidatId;
         const { status } = req.body;
         const updatedCandidat = await userService.changeCandidatStatus(id, status);
         return res.status(200).json(updatedCandidat);
@@ -220,7 +220,7 @@ const linkAttachmentsToCandidat = async (
     next: NextFunction
 ) => {
     try {
-        const id = (req as CandidatAuthRequest).user.candidatId; 
+        const id = (req as UserAuthRequest).user.candidatId; 
         const cvFiles = req.files?.cvFiles as (UploadedFile[] | UploadedFile);
         const cinFiles = req.files?.cinFiles as (UploadedFile[] | UploadedFile);
 
@@ -268,7 +268,7 @@ const linkConcourstoCandidat = async (
     next: NextFunction
 ) => {
     try {
-        const {user:decodedToken} = (req as CandidatAuthRequest);
+        const {user:decodedToken} = (req as UserAuthRequest);
         const candidatId = decodedToken.user.candidat?.id;
         const { concoursIds } = req.body;
         const updatedCandidat = await userService.linkConcours(candidatId, concoursIds);

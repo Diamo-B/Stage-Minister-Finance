@@ -19,14 +19,14 @@ import { resetSteps } from "../Redux/RegisterationForm/formSteps";
 const Navbar = () => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
-    const { show, isConfirmed } = useAppSelector(
+    const { show, isConfirmed, functionParams } = useAppSelector(
         state => state.confirmationPanel,
     );
     const { connectedUser } = useAppSelector(state => state.genValues);
 
 
     useEffect(() => {
-        if (isConfirmed) {
+        if (isConfirmed && functionParams.logout) {
             /*
                 ! Not reading this will absolutely lead you to bugs. They will be annoying to debug. Trust me, I've been there. :D
 
@@ -58,7 +58,7 @@ const Navbar = () => {
             showConfirmationPanel({
                 text: "Voulez-vous vraiment vous déconnecter ?",
                 itemIdentifier: null,
-                functionParams: null,
+                functionParams: {logout: true},
             }),
         );
     };

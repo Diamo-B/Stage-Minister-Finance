@@ -10,6 +10,7 @@ import loadingReducer from "./loading";
 import alertReducer from "./alerts";
 import confirmationPanelReducer from "./confirmationPanel";
 import concoursReducer from "./Admin/concours/create";
+import concoursManagementReducer from "./Admin/concours/manage";
 import forgotPasswordReducer from "./forgotPassword";
 import postulerReducer from './Concours/postuler';
 import postulerConcoursReducer from './Concours/concours'
@@ -17,6 +18,7 @@ import genValuesReducer from "./GeneralValues";
 
 export const store = configureStore({
     reducer: {
+        //! Registration
         //----------------Applicant's Registration-------------------
         user: userReducer,
         formSteps: formStepsReducer,
@@ -25,12 +27,16 @@ export const store = configureStore({
         diplomes: diplomesState,
         lastStep: lastStepReducer,
         formTabs: formTabsReducer,
+        //! Candidat
         //----------------Apply to concours-------------------
         postuler: postulerReducer,
         postulerConcours: postulerConcoursReducer,
+        //! Admin
         //----------------create Concours-------------------
-        concours: concoursReducer,
-        //----------------General-------------------
+        concoursCreation: concoursReducer,
+        //----------------Manage concours----------------------------------
+        concoursManagement: concoursManagementReducer,
+        //!General
         forgotPassword: forgotPasswordReducer,
         loading: loadingReducer,
         alert: alertReducer,

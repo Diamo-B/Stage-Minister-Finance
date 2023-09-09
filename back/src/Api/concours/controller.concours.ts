@@ -4,7 +4,7 @@ import httpException from '../../utils/httpException';
 import { UploadedFile } from 'express-fileupload';
 import attachmentsService from '../attachments/service.attachments';
 import { saveFiles } from '../../utils/fileUploaders/saveFiles';
-import { CandidatAuthRequest } from '../../utils/interfaces/ModifiedRequestObject';
+import { UserAuthRequest } from '../../utils/interfaces/ModifiedRequestObject';
 
 const create = async (req: Request, res: Response, next: NextFunction) => {
     const {
@@ -102,7 +102,7 @@ const getAll_W_usefulProps_userAssignments = async (
     next: NextFunction
 ) => {
     try {
-        const { user: decodedToken } = req as CandidatAuthRequest;
+        const { user: decodedToken } = req as UserAuthRequest;
         const candidatId = decodedToken.user.candidat?.id;
         const concours =await concoursService.getAll_W_usefulProps_userAssignments(candidatId);
         return res.status(200).json({ concours });
@@ -112,9 +112,28 @@ const getAll_W_usefulProps_userAssignments = async (
     }
 };
 
+const remove = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const admin = (req as UserAuthRequest).user.user.admin.id;
+        if(!admin)
+        {
+          throw new httpException(401, 'Unauthorized');  
+        } 
+        const { id } = req.params;
+        const concours = await concoursService.remove(id);
+        return res.status(200).json({
+            concours
+        });
+    } catch (err:any) {
+       if (err instanceof httpException) next(err);
+       next(new httpException(500, err.message)); 
+    }
+};
+
 export default {
     getAll,
     getAll_W_UsefulPropsOnly,
     getAll_W_usefulProps_userAssignments,
     create,
+    remove,
 };

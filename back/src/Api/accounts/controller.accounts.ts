@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import httpException from "../../utils/httpException";
 import accountsService from "./service.accounts";
 import { generateJWT } from "../../utils/JWT/generateJWT";
-import { CandidatAuthRequest } from "../../utils/interfaces/ModifiedRequestObject";
+import { UserAuthRequest } from "../../utils/interfaces/ModifiedRequestObject";
 
 const login = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -36,7 +36,7 @@ const generateRegistrationToken = async (req: Request, res: Response, next: Next
 
 const genAccessToken = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { candidatId } = (req as CandidatAuthRequest).user;
+        const { candidatId } = (req as UserAuthRequest).user;
         const user = await accountsService.genAccessToken(candidatId);  
         if(user)
         {
@@ -64,7 +64,7 @@ const sendForgotPasswordEmail = async (req: Request, res: Response, next: NextFu
 const verifyResetPasswordToken = async (req: Request, res: Response, next: NextFunction) => {
     try {
         let token = req.header('Authorization')?.replace('Bearer ', '');
-        const {id} = (req as CandidatAuthRequest).user;
+        const {id} = (req as UserAuthRequest).user;
         if(!token || !id)
         {
             next(new httpException(401, 'Token invalide'))
@@ -103,9 +103,7 @@ const findCorrectRegistrationStep = async (
     next: NextFunction
 ) => {
     try {
-        const {user} = (req as CandidatAuthRequest).user;
-         console.log('user: ',user);
-         
+        const {user} = (req as UserAuthRequest).user;
         const step = await accountsService.findCorrectRegistrationStep(
             user.candidat.id
         );
@@ -124,7 +122,7 @@ const verifyPastRegistration = async (
     next: NextFunction
 ) => {
     try {
-        const { candidatId } = (req as CandidatAuthRequest).user;
+        const { candidatId } = (req as UserAuthRequest).user;
         const user = await accountsService.verifyPastRegistration(candidatId)
         const token = generateJWT({ user }, '2d');
         return res.status(200).json({ token, user });

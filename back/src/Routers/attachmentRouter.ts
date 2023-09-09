@@ -5,6 +5,14 @@ import schema from '../Api/attachments/validation.attachments';
 import { AuthMiddleware } from '../middlewares/auth.middleware';
 const router: Router = Router();
 
+router.get('/get/:id', AuthMiddleware, validate(schema.getById), attachmentApi.getById);
+router.get(
+    '/get/:id/data',
+    AuthMiddleware,
+    validate(schema.getById),
+    attachmentApi.getAttachmentDataByID
+);
+
 router.get('/getAll/candidat', AuthMiddleware, attachmentApi.getByCandidatID);
 router.post('/create', validate(schema.create), attachmentApi.create);
 router.delete('/delete/:id', validate(schema.deleteById), attachmentApi.deleteById);

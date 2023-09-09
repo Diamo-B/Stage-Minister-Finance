@@ -23,7 +23,6 @@ export const verifyJWT = (req: Request, res: Response, next: NextFunction) => {
                     throw new httpException(403, 'Unauthorized');
                 }
             }
-            console.log(decoded);
             return res.status(200).json(decoded);
         }
     );

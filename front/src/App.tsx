@@ -6,12 +6,13 @@ import GenAppLayout from "./Layouts/GenAppLayout";
 import Register from "./Pages/Candidat/Register";
 import Home from "./Pages/Candidat/Home";
 import AdminHome from "./Pages/Admin/Home";
-import CreateConcours from "./Pages/Admin/Concours/Create";
+import CreateModifyConcours from "./Pages/Admin/Concours/Create_Modify";
 import Login from "./Pages/Login";
 import NavbarLayout from "./Layouts/NavbarLayout";
 import WithAuthCheck from "./Utils/Middlewares/Routes/withAuthCheck";
 import ConcoursHome from "./Pages/Home/ConcoursHome";
 import ResetPassword from "./Pages/resetPassword";
+import ConcoursManagement from "./Pages/Admin/Concours/management";
 
 function App() {
     return (
@@ -65,8 +66,12 @@ function App() {
                             <Route element={<NavbarLayout />}>
                                 <Route index element={<AdminHome />} />
                                 <Route
+                                    path={"/admin/concours/create"}
+                                    element={<CreateModifyConcours />}
+                                />
+                                <Route
                                     path={"/admin/concours"}
-                                    element={<CreateConcours />}
+                                    element={<ConcoursManagement/>}
                                 />
                             </Route>
                         </Route>

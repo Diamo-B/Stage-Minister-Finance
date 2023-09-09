@@ -2,6 +2,7 @@ type functionParams = {
     id?: string;
     attachments?: { path: string }[];
     index?: number;
+    logout?: boolean;
 };
 
 export interface IConfirmationPanel {

@@ -2,10 +2,10 @@ import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 dayjs.extend(customParseFormat);
 import { z } from "zod";
-import { IConcours } from "../../../Utils/interfaces/Admin/concours/IConcours";
-import { base64ToBlob } from "../../../Utils/base64ToBlobs";
-import { stopLoading } from "../../../Redux/loading";
-import { useAppDispatch } from "../../redux";
+import { IConcours } from "../../../../Utils/interfaces/Admin/concours/IConcours";
+import { base64ToBlob } from "../../../../Utils/base64ToBlobs";
+import { stopLoading } from "../../../../Redux/loading";
+import { useAppDispatch } from "../../../redux";
 
 
 const useFormRegistry = () => {

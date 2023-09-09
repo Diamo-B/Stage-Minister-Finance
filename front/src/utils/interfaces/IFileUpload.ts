@@ -5,7 +5,6 @@ export interface file {
     extension: string;
 }
 
-
 //explain: used as the type for the files records inside the fileUploader component itself (to show the files that are being selected)
 export interface fileField {
     file: File;

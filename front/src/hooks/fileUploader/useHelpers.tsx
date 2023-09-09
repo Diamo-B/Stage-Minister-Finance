@@ -30,9 +30,10 @@ type Props = {
     setFiles: React.Dispatch<React.SetStateAction<fileField[]>>;
     setShow: React.Dispatch<React.SetStateAction<boolean>>;
     setErrors: React.Dispatch<React.SetStateAction<errorsField | null>>;
+    numberOfFiles: number|undefined;
 };
 
-const useHelpers = ({ reg, files, setFiles, setShow, setErrors }: Props) => {
+const useHelpers = ({ reg, files, setFiles, setShow, setErrors, numberOfFiles }: Props) => {
     const dispatch = useAppDispatch();
 
     const onDrop = useCallback(
@@ -63,7 +64,7 @@ const useHelpers = ({ reg, files, setFiles, setShow, setErrors }: Props) => {
                     requiredError: false,
                 });
             }
-            if (files.length < 2) {
+            if (files.length < (numberOfFiles||2)) { 
                 setFiles(prev => [
                     ...prev,
                     ...acceptedFiles.map(file => {

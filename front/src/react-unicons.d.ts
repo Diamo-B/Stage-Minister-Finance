@@ -19,7 +19,7 @@ declare module "@iconscout/react-unicons" {
     export const UilListUiAlt: Icon;
     export const UilBars: Icon;
     export const UilDraggabledots: Icon;
-    export const UilAngleRightB: Icons;
+    export const UilAngleRightB: Icon;
     export const UilSearch: Icon;
     export const UilCheckCircle: Icon;
     export const UilEye: Icon;
@@ -29,4 +29,12 @@ declare module "@iconscout/react-unicons" {
     export const UilSignOutAlt: Icon;
     export const UilFileDownload: Icon;
     export const UilLink: Icon;
+    export const UilComparison: Icon;
+    export const UilUser: Icon;
+    export const UilGraphBar: Icon;
+    export const UilSortAmountUp: Icon;
+    export const UilSortAmountDown: Icon;
+    export const UilHeart : Icon;
+    export const UilSuitcaseAlt : Icon;
+    export const UilUserCheck : Icon;
 }

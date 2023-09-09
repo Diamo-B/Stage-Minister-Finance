@@ -7,7 +7,7 @@ export type concours = {
     datePublication: string;
     dateLimiteInscription: string;
     dateConcours: string;
-    campagneId: string;
+    campagneId: string; 
     avis: {path: string};
     candidats?: {id: string}[];  
 }

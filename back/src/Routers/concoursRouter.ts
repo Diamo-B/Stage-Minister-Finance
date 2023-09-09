@@ -14,6 +14,6 @@ router.get('/getAll/useful', concoursApis.getAll_W_UsefulPropsOnly);
 //explain: this route gets all the concours with only the useFul information to include in the front-end, in addition to the links between the current user and the concours he applied to. (signedIn user)
 router.get('/getAll/useful/withUserAssignments', AuthMiddleware, concoursApis.getAll_W_usefulProps_userAssignments);
 
-
+router.delete('/delete/:id', AuthMiddleware, validate(schema.remove),concoursApis.remove);
 
 export default router;

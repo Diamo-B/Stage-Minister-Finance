@@ -1,4 +1,4 @@
-import { CandidatAuthRequest } from '../utils/interfaces/ModifiedRequestObject';
+import { UserAuthRequest } from '../utils/interfaces/ModifiedRequestObject';
 import { Request, Response, NextFunction } from 'express';
 import jsonwebtoken from 'jsonwebtoken';
 import dotenv from 'dotenv';
@@ -12,7 +12,7 @@ export const AuthMiddleware = (
     next: NextFunction
 ) => {
     let token = req.header('Authorization')?.replace('Bearer ', '');
-
+    
     if (token) {
         jsonwebtoken.verify(
             token,
@@ -21,7 +21,7 @@ export const AuthMiddleware = (
                 if (!err) {
                     if (decodedToken != null) {
                         // Correct candidat token
-                        (req as CandidatAuthRequest).user = decodedToken;
+                        (req as UserAuthRequest).user = decodedToken;
                         next();
                     } else {
                         // Correct token but doesn't belong to an agent

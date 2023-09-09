@@ -49,7 +49,7 @@ const IntitulePanel = ({
     
     return (
         <div className="z-40 w-full h-full fixed top-0 left-0 flex justify-center items-center bg-slate-700/80 ">
-            <div className="w-2/6 bg-base-200 p-10 flex flex-col items-center gap-5 rounded-xl">
+            <div className="bg-base-200 p-10 flex flex-col items-center gap-5 rounded-xl">
                 {!CustomLabelInput ? (
                     <>
                         <p>
