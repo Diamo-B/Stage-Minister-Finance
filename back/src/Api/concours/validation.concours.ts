@@ -1,5 +1,9 @@
 import { z } from "zod";
 
+const getById = z.object({
+    id: z.string().uuid({ message: 'L\'id du concours doit absolument être un UUID' }).nonempty({ message: 'L\'id du concours est obligatoire' })
+})
+
 const create = z.object({
     label: z.string().nonempty({ message: 'Le label est obligatoire' }),
     directionId: z
@@ -62,11 +66,17 @@ const create = z.object({
     villesIds: z.string()
 });
 
+const update = z.object({
+    id: z.string().uuid({ message: 'L\'id du concours doit absolument être un UUID' }).nonempty({ message: 'L\'id du concours est obligatoire' }),
+}).merge(create)
+
 const remove = z.object({
     id: z.string().uuid({ message: 'L\'id du concours doit absolument être un UUID' }).nonempty({ message: 'L\'id du concours est obligatoire' })
 })
 
 export default {
+    getById,
     create,
+    update,
     remove
 }

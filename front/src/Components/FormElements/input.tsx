@@ -114,7 +114,7 @@ const Input: FC<InputProps> = (props): JSX.Element => {
                         className={`input input-bordered w-72 join-item ${props.customClasses}`}
                         min={props.type === "number" ? props.min : undefined}
                         max={props.type === "number" ? props.max : undefined}
-                        value={props.defaultValue}
+                        defaultValue={props.defaultValue}
                         {...register(props.registerValue as string)}
                     />
                 </div>
@@ -151,7 +151,7 @@ const Input: FC<InputProps> = (props): JSX.Element => {
                         className={`input input-bordered w-72 join-item ${props.customClasses}`}
                         min={props.type === "number" ? props.min : undefined}
                         max={props.type === "number" ? props.max : undefined}
-                        value={props.defaultValue}
+                        defaultValue={props.defaultValue}
                         {...register(props.registerValue as string)}
                     />
                 </div>

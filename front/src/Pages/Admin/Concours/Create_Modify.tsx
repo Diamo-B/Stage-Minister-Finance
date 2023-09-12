@@ -6,22 +6,19 @@ import FileUpload from "../../../Components/fileUploader/fileUploader";
 import { zodResolver } from "@hookform/resolvers/zod";
 import useFormRegistry from "../../../Hooks/admin/concours/create/useFormRegistry";
 import DragNDropCities from "../../../Components/admin/Concours/create/citiesDragNDrop/citiesDragNDrop";
-import { useAppDispatch, useAppSelector } from "../../../Hooks/redux";
+import { useAppSelector } from "../../../Hooks/redux";
 import useHelpers from "../../../Hooks/admin/concours/create/useHelpers";
 import { IFormType } from "../../../Utils/interfaces/Admin/concours/IFormTypes";
 import IntitulePanel from "../../../Components/admin/Concours/create/intitulePanel";
 import Toast from "../../../Components/toast";
 import { IConcours } from "../../../Utils/interfaces/Admin/concours/IConcours";
-import { z } from "zod";
 import { TCity } from "../../../Redux/Admin/concours/types/create";
 import { UilArrowLeft } from "@iconscout/react-unicons";
 import AnimatedButton from "../../../Components/FormElements/animatedButton";
 import { useLocation, useNavigate } from "react-router-dom";
 import { concoursType } from "../../../Redux/Admin/concours/types/manage";
-import {
-    startGenPageLoading,
-    stopGenPageLoading,
-} from "../../../Redux/loading";
+import useModification from "../../../Hooks/admin/concours/modify/useModification";
+import setIntitulePanelData from "../../../Hooks/admin/concours/intitulePanel/useIntitulePanelHelpers";
 
 const CreateModifyConcours = () => {
     const [directions, setDirections] = useState<IFormType[]>([]);
@@ -29,6 +26,7 @@ const CreateModifyConcours = () => {
     const [grades, setGrades] = useState<IFormType[]>([]);
     const [branches, setBranches] = useState<IFormType[]>([]);
     const [specs, setSpecs] = useState<IFormType[]>([]);
+
     const { fetchOnLoad } = useHelpers({
         setDirections,
         setPostes,
@@ -41,22 +39,35 @@ const CreateModifyConcours = () => {
         fetchOnLoad();
     }, []);
 
-    //explain: intitulePanel states ----------------------------------------
+    //!===========================================================================================
+
+    //explain: intitulePanel states
     const [intitulePanel, showIntitulePanel] = useState<boolean>(false);
     const [CustomLabelInput, showCustomLabelInput] = useState<boolean>(false);
-    //----------------------------------------------------------------------
-    const { avis } = useAppSelector(state => state.concoursCreation);
+
+    //!===========================================================================================
+
     const { alert } = useAppSelector(state => state.alert);
-    const { schema, saveConcours } = useFormRegistry();
+
+    const { schema, triggerValidation, saveOrModifyConcours } = useFormRegistry();
 
     const methods = useForm<IConcours>({
         resolver: zodResolver(schema),
     });
 
     const submit = (data: IConcours) => {
-        saveConcours(data, emptyFields);
+        if(isModify !== undefined)
+        {
+            saveOrModifyConcours(data, 'modify', emptyFields, isModify?.id)
+        }
+        else
+        {
+            //explain: creation mode
+            saveOrModifyConcours(data, 'save', emptyFields, undefined);
+        }
     };
 
+    //!===========================================================================================
     //explain: fileUpload states
     const [emptyFiles, shouldEmptyFiles] = useState(false);
 
@@ -66,114 +77,39 @@ const CreateModifyConcours = () => {
         setSelectedCities([]); //? this for preventing the cities table from being undefined and triggering an error on submit when it shouldn't
     };
 
-    //explain: This is used to trigger the validation of the form before submitting (when clicking the valider button)
-    const triggerValidation = () => {
-        methods.clearErrors();
-        methods.setValue("avis", avis);
-        methods.trigger().then(() => {
-            const errorKeys = Object.keys(methods.formState.errors);
-            console.log(errorKeys);
-
-            if (errorKeys.length === 1 && errorKeys[0] === "intitulé") {
-                showIntitulePanel(true);
-                methods.clearErrors();
-            }
-        });
-    };
+    //!===========================================================================================
 
     //explain: These are the props values for the intitulePanel with their update
     const [selectedDirection, setSelectedDirection] = useState<string>("");
     const [selectedPoste, setSelectedPoste] = useState<string>("");
     const [selectedGrade, setSelectedGrade] = useState<string>("");
+    setIntitulePanelData({setSelectedDirection, setSelectedPoste, setSelectedGrade, getValues: methods.getValues, directions, postes, grades});
 
-    useEffect(() => {
-        const schema = z.string().uuid();
-        if (directions && postes && grades) {
-            if (
-                schema.safeParse(methods.getValues("direction")).success ===
-                true
-            ) {
-                setSelectedDirection(
-                    directions.filter(
-                        d => d.id === methods.getValues("direction"),
-                    )[0].label as string,
-                );
-            }
-            if (schema.safeParse(methods.getValues("poste")).success === true) {
-                setSelectedPoste(
-                    postes.filter(p => p.id === methods.getValues("poste"))[0]
-                        .label as string,
-                );
-            }
-            if (schema.safeParse(methods.getValues("grade")).success === true) {
-                setSelectedGrade(
-                    grades.filter(g => g.id === methods.getValues("grade"))[0]
-                        .label as string,
-                );
-            }
-        }
-    }, [
-        methods.getValues("direction"),
-        methods.getValues("poste"),
-        methods.getValues("grade"),
-    ]);
-
+    //!===========================================================================================
+    
     //explain: this is the state used to track selected cities
     const [selectedCities, setSelectedCities] = useState<TCity[]>([]);
 
-    //explain: this is the state defining whether this is a creation or an update
+    //!===========================================================================================
+
+    //explain: Defining whether this is a creation or an update, then applying fetches and changes when being on update mode if necessary
     const navigate = useNavigate();
     const location = useLocation();
-    const dispatch = useAppDispatch();
     const [isModify, setIsModify] = useState<concoursType | null>(
         location.state?.isModify,
     );
+    useModification({ isModify, setIsModify, setValue: methods.setValue});
+    
+    //!===========================================================================================
 
+    //explain: this watches the errors object for the case where all the fields are good except the intitule field, so that we can show the intitulePanel
     useEffect(() => {
-        //explain: In the case of a modification, fetch the 'avis' file's data from the database
-        if (isModify?.avis.id !== undefined && isModify?.avis.id !== null && !isModify?.avis.file) {
-            dispatch(startGenPageLoading());
-            fetch(
-                `${
-                    import.meta.env.VITE_BackendBaseUrl
-                }/attachment/get/${isModify?.avis.id}/data`,
-                {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${localStorage.getItem(
-                            "AccessToken",
-                        )}`,
-                    },
-                },
-            )
-                .then(async res => {
-                    const response = await res.json();
-                    fetch(response.data_base64).then(async res => {
-                        const blob = await res.blob();
-                        const fileName = isModify?.avis.path
-                            .replace("./public/Concours/", "")
-                            .split("/")[1];
-                        const fileExtension = fileName?.split(".")[1];
-                        const f = new File([blob], fileName!!, {
-                            type:
-                                fileExtension === "pdf"
-                                    ? "application/pdf"
-                                    : `image/${fileExtension}`,
-                        });
-                        const updatedAvis = { ...isModify.avis, file: f };
-                        setIsModify({ ...isModify, avis: updatedAvis });
-                        isModify.avis.file = f;
-                    });
-                })
-                .catch(err => {
-                    console.error(err);
-                })
-                .finally(() => {
-                    dispatch(stopGenPageLoading());
-                });
+        const errors =  Object.keys(methods.formState.errors);
+        if(errors.length === 1 && errors.includes("intitulé")) {
+            showIntitulePanel(true);
+            methods.clearErrors();
         }
-    }, [isModify]);
+    },[methods.formState.errors]);
 
     return (
         <div className="w-full px-5 py-10">
@@ -191,7 +127,7 @@ const CreateModifyConcours = () => {
                         "ml-10",
                     ]}
                     onClickFct={() => {
-                        navigate(-1);
+                        navigate('/admin/concours');
                     }}
                 />
                 <h1 className="text-2xl font-bold text-center">
@@ -278,7 +214,9 @@ const CreateModifyConcours = () => {
                                         shouldEmptyFiles={shouldEmptyFiles}
                                         numberOfFiles={1}
                                         reg="avis"
-                                        fileShowCase={isModify?.avis.file} /* //explain: passing the 'avis' file when being in modification mode as a FileField Array to be suitable to the fileUploader  */
+                                        fileShowCase={
+                                            isModify?.avis.file
+                                        } /* //explain: passing the 'avis' file when being in modification mode as a FileField Array to be suitable to the fileUploader  */
                                     />
                                 </div>
                             </div>
@@ -357,13 +295,20 @@ const CreateModifyConcours = () => {
                                 <DragNDropCities
                                     selectedCities={selectedCities}
                                     setSelectedCities={setSelectedCities}
+                                    modification= {isModify}
                                 />
                             </div>
                         </div>
                         <div className="flex justify-center mt-5">
                             <label
                                 className="btn btn-wide btn-outline btn-success !text-neutral hover:!text-white"
-                                onClick={triggerValidation}
+                                onClick={() => {
+                                    triggerValidation({
+                                        clearErrors: methods.clearErrors,
+                                        setValue: methods.setValue,
+                                        trigger: methods.trigger,
+                                    });
+                                }}
                             >
                                 {isModify ? "Modifier" : "Valider"}
                             </label>
@@ -376,6 +321,7 @@ const CreateModifyConcours = () => {
                                 grade={selectedGrade}
                                 CustomLabelInput={CustomLabelInput}
                                 showCustomLabelInput={showCustomLabelInput}
+                                creationMode={isModify === undefined? true : false}
                             />
                         )}
                     </form>

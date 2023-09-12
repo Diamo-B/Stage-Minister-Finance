@@ -1,4 +1,4 @@
-import { setConcours, setFilteredConcours } from "../../../../Redux/Admin/concours/manage";
+import { deleteConcoursFromFiltered, setConcours, setFilteredConcours } from "../../../../Redux/Admin/concours/manage";
 import { useAppDispatch, useAppSelector } from "../../../redux";
 import { hideConfirmationPanel} from "../../../../Redux/confirmationPanel";
 import { deleteConcours } from "../../../../Redux/Admin/concours/manage";
@@ -35,9 +35,9 @@ const useHelpers = () => {
         const response = await res.json();
         if(response)
         {
-            console.log(response);
             //explain: remove the concours from the redux store
             dispatch(deleteConcours(functionParams.id))
+            dispatch(deleteConcoursFromFiltered(functionParams.id))
             dispatch(hideConfirmationPanel())
             dispatch(activateAlert({
                 message: 'Concours supprimé avec succès',

@@ -34,7 +34,22 @@ export type concoursType = {
     candidats: {
         id: string,
         status: string,
+        user:{
+            id:string,
+            titre:string,
+            cin: string,
+            nom:string,
+            prenom:string,
+            email: string,
+            adresse: string,
+            dateNaissance:string,
+            telephone:string,
+        },
         userId: string,
+    }[],
+    villes:{
+        id: string,
+        nom: string
     }[],
     dateConcours: string,
     datePublication: string,

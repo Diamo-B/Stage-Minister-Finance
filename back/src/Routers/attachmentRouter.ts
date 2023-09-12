@@ -7,10 +7,10 @@ const router: Router = Router();
 
 router.get('/get/:id', AuthMiddleware, validate(schema.getById), attachmentApi.getById);
 router.get(
-    '/get/:id/data',
+    '/get/:id/fileData',
     AuthMiddleware,
     validate(schema.getById),
-    attachmentApi.getAttachmentDataByID
+    attachmentApi.getAttachmentFileByID
 );
 
 router.get('/getAll/candidat', AuthMiddleware, attachmentApi.getByCandidatID);

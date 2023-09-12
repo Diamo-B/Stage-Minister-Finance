@@ -15,6 +15,7 @@ const LatestConcoursTable = () => {
     const { show, showAlreadyApplied, concoursId, concoursTitle } = useAppSelector(state => state.postuler);
     const { concours } = useAppSelector(state => state.postulerConcours);
     const {connectedUser} = useAppSelector(state => state.genValues);
+    const {loading} = useAppSelector(state=>state.loading)
 
     useEffect(() => {
         if((connectedUser as z.infer<typeof connectedUserSchema>)?.candidat?.id || connectedUser === 'visitor')
@@ -40,8 +41,6 @@ const LatestConcoursTable = () => {
                     ?.candidats?.find(
                         c => c.id === (connectedUser as z.infer<typeof connectedUserSchema>).candidat?.id
                     )?.id ? true : false;
-                    console.log(hasAlreadyApplied);
-                    
                 if (hasAlreadyApplied === true)
                 {
                     dispatch(hidePanel())
@@ -75,7 +74,7 @@ const LatestConcoursTable = () => {
                         </tr>
                     </thead>
                     <tbody className="text-center">
-                        {concours && concours.length > 0 &&
+                        {concours && concours.length > 0 ?
                             concours.map(c => (
                                 <tr className="hover" key={c.id}>
                                     <td className="text-left font-bold">
@@ -160,6 +159,18 @@ const LatestConcoursTable = () => {
                                     </td>
                                 </tr>
                             ))
+                            :
+                            <tr>
+                                <td colSpan={8} className="text-center">
+                                    {loading ? (
+                                        <span className="loading loading-spinner loading-md"></span>
+                                    ) : (
+                                        <p className="my-5 font-medium text-lg text-neutral">
+                                            Aucune annonce pour le moment
+                                        </p>
+                                    )}
+                                </td>
+                            </tr>
                         }
                     </tbody>
                 </table>

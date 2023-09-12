@@ -5,8 +5,15 @@ import { z } from "zod";
 import { IConcours } from "../../../../Utils/interfaces/Admin/concours/IConcours";
 import { base64ToBlob } from "../../../../Utils/base64ToBlobs";
 import { stopLoading } from "../../../../Redux/loading";
-import { useAppDispatch } from "../../../redux";
+import { useAppDispatch, useAppSelector } from "../../../redux";
+import { UseFormClearErrors, UseFormSetValue, UseFormTrigger } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 
+type ConcoursModificationOnlyProps = {
+    clearErrors: UseFormClearErrors<IConcours>;
+    setValue: UseFormSetValue<IConcours>;
+    trigger: UseFormTrigger<IConcours>;
+}
 
 const useFormRegistry = () => {
     const schema = z
@@ -140,54 +147,76 @@ const useFormRegistry = () => {
             },
         );
 
+        //explain: This is used to trigger the validation of the form before submitting (when clicking the valider button)
+        const { avis } = useAppSelector(state => state.concoursCreation);
+    const triggerValidation = async (    
+        {
+        clearErrors,
+        setValue,
+        trigger
+    }: ConcoursModificationOnlyProps) => {
+        clearErrors();
+        setValue("avis", avis);
+        await trigger()
+    };
+
+
         const dispatch = useAppDispatch();
+        const navigate = useNavigate();
+    const saveOrModifyConcours = (
+        data: IConcours,
+        type: "save" | "modify",
+        emptyFields: () => void,
+        id?: string,
+    ) => {
 
-        const saveConcours = (
-            data: IConcours,
-            emptyFields: () => void,
-        ) => {
-            const file = data.avis[0];
-            const base64Data = file.file.replace(/^data:.*;base64,/, ""); //explain: Remove data URL prefix for any type
-            const contentType =
-                file.extension === "pdf"
-                    ? "application/pdf"
-                    : `image/${file.extension}`;
-            const blob = base64ToBlob(base64Data, contentType);
+        const file = data.avis[0];
+        const base64Data = file.file.replace(/^data:.*;base64,/, ""); //explain: Remove data URL prefix for any type
+        const contentType =
+            file.extension === "pdf"
+                ? "application/pdf"
+                : `image/${file.extension}`;
+        const blob = base64ToBlob(base64Data, contentType);
 
-            const fd = new FormData();
-            fd.append("label", data.intitulé);
-            fd.append("directionId", data.direction);
-            fd.append("posteId", data.poste);
-            fd.append("gradeId", data.grade);
-            fd.append("brancheId", data.branche);
-            fd.append("specialiteId", data.spécialité);
-            fd.append("maxPlaces", data.maxPlaces.toString());
-            fd.append("maxAge", data.maxAge.toString());
-            fd.append("dateLimiteDepot", data.dateLimite);
-            fd.append("dateConcours", data.dateConcours);
-            fd.append("villesIds", JSON.stringify(data.villes));
-            fd.append("avis", blob, file.name);
-            fetch(
-                `${import.meta.env.VITE_BackendBaseUrl}/concours/create`,
-                {
-                    method: "POST",
-                    body: fd,
+        const fd = new FormData();
+        fd.append("label", data.intitulé);
+        fd.append("directionId", data.direction);
+        fd.append("posteId", data.poste);
+        fd.append("gradeId", data.grade);
+        fd.append("brancheId", data.branche);
+        fd.append("specialiteId", data.spécialité);
+        fd.append("maxPlaces", data.maxPlaces.toString());
+        fd.append("maxAge", data.maxAge.toString());
+        fd.append("dateLimiteDepot", data.dateLimite);
+        fd.append("dateConcours", data.dateConcours);
+        fd.append("villesIds", JSON.stringify(data.villes));
+        fd.append("avis", blob, file.name);
+        fetch(
+            `${import.meta.env.VITE_BackendBaseUrl}/concours/${type === 'save' ? 'create' : `update/${id}`}`,
+            {
+                method: `${type === 'save' ? 'POST' : 'PUT'}`,
+                headers:{
+                    Authorization: `Bearer ${localStorage.getItem("AccessToken")}`,
                 },
-            )
-                .then(async res => {
-                    const response = await res.json();
-                    console.log(response);
-                })
-                .catch(err => {
-                    console.error(err);
-                })
-                .finally(() => {
-                    emptyFields();
-                    dispatch(stopLoading());
-                });
-        }; 
+                body: fd,
+            },
+        )
+            .catch(err => {
+                console.error(err);
+            })
+            .finally(() => {
+                if(type === 'save')
+                    emptyFields(); // explain: only in create mode
+                else
+                {
+                    //explain: in modify mode, return to the concours management page then display a message
+                    navigate("/admin/concours",{state: {message: "Concours modifié avec succès", success: true}})  ;
+                }
+                dispatch(stopLoading());
+            });
+    }; 
 
-    return { schema, saveConcours };
-};
+    return { schema, triggerValidation, saveOrModifyConcours }; 
+}; 
 
 export default useFormRegistry;

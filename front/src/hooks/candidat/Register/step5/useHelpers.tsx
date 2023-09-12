@@ -59,7 +59,7 @@ const useHelpers = () => {
                     activateAlert({
                         message:
                             "Une erreur s'est produite lors de la suppression de la pièce jointe",
-                        level: "error",
+                        level: "alert-error",
                     }),
                 );
             })

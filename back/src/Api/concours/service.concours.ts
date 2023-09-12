@@ -20,17 +20,89 @@ const getAll = async () => {
                     path: true,
                 }
             },
-            candidats: true,
+            candidats: {
+                include:{
+                    user: {
+                        select:{
+                            id: true,
+                            adresse: true,
+                            cin: true,
+                            dateNaissance: true,
+                            email: true,
+                            nom: true,
+                            prenom: true,
+                            telephone: true,
+                            titre: true,
+
+                        }
+                    },
+                }
+            },
             dateConcours: true,
             datePublication: true,
             dateLimiteInscription: true,
             limiteAge: true,
             limitePlaces:true,
-            status: true
+            status: true,
+            villes:{
+                select:{
+                    id: true,
+                    nom: true
+                }
+            }
         }
     });
     return concours;
 };
+
+const getById = async (id: string) => {
+    try {
+        const concours = await prisma.concours.findUnique({
+            where: {
+                id: id,
+            },
+            select: {
+                id: true,
+                label: true,
+                status: true,
+                directionId: true,
+                posteId: true,
+                gradeId: true,
+                specialiteId: true,
+                brancheId: true,
+                limitePlaces:true,
+                limiteAge: true,
+                datePublication: true,
+                dateLimiteInscription: true,
+                dateConcours: true,
+                campagneId: true,
+                avis: {
+                    select:{
+                        id: true,
+                        path: true,
+                    }
+                },
+                candidats: true,
+                villes: {
+                    select:{
+                        id: true,
+                    }
+                },
+            }
+        });
+        if(!concours)
+        {
+            throw new httpException(404, "Aucun concours ne possède l'id: " + id);
+        }
+        else
+        {
+            return concours;
+        }
+    } catch (err: any) {
+        if(err instanceof httpException) throw err;
+        throw new httpException(500, err.message);
+    }
+}
 
 const getAll_W_UsefulPropsOnly = async () => {
     const concours = await prisma.concours.findMany({
@@ -150,6 +222,27 @@ const create = async (
     return concours;
 };
 
+const update = async (
+    updatedData: any,
+    id: string
+) => {
+    try {
+        const concours = await prisma.concours.update({
+            where: {
+                id: id,
+            },
+            data: {
+                ...updatedData,
+            },
+        });
+        if(!concours)
+            throw new httpException(404, "Aucun concours ne possède l'id: " + id);
+        return concours;
+    } catch (err) {
+        throw err;    
+    }
+};
+
 const remove = async (id: string) => {
     try {
         
@@ -178,8 +271,10 @@ const remove = async (id: string) => {
 
 export default {
     getAll,
+    getById,
     getAll_W_UsefulPropsOnly,
     getAll_W_usefulProps_userAssignments,
     create,
+    update,
     remove,
 };

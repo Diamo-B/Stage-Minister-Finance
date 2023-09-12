@@ -13,6 +13,7 @@ type Props = {
     grade: string;
     CustomLabelInput: boolean;
     showCustomLabelInput: Dispatch<SetStateAction<boolean>>;
+    creationMode: boolean;
 };
 
 const IntitulePanel = ({
@@ -22,15 +23,15 @@ const IntitulePanel = ({
     grade,
     CustomLabelInput,
     showCustomLabelInput,
+    creationMode,
 }: Props) => {
     const { setValue } = useFormContext();
     const dispatch = useAppDispatch();
-    const {loading}  = useAppSelector(state => state.loading);
-    const [animation,animate] = useState<boolean>(false);
+    const { loading } = useAppSelector(state => state.loading);
+    const [animation, animate] = useState<boolean>(false);
 
     useEffect(() => {
-        if(loading === false)
-        {
+        if (loading === false) {
             animate(true);
             setTimeout(() => {
                 dispatch(resetLoading());
@@ -45,16 +46,16 @@ const IntitulePanel = ({
                 );
             }, 2000);
         }
-    }, [loading])
-    
+    }, [loading]);
+
     return (
         <div className="z-40 w-full h-full fixed top-0 left-0 flex justify-center items-center bg-slate-700/80 ">
             <div className="bg-base-200 p-10 flex flex-col items-center gap-5 rounded-xl">
                 {!CustomLabelInput ? (
                     <>
                         <p>
-                            Voulez vous nommer utiliser le nom généré
-                            automatiquement pour votre concours?
+                            Voulez vous utiliser le nom généré automatiquement
+                            pour votre concours?
                         </p>
                         <p className="text-center font-bold">
                             Concours des {poste} de {direction}, {grade}
@@ -80,26 +81,34 @@ const IntitulePanel = ({
                                         `Concours des ${poste} de ${direction}, ${grade}`,
                                     );
                                     dispatch(startLoading());
-                            }}
+                                }}
                             >
                                 {loading ? (
                                     <span className="loading loading-spinner loading-sm"></span>
                                 ) : animation ? (
                                     <UilCheckCircle className="text-green-500" />
-                                ) : (
+                                ) : creationMode ? (
                                     "Créer"
+                                ) : (
+                                    "Modifier"
                                 )}
                             </button>
                         </div>
                         <p>ou</p>
                         <button
-                            className="btn font-bold btn-outline btn-neutral hover:btn-ghost"
+                            className="btn font-bold w-72 btn-outline btn-neutral hover:btn-ghost"
                             type="button"
                             onClick={() => {
                                 showCustomLabelInput(true);
                             }}
+                            disabled={loading === true}
                         >
-                            Choisir un intitulé personnalisé
+                            {
+                                loading ?
+                                    <span className="loading loading-spinner loading-sm"></span>
+                                : 
+                                    'Choisir un intitulé personnalisé'
+                            }
                         </button>
                     </>
                 ) : (
@@ -132,8 +141,10 @@ const IntitulePanel = ({
                                     <span className="loading loading-spinner loading-sm"></span>
                                 ) : animation ? (
                                     <UilCheckCircle className="text-green-500" />
-                                ) : (
+                                ) : creationMode ? (
                                     "Créer"
+                                ) : (
+                                    "Modifier"
                                 )}
                             </button>
                         </div>

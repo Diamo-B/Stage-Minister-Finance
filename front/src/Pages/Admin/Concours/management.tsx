@@ -11,7 +11,7 @@ const ConcoursManagement = () => {
     const { getConcours } = useHelpers();
     const { info } = useAppSelector(state => state.concoursManagement);
     useEffect(() => {
-        getConcours();        
+        getConcours();
     }, []);
     return (
         <div className="flex-grow w-full flex flex-col justify-center">
@@ -26,11 +26,15 @@ const ConcoursManagement = () => {
                         <div className="h-full flex flex-col ">
                             <Table />
                             <div className="flex-grow"></div>
-                            <Link to={'/admin/concours/create'} className="w-full flex justify-center items-center pb-5">
+                            <div className="w-full flex justify-center items-center pb-5">
                                 <button className="btn btn-sm btn-outline btn-success hover:!text-white mt-7">
-                                    Créer un nouvel concours
+                                    <Link
+                                        to={"/admin/concours/create"}
+                                    >
+                                        Créer un nouvel concours
+                                    </Link>
                                 </button>
-                            </Link>
+                            </div>
                         </div>
                     )}
                 </div>

@@ -13,11 +13,12 @@ const getById = async (req: Request, res: Response, next: NextFunction) => {
     }
 };
 
-const getAttachmentDataByID = async (req: Request, res: Response, next: NextFunction) => {
+const getAttachmentFileByID = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { id } = req.params;
-        const attachment = await attachmentService.getAttachmentDataByID(id);
-        res.status(200).json(attachment);
+        const attachment = await attachmentService.getAttachmentFileByID(id);
+        const bufferToBase64 = attachment?.file_data?.toString('base64');
+        res.status(200).json({ attachmentFile: bufferToBase64 });
     } catch (err: any) {
         next(new httpException(500, err.message));
     }
@@ -60,11 +61,19 @@ const deleteById = async (req: Request, res:Response, next: NextFunction) => {
     }
 };
 
+const deleteByConcoursId = async (req: Request, res:Response, next: NextFunction) => {
+    try {
+        
+    } catch (error) {
+        
+    }
+}
 
 export default {
-    getAttachmentDataByID,
+    getAttachmentFileByID,
     getById,
     getByCandidatID,
     create,
     deleteById,
+    deleteByConcoursId,
 };

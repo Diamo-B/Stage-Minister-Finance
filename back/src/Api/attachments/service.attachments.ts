@@ -1,6 +1,7 @@
 import { AttachmentTypes } from '@prisma/client';
 import { prisma } from '../../prisma/db.prisma';
 import fs from "fs";
+import httpException from '../../utils/httpException';
 
 const getById = async (id: string) => {
     try {
@@ -19,14 +20,14 @@ const getById = async (id: string) => {
     }
 }
 
-const getAttachmentDataByID = async (id: string) => {
+const getAttachmentFileByID = async (id: string) => {
     try {
         return await prisma.attachment.findUnique({
             where: {
                 id: id,
             },
             select: {
-                data_base64: true,
+                file_data: true,
             },
         });
     } catch (err) {
@@ -64,7 +65,7 @@ const create = async (
         const attachmentData: any = {
             path,
             type,
-            data_base64: blob,
+            file_data: blob,
         };
 
         if (candidatId !== undefined) {
@@ -147,12 +148,31 @@ const deleteAttachments_byDiplome = async (diplomeId: string, paths: string[]) =
     }
 }
 
+const deleteByConcoursId = async (concoursId: string) => {
+    try {
+        const attachment = await prisma.attachment.deleteMany({
+            where:{
+                concoursId,
+            }
+        })
+        if(!attachment)
+        {
+            throw new httpException(404, "attachment not found");
+        }
+        return attachment;
+    } catch (err: any) {
+        if(err instanceof httpException) throw err;
+        throw new httpException(500, err.message);
+    }
+}
+
 
 export default {
     getById,
-    getAttachmentDataByID,
+    getAttachmentFileByID,
     getByCandidatID,
     create,
-    deleteAttachments_byDiplome,
     deleteById,
+    deleteAttachments_byDiplome,
+    deleteByConcoursId,
 };

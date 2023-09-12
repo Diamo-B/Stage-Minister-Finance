@@ -7,13 +7,15 @@ import DroppingContainer from "./droppinArea/droppingContainer";
 import useCitiesHelpers from "../../../../../Hooks/admin/concours/create/useCitiesDragNDropHelpers";
 import DraggingContainer from "./draggingArea/draggingContainer";
 import { useFormContext } from "react-hook-form";
+import { concoursType } from "../../../../../Redux/Admin/concours/types/manage";
 
 type Props = {
     selectedCities :  TCity[];
     setSelectedCities : React.Dispatch<React.SetStateAction<TCity[]>>;
+    modification?: concoursType|null;
 };
 
-const DragNDropCities = ({selectedCities, setSelectedCities}:Props) => {
+const DragNDropCities = ({selectedCities, setSelectedCities, modification}:Props) => {
     const { setValue } = useFormContext();
     const {memoizedCityList} = useCitiesHelpers();
 
@@ -22,8 +24,6 @@ const DragNDropCities = ({selectedCities, setSelectedCities}:Props) => {
     useEffect(()=>{
         setCities(memoizedCityList);
     },[memoizedCityList]) 
-
-   
 
     //explain: This is updating the form data whenever the selected cities change
     useEffect(() => {
@@ -72,6 +72,25 @@ const DragNDropCities = ({selectedCities, setSelectedCities}:Props) => {
         }
     };
 
+    //!-------------------------------------------------------------------------------------------
+    //explain: this handles the modification state
+    //* when being in the modification mode, we need to set the selected cities to the cities that are already in the modification object 
+    useEffect(()=>{
+        if(modification)
+        {   
+            if(cities)
+            {
+                const concoursVilles = modification.villes.map((ville)=>({id:ville.id, nom:ville.nom}))
+                setSelectedCities(concoursVilles);
+                //explain: remove the element from the original list
+                setCities(
+                    prev =>
+                        prev &&
+                        prev.filter(city => !concoursVilles.map(v=> v.id).includes(city.id)),
+                );
+            }
+        }
+    },[modification]);
 
     return (
         <DndContext onDragEnd={handleDragEnd} modifiers={[snapCenterToCursor, restrictToHorizontalAxis]}>

@@ -16,7 +16,8 @@ const WithAuthCheck = ({ userTypes }: Props) => {
         dispatch(startGenPageLoading()); 
     },[])
     useEffect(() => {        
-        const token = localStorage.getItem("AccessToken");        
+        const token = localStorage.getItem("AccessToken");      
+          
         if (token) {
             fetch(
                 `${import.meta.env.VITE_BackendBaseUrl}/accounts/verifyToken`,
@@ -49,6 +50,7 @@ const WithAuthCheck = ({ userTypes }: Props) => {
                 })
                 .catch(async err => {
                     console.error(err);
+                    navigate("/login");
                 });
         } else {
             if (userTypes.includes("visitor")) {

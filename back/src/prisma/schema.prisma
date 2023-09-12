@@ -215,7 +215,7 @@ model Attachment {
   id          String          @id @default(uuid())
   path        String
   type        AttachmentTypes
-  data_base64 Bytes?
+  file_data Bytes?
   candidatId  String?
   candidat    Candidat?       @relation(fields: [candidatId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   concoursId  String?         @unique

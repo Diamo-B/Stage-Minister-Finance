@@ -15,6 +15,7 @@ import {
     addCandidatsToConcours,
     setConcours,
 } from "../../Redux/Concours/concours";
+import { Dispatch, SetStateAction } from "react";
 
 const useHelpers = () => {
     const dispatch = useAppDispatch();
@@ -49,7 +50,9 @@ const useHelpers = () => {
         }
     };
 
-    const getConcoursResults = () => {};
+    const getConcoursResults = (setter: Dispatch<SetStateAction<any>>) => {
+        setter(null);
+    };
 
     const showPanelOrRedirect = (id: string, title: string) => {
         if (connectedUser === "visitor") {

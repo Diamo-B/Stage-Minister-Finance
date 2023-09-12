@@ -106,8 +106,8 @@ const ConcoursResultsTable = () => {
                                     {loading ? (
                                         <span className="loading loading-spinner loading-md"></span>
                                     ) : (
-                                        <p className="my-5 font-medium capitalize text-lg text-neutral">
-                                            Aucun résultat disponible
+                                        <p className="my-5 font-medium text-lg text-neutral">
+                                            Aucun résultat pour le moment
                                         </p>
                                     )}
                                 </td>
