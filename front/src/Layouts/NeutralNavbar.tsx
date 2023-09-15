@@ -4,7 +4,7 @@ import { UilSignOutAlt } from "@iconscout/react-unicons";
 
 const NeutralNavbar = () => {
     return (
-        <div className="flex flex-col w-full">
+        <nav className="flex flex-col w-full">
             <div className="navbar bg-base-200 border-b-2 border-neutral-content">
                 <div className="navbar-start">
                     <a className="btn btn-ghost normal-case text-xl">
@@ -37,7 +37,7 @@ const NeutralNavbar = () => {
                     </div>
                 </div>
             </div>
-        </div>
+        </nav>
     );
 };
 

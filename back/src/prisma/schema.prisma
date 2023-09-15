@@ -50,6 +50,7 @@ model Candidat {
   concoursActifs Concours[]
   diplomes       Diplome[]
   status        UserStatus @default(None)
+  villesExamenCandidat ville_examen_candidat[]
 }
 
 model Admin {
@@ -124,6 +125,7 @@ model Ville {
   region     Region?    @relation(fields: [regionId], references: [id], onDelete: SetNull, onUpdate: Cascade)
   chefRegion Boolean    @default(false)
   status     Boolean    @default(true)
+  villeExamenCandidat ville_examen_candidat[]
 }
 
 model Region {
@@ -133,7 +135,7 @@ model Region {
 }
 
 enum concoursStatus {
-  Disabled
+  disabled
   enabled
   ended
 }
@@ -162,6 +164,7 @@ model Concours {
   dateConcours          String?
   campagneId            String?
   campagne              Campagne?      @relation(fields: [campagneId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  villesExamenCandidat  ville_examen_candidat[]
 }
 
 model direction {
@@ -222,4 +225,14 @@ model Attachment {
   concours    Concours?       @relation(fields: [concoursId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   diplomeId   String?
   diplome     Diplome?        @relation(fields: [diplomeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model ville_examen_candidat{
+  id String @id @default(uuid())
+  villeExamenId String
+  villeExamen Ville @relation(fields: [villeExamenId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  candidatId String
+  candidat Candidat @relation(fields: [candidatId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  concoursId String
+  concours Concours @relation(fields: [concoursId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }

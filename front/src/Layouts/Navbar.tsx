@@ -2,7 +2,7 @@ import {
     UilEllipsisH,
     UilBars,
     UilSignout,
-    UilSetting, 
+    UilSetting,
     UilLink,
 } from "@iconscout/react-unicons";
 import { useNavigate } from "react-router-dom";
@@ -12,9 +12,10 @@ import {
     hideConfirmationPanel,
     showConfirmationPanel,
 } from "../Redux/confirmationPanel";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { setConnectedUser } from "../Redux/GeneralValues";
 import { resetSteps } from "../Redux/RegisterationForm/formSteps";
+import Menu from "./menu";
 
 const Navbar = () => {
     const navigate = useNavigate();
@@ -23,8 +24,7 @@ const Navbar = () => {
         state => state.confirmationPanel,
     );
     const { connectedUser } = useAppSelector(state => state.genValues);
-
-
+    
     useEffect(() => {
         if (isConfirmed && functionParams.logout) {
             /*
@@ -58,20 +58,26 @@ const Navbar = () => {
             showConfirmationPanel({
                 text: "Voulez-vous vraiment vous déconnecter ?",
                 itemIdentifier: null,
-                functionParams: {logout: true},
+                functionParams: { logout: true },
             }),
         );
     };
-
+    
+    const [menu,showMenu] = useState(false);
     return (
         <>
-            <div className="navbar bg-base-200 border-b-2 border-neutral-content">
+            <nav className="navbar bg-base-200 border-b-2 border-neutral-content">
                 <div className="navbar-start">
-                    <label className="btn btn-ghost btn-circle">
-                        <UilBars />
-                    </label>
+                <label className="btn btn-circle">
+                    <input type="checkbox" className="hidden" 
+                        onChange={()=>{
+                            showMenu(!menu)
+                        }}
+                    />
+                    <UilBars/>
+                </label>
                 </div>
-                <div className="navbar-center">
+                <div className="navbar-center relative">
                     <a className="btn btn-ghost normal-case text-xl">
                         Ministère de l'Économie et des Finances
                     </a>
@@ -80,7 +86,7 @@ const Navbar = () => {
                     {connectedUser && typeof connectedUser === "object" && (
                         <>
                             <p className="text-base text-base-100 mr-5 badge badge-lg badge-success flex gap-1">
-                                <UilLink className='text-white'/>
+                                <UilLink className="text-white" />
                                 <span className="font-bold">
                                     {`${connectedUser.email}`}
                                 </span>
@@ -113,6 +119,11 @@ const Navbar = () => {
                         </ul>
                     </div>
                 </div>
+            </nav>
+            <div className="relative w-full flex justify-center rounded-xl">
+                {menu && <Menu menu={menu} showMenu={showMenu} userType={
+                    connectedUser!!.admin !== null ? 'admin' : 'candidat'
+                }/>}
             </div>
             {show && <ConfirmationPanel customConfirmButton="Déconnexion" />}
         </>

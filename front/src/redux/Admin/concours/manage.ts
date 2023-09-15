@@ -35,6 +35,14 @@ const manage = createSlice({
         setFilteredConcours: (state, action) => {
             state.filteredConcours = action.payload;
         },
+        EndConcours: (state, action) => {
+            const id = action.payload;
+            const index = state.filteredConcours.findIndex(concours => concours.id === id);
+            if(index) 
+                state.filteredConcours[index].status = 'ended';
+            const originalIndex = state.concours.findIndex(concours => concours.id === id);
+            state.concours[originalIndex].status = 'ended';
+        },
         deleteConcoursFromFiltered: (state, action) => {
             state.filteredConcours = state.filteredConcours.filter(
                 concours => concours.id !== action.payload,
@@ -46,11 +54,11 @@ const manage = createSlice({
             );
         },
         sortConcours: (state, action) => {
-          function sortByLabel(arr:concoursType[], key: 'direction'|'poste'|'grade', order: 'asc' | 'desc') {
+          function sortByLabel(arr:concoursType[], key: 'direction'|'poste'|'grade'|'status', order: 'asc' | 'desc') {
             return arr.sort((a, b) => {
-                const labelA = a[key].label.toLowerCase();
-                const labelB = b[key].label.toLowerCase();
-        
+                const labelA = (key !== 'status'? a[key].label : a[key]).toLowerCase();
+                const labelB = (key !== 'status'? b[key].label : b[key]).toLowerCase();
+                
                 if (order === 'asc') {
                     return labelA.localeCompare(labelB);
                 } else if (order === 'desc') {
@@ -69,6 +77,7 @@ export const {
     setConcours,
     deleteConcours,
     deleteMultipleConcours,
+    EndConcours,
     setSwitch,
     setInfo,
     closeInfo,

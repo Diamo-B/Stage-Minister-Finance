@@ -53,7 +53,7 @@ router.patch(
     usersApis.linkAttachmentsToCandidat
 );
 
-//explain: Links concours to candidats
+//explain: Links concours to candidats (postuler)
 router.patch(
     '/link/concours',
     AuthMiddleware,

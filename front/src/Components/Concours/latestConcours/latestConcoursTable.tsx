@@ -120,7 +120,7 @@ const LatestConcoursTable = () => {
                                     <td>
                                         {c.status === "enabled"
                                             ? "Actif"
-                                            : "cloturé"}
+                                            : "clôturé"}
                                     </td>
                                     <td className="">
                                         <AnimatedButton

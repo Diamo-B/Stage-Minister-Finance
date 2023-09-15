@@ -44,6 +44,10 @@ export type concoursType = {
             adresse: string,
             dateNaissance:string,
             telephone:string,
+            ville:{
+                id: string,
+                nom: string
+            }
         },
         userId: string,
     }[],

@@ -4,6 +4,22 @@ const getById = z.object({
     id: z.string().uuid({ message: 'L\'id du concours doit absolument être un UUID' }).nonempty({ message: 'L\'id du concours est obligatoire' })
 })
 
+const getExaminationSiteDetails = z.object({
+    concoursId: z.string().uuid({ message: 'L\'id du concours doit absolument être un UUID' }).nonempty({ message: 'L\'id du concours est obligatoire' })
+})
+
+const ChangeExaminationSiteDetails = z.object({
+    concoursId: z.string().uuid({ message: 'L\'id du concours doit absolument être un UUID' }).nonempty({ message: 'L\'id du concours est obligatoire' }),
+    newCitiesAssignments: z.array(
+        z.object({
+            CandidatIds: z.array(
+                z.string().uuid({ message: 'L\'id du candidat doit absolument être un UUID' }).nonempty({ message: 'L\'id du candidat est obligatoire' })
+            ),
+            newCityId: z.string().uuid({ message: 'L\'id de la ville doit absolument être un UUID' }).nonempty({ message: 'L\'id de la ville est obligatoire' })
+        })
+    ),
+});
+
 const create = z.object({
     label: z.string().nonempty({ message: 'Le label est obligatoire' }),
     directionId: z
@@ -70,13 +86,23 @@ const update = z.object({
     id: z.string().uuid({ message: 'L\'id du concours doit absolument être un UUID' }).nonempty({ message: 'L\'id du concours est obligatoire' }),
 }).merge(create)
 
+const updateStatus = z.object({
+    id: z
+        .string()
+        .uuid({ message: "L'id du concours doit absolument être un UUID" })
+        .nonempty({ message: "L'id du concours est obligatoire" }),
+});
+
 const remove = z.object({
     id: z.string().uuid({ message: 'L\'id du concours doit absolument être un UUID' }).nonempty({ message: 'L\'id du concours est obligatoire' })
 })
 
 export default {
     getById,
+    getExaminationSiteDetails,
+    ChangeExaminationSiteDetails,
     create,
     update,
+    updateStatus,
     remove
 }

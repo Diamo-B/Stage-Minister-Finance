@@ -16,6 +16,7 @@ import {
     setConcours,
 } from "../../Redux/Concours/concours";
 import { Dispatch, SetStateAction } from "react";
+import { concoursType } from "../../Redux/Admin/concours/types/manage";
 
 const useHelpers = () => {
     const dispatch = useAppDispatch();
@@ -39,7 +40,8 @@ const useHelpers = () => {
             )
                 .then(async res => {
                     const response = await res.json();
-                    dispatch(setConcours(response.concours));
+                    const concours = response.concours.filter((c:concoursType)=>c.status === 'enabled');
+                    dispatch(setConcours(concours));
                 })
                 .catch(err => {
                     console.error(err);

@@ -13,6 +13,7 @@ import WithAuthCheck from "./Utils/Middlewares/Routes/withAuthCheck";
 import ConcoursHome from "./Pages/Home/ConcoursHome";
 import ResetPassword from "./Pages/resetPassword";
 import ConcoursManagement from "./Pages/Admin/Concours/management";
+import CategorizeConcours from "./Pages/Admin/Concours/Categorize";
 
 function App() {
     return (
@@ -72,6 +73,10 @@ function App() {
                                 <Route
                                     path={"/admin/concours"}
                                     element={<ConcoursManagement/>}
+                                />
+                                <Route
+                                    path={`/admin/concours/categorize`}
+                                    element={<CategorizeConcours />}
                                 />
                             </Route>
                         </Route>

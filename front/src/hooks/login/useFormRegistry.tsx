@@ -83,7 +83,7 @@ const useFormRegistry = () => {
                     //explain: redirect to the previous page if the user was redirected to the login page by another action
                     const redirectPath = location.state?.from;
                     if (redirectPath !== undefined) {
-                        navigate(`${redirectPath}`);
+                        navigate(`${redirectPath}`,{state: {listOnly: true}});
                     } else if (response.type === "candidat") {
                         navigate("/");
                     } else if (response.type === "admin") {

@@ -4,14 +4,14 @@ import { z } from 'zod';
 const validateRequestData = (schema: z.Schema<any>) => {
         return (req: Request, res: Response, next: NextFunction) => {
         try {
-            let dataToValidate;
+            let dataToValidate:any = {};
 
-            // Check if the request has a body property, meaning it's a POST request
-            if (Object.keys(req.body).length > 0) {                
-                dataToValidate = req.body;
-            } else {
-                // If it doesn't have a body property, it's a GET request, so use req.params
-                dataToValidate = req.params;
+            if (Object.keys(req.body).length > 0) {
+                dataToValidate = { ...dataToValidate, ...req.body };
+            }
+
+            if (Object.keys(req.params).length > 0) {
+                dataToValidate = { ...dataToValidate, ...req.params };
             }
 
             // Validate the data against the schema

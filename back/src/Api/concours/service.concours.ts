@@ -33,7 +33,12 @@ const getAll = async () => {
                             prenom: true,
                             telephone: true,
                             titre: true,
-
+                            ville:{
+                                select:{
+                                    id: true,
+                                    nom: true
+                                }
+                            }
                         }
                     },
                 }
@@ -47,7 +52,8 @@ const getAll = async () => {
             villes:{
                 select:{
                     id: true,
-                    nom: true
+                    nom: true,
+                    users: true
                 }
             }
         }
@@ -163,6 +169,83 @@ const getAll_W_usefulProps_userAssignments = async (userId: string) => {
     }
 }
 
+const getExaminationSiteDetails = async (concoursId: string) => {
+    try {
+        const concoursExaminationData = await prisma.ville_examen_candidat.findMany({
+            where:{
+                concoursId: concoursId,
+            },
+            include:{
+                candidat:{
+                    select:{
+                        id: true,
+                        user:{
+                            select:{
+                                titre:true,
+                                nom: true,
+                                prenom:true,
+                                cin:true,
+                                email:true,
+                                ville:{
+                                    select:{
+                                        id: true,
+                                        nom: true
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                concours:{
+                    include:{
+                        villes:{
+                            select:{
+                                id: true,
+                                nom: true
+                            }
+                        }
+                    }
+                },
+                villeExamen: {
+                    select:{
+                        id: true,
+                        nom: true,
+                    }
+                }
+            }
+        })
+        if(!concoursExaminationData || concoursExaminationData.length === 0)
+            throw new httpException(404, "Aucun concours n'est trouvé");
+        return concoursExaminationData;
+    } catch (err) {
+        throw err;
+    }
+}
+
+const changeExaminationSiteDetails = async (
+    concoursId: string,
+    newCitiesAssignments:any[]
+) => {
+    let finalChanges = []
+    for(const newCityAssignment of newCitiesAssignments) {
+        console.log(newCityAssignment);
+        const { CandidatIds, newCityId } = newCityAssignment;
+        const newExamCityAssignment = await prisma.ville_examen_candidat.updateMany({
+            where: {
+                candidatId: {
+                    in: CandidatIds,
+                },
+            },
+            // Other update data as needed
+            data:{
+                villeExamenId: newCityId,
+            }
+        });
+        finalChanges.push(newExamCityAssignment);
+    };
+    return finalChanges;
+};
+
 const create = async (
     label: string,
     status: concoursStatus,
@@ -243,6 +326,24 @@ const update = async (
     }
 };
 
+const endConcours = async (id: string) => {
+    try {
+        const concours = await prisma.concours.update({
+            where: {
+                id: id,
+            },
+            data: {
+                status: concoursStatus.ended,
+            },
+        });
+        if(!concours)
+            throw new httpException(404, "Aucun concours ne possède l'id: " + id);
+        return concours;
+    } catch (err) {
+        throw err;
+    }
+}
+
 const remove = async (id: string) => {
     try {
         
@@ -274,7 +375,10 @@ export default {
     getById,
     getAll_W_UsefulPropsOnly,
     getAll_W_usefulProps_userAssignments,
+    getExaminationSiteDetails,
+    changeExaminationSiteDetails,
     create,
     update,
+    endConcours,
     remove,
 };

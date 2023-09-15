@@ -1,6 +1,11 @@
 const Footer = () => {
     return (
-        <footer className="footer justify-items-start place-items-center py-5 px-10 bg-base-200 text-base-content border-t-2 border-neutral-content">
+<footer className="footer footer-center p-4 bg-base-300 text-base-content">
+  <aside>
+    <p>Copyright © 2023 -  Ministère de l'Économie et des Finances</p>
+  </aside>
+</footer>
+     /*    <footer className="footer justify-items-start place-items-center py-5 px-10 bg-base-200 text-base-content border-t-2 border-neutral-content">
             <div className="place-items-center w-3/4">
                 <img className="h-24" src="/testMEFNoBG.png" alt="logo MEF" />
                 <p className="text-center font-bold">
@@ -29,7 +34,7 @@ const Footer = () => {
                 <a className="link link-hover">Privacy policy</a>
                 <a className="link link-hover">Cookie policy</a>
             </div>
-        </footer>
+        </footer> */
     );
 };
 

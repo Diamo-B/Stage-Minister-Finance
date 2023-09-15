@@ -18,7 +18,7 @@ const ConfirmationPanel = ({ customConfirmButton }: Props) => {
 
     return (
         <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center z-50 bg-slate-700/50 inset-0">
-            <div className="card w-96 bg-base-300 ">
+            <div className="card w-6/12 bg-base-300 ">
                 <div className="card-body items-center text-center !gap-5">
                     <h2 className="card-title">
                         <UilExclamationOctagon className="text-error w-12 h-12" />

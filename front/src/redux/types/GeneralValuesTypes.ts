@@ -12,7 +12,7 @@ export const connectedUserSchema = z.object({
     }).nullable(),
     admin: z.object({
         id: z.string().uuid().nonempty(),
-    }).nullable(),
+    }).nullable(), 
 }) 
 
 export interface GenValues {

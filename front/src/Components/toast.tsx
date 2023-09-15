@@ -10,14 +10,14 @@ const Toast = () => {
 
         setTimeout(() => {
             dispatch(disableAlert());
-        },3000) 
+        },3000)
 
     }, []);
 
-    const classNames=['alert', alert.level?alert.level:'' ,'flex' ,'justify-center' ,'hover:alert-error' ,'hover:cursor-pointer ','min-w-full','group','relative']
+    const classNames=['alert', alert.level?alert.level:'' ,'flex' ,'justify-center' ,'hover:alert-error' ,'hover:cursor-pointer ','max-w-full','group','relative']
                 
     return (
-        <div className="toast w-80">
+        <div className="toast w-3/12">
             <div
                 className={classNames.join(' ')}
                 onClick={() => dispatch(disableAlert())}

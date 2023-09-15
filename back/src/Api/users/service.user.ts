@@ -390,6 +390,7 @@ const linkAttachments = async (
 
 const linkConcours = async (candidatId: string, concoursIds: string[]) => {
     try {
+        //explain: Link the candidat with the concours
         const candidat = await prisma.candidat.update({
             where: {
                 id: candidatId,
@@ -403,7 +404,45 @@ const linkConcours = async (candidatId: string, concoursIds: string[]) => {
                 },
             },
         });
-        if(!candidat) throw new httpException(404, 'Candidat not found');
+        if (!candidat) throw new httpException(404, 'Candidat not found');
+        //explain: define Rabat as the default city where the candidat will pass the exam (villesExamenCandidat field)
+
+        //* Step1: find the default city ID (Rabat)
+        const rabat = await prisma.ville.findFirst({
+            where: {
+                nom: 'RABAT',
+            },
+            select: {
+                id: true,
+            },
+        });
+        if (!rabat)
+            throw new httpException(
+                404,
+                "La ville par défaut pour les examens est Rabat, mais cette ville n'est pas incluse dans la base de données."
+            );
+
+        //* Step1: create a ville_examen_candidat record that links the candidat with the default city and the concours he is applying to
+        const villeExamenCandidat = await prisma.ville_examen_candidat.create({
+            data: {
+                candidat: {
+                    connect: {
+                        id: candidatId,
+                    },
+                },
+                concours: {
+                    connect: {
+                        id: concoursIds[0],
+                    },
+                },
+                villeExamen: {
+                    connect: {
+                        id: rabat.id,
+                    },
+                },
+            },
+        });
+        if(!villeExamenCandidat) throw new httpException(500, "Échec de la liaison du candidat avec la ville par défaut où il passera l'examen, qui est par défaut 'Rabat'.");
         return candidat;
     } catch (err) {
         throw err;

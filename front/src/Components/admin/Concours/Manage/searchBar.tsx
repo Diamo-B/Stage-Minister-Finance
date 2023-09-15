@@ -20,7 +20,7 @@ const SearchBar = () => {
             ))
         }
     };
-    const [filterType,setFilterType] = useState<'poste'|'grade'|'direction'|null>(null);
+    const [filterType,setFilterType] = useState<'poste'|'grade'|'direction'|'status'|null>(null);
     const [filterOrder,setFilterOrder] = useState<'asc'|'desc'|null>(null);
 
     useEffect(()=>{
@@ -40,8 +40,8 @@ const SearchBar = () => {
     }
 
     return (
-        <div className="grid grid-cols-3 gap-2 w-full">
-            <div className="col-span-2 flex justify-between px-10 items-center gap-5">
+        <div className="w-full">
+            <div className="flex justify-between px-10 items-center gap-5">
                 <div className="relative w-5/12">
                     <UilSearch className="w-4 absolute top-1 left-2" />
                     <input
@@ -62,7 +62,7 @@ const SearchBar = () => {
                     >
                         Rechercher
                     </button>
-                    <div className="dropdown">
+                    <div className="dropdown dropdown-bottom dropdown-left">
                         <button tabIndex={0} 
                         className="btn btn-outline btn-xs" 
                         disabled={info !== null}
@@ -96,6 +96,15 @@ const SearchBar = () => {
                                     <a>Par Poste</a>
                                     {
                                         filterType === "poste" &&
+                                        <UilCheck className="text-neutral-content w-7 h-7 font-bold" />
+                                    }
+                                </div>
+                            </li>
+                            <li onClick={()=>setFilterType("status")}>
+                                <div className="flex justify-between">
+                                    <a>Par Status</a>
+                                    {
+                                        filterType === "status" &&
                                         <UilCheck className="text-neutral-content w-7 h-7 font-bold" />
                                     }
                                 </div>

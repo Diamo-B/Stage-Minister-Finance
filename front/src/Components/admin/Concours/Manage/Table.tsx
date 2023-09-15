@@ -53,43 +53,49 @@ const Table = () => {
                     {
                         filteredConcours && filteredConcours.length > 0 &&
                         filteredConcours.map((c)=>(
-                                <tr className="hover" key={c.id}>
-                                    <th>
-                                        <input
-                                            type="checkbox"
-                                            className="checkbox checkbox-xs checkbox-success"
-                                        />
-                                    </th>
-                                    <td>
-                                        {c.label}
-                                    </td>
-                                    <td className="text-center">
-                                        <div className={`badge badge-outline ${c.status === 'enabled'?'badge-success':'badge-error'}`}>
-                                            {c.status === 'enabled'?'Actif':'Clôturé'}
-                                        </div>
-                                    </td>
-                                    <td >
-                                        <div className="flex justify-center gap-2 items-center">
-                                            <button className="btn w-20 btn-xs btn-outline btn-info hover:!text-white"
-                                                onClick={()=>{
-                                                    dispatch(setInfo(c))
-                                                }}
-                                            >Info</button>
-                                            <button className="btn w-20 btn-xs btn-outline btn-warning hover:!text-white"
-                                                onClick={()=>{
-                                                    navigate(`/admin/concours/create`, {state: {isModify: c}})
-                                                }}
-                                            >
-                                                Modifier
-                                            </button>
-                                            <button className="btn w-20 btn-xs btn-outline btn-error hover:!text-white"
-                                                onClick={()=>{
-                                                    removeConcours(c.id, c.label)
-                                                }}
-                                            >Supprimer</button>
-                                        </div>
-                                    </td>
-                                </tr>
+                            <tr className="hover" key={c.id}>
+                                <th>
+                                    <input
+                                        type="checkbox"
+                                        className="checkbox checkbox-xs checkbox-success"
+                                    />
+                                </th>
+                                <td>
+                                    {c.label}
+                                </td>
+                                <td className="text-center">
+                                    <div className={`badge badge-outline w-20 ${c.status === 'enabled'?'badge-success':'badge-error'}`}>
+                                        {c.status === 'enabled'?'Actif':'Clôturé'}
+                                    </div>
+                                </td>
+                                <td >
+                                    <div className="flex justify-center gap-2 items-center">
+                                        <button className="btn w-24 btn-xs btn-outline btn-success disabled:btn-disabled hover:!text-white"
+                                            onClick={()=>{
+                                                navigate(`/admin/concours/categorize`, {state: {concoursId: c.id}})
+                                            }}
+                                            disabled={c.candidats.length === 0 || c.status in ['disabled','ended']}
+                                        >Catégoriser</button>
+                                        <button className="btn w-24 btn-xs btn-outline btn-info hover:!text-white"
+                                            onClick={()=>{
+                                                dispatch(setInfo(c))
+                                                    }}
+                                        >Info</button>
+                                        <button className="btn w-24 btn-xs btn-outline btn-warning hover:!text-white"
+                                            onClick={()=>{
+                                                navigate(`/admin/concours/create`, {state: {isModify: c}})
+                                            }}
+                                        >
+                                            Modifier
+                                        </button>
+                                        <button className="btn w-24 btn-xs btn-outline btn-error hover:!text-white"
+                                            onClick={()=>{
+                                                removeConcours(c.id, c.label)
+                                            }}
+                                        >Supprimer</button>
+                                    </div>
+                                </td>
+                            </tr>
                         ))
                     }
                 </tbody>

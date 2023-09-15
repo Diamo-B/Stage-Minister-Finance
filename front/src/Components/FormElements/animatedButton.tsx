@@ -33,7 +33,7 @@ const AnimatedButton = ({
             disabled={disabled}
         >
             <div
-                className={`absolute w-1/3 ${
+                className={`absolute flex justify-center w-1/3 ${
                     ReverseAnimationDirection ? "right-0" : "left-0"
                 } top-1/2 transform -translate-y-1/2 invisible group-hover:visible ${
                     ReverseAnimationDirection

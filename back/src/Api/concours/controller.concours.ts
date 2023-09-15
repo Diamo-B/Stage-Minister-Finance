@@ -324,6 +324,48 @@ const getAll_W_usefulProps_userAssignments = async (
     }
 };
 
+const getExaminationSiteDetails = async ( req:Request, res:Response, next:NextFunction) => {
+    try {
+        const {concoursId} = req.params;
+        const examinationData = await concoursService.getExaminationSiteDetails(concoursId);
+        return res.status(200).json(examinationData);
+    } catch (err: any) {
+        if(err instanceof httpException) next(err)
+        next(new httpException(500, err.message));
+    }
+}
+
+const ChangeExaminationSiteDetails = async ( req:Request, res:Response, next:NextFunction) => {
+    try {
+        const { concoursId } = req.params;
+        const { newCitiesAssignments } = req.body;
+        const newExaminationData = await concoursService.changeExaminationSiteDetails(
+            concoursId, newCitiesAssignments
+        );
+        return res.status(200).json(newExaminationData);
+    } catch (err:any) {
+        if (err instanceof httpException) next(err);
+        next(new httpException(500, err.message));
+    }
+}
+
+const updateStatus = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    try {
+        const { id } = req.body;
+        const concours = await concoursService.endConcours(id);
+        return res.status(200).json({
+            concours,
+        });
+    } catch (err: any) {
+        if (err instanceof httpException) next(err);
+        next(new httpException(500, err.message));
+    }
+}
+
 const remove = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const admin = (req as UserAuthRequest).user.user.admin.id;
@@ -346,7 +388,10 @@ export default {
     getById,
     getAll_W_UsefulPropsOnly,
     getAll_W_usefulProps_userAssignments,
+    getExaminationSiteDetails,
+    ChangeExaminationSiteDetails,
     create,
     update,
+    updateStatus,
     remove,
 };
