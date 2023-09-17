@@ -43,7 +43,7 @@ const FileUpload = ({ emptyFiles, shouldEmptyFiles, reg, numberOfFiles, fileShow
             
         if(fileShowCase !== undefined && files.length === 0)
         {
-            //put the fileShowCase in the format of {file: fileShowcase}
+            //?put the fileShowCase in the format of {file: fileShowcase}
             let tempFiles: fileField[] = [];
             if(Array.isArray(fileShowCase))
             {
@@ -157,9 +157,16 @@ const FileUpload = ({ emptyFiles, shouldEmptyFiles, reg, numberOfFiles, fileShow
                                             <UilFile />
                                         )}
                                         <div className="flex mr-auto ml-5">
-                                            <h1 className="font-bold hover:cursor-pointer hover:underline">
-                                                {fileObj.file.name}
-                                            </h1>
+                                        <a
+                                            href={URL.createObjectURL(fileObj.file)}
+                                            download={fileObj.file.name}
+                                            className="font-bold hover:cursor-pointer hover:underline"
+                                            onClick={()=>{
+                                                URL.revokeObjectURL(URL.createObjectURL(fileObj.file));
+                                            }}
+                                        >
+                                            {fileObj.file.name}
+                                        </a>
                                         </div>
                                         <div className="flex justify-center items-center gap-5 font-medium">
                                             <h1>

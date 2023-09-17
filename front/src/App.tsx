@@ -1,10 +1,9 @@
 import "./index.css";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { Provider } from "react-redux";
 import { store } from "./Redux/store";
 import GenAppLayout from "./Layouts/GenAppLayout";
 import Register from "./Pages/Candidat/Register";
-import Home from "./Pages/Candidat/Home";
 import AdminHome from "./Pages/Admin/Home";
 import CreateModifyConcours from "./Pages/Admin/Concours/Create_Modify";
 import Login from "./Pages/Login";
@@ -14,6 +13,7 @@ import ConcoursHome from "./Pages/Home/ConcoursHome";
 import ResetPassword from "./Pages/resetPassword";
 import ConcoursManagement from "./Pages/Admin/Concours/management";
 import CategorizeConcours from "./Pages/Admin/Concours/Categorize";
+import CreateConcoursResults from "./Pages/Admin/Concours/CreateConcoursResults";
 
 function App() {
     return (
@@ -39,8 +39,8 @@ function App() {
                             path="/"
                             element={<WithAuthCheck userTypes={["candidat"]} />}
                         >
-                            <Route element={<NavbarLayout />}>
-                                <Route index element={<Home />} />
+                            <Route element={<NavbarLayout />}> 
+                                <Route index element={<Navigate to={'/concours'} state={{listOnly: true}}/>}/>
                             </Route>
                         </Route>
 
@@ -65,7 +65,7 @@ function App() {
                             element={<WithAuthCheck userTypes={["admin"]} />}
                         >
                             <Route element={<NavbarLayout />}>
-                                <Route index element={<AdminHome />} />
+                                <Route index element={<Navigate to={'/admin/concours'} />}/>
                                 <Route
                                     path={"/admin/concours/create"}
                                     element={<CreateModifyConcours />}
@@ -78,6 +78,10 @@ function App() {
                                     path={`/admin/concours/categorize`}
                                     element={<CategorizeConcours />}
                                 />
+                                <Route
+                                    path={"/admin/concours/results"}
+                                    element={<CreateConcoursResults />}
+                                /> 
                             </Route>
                         </Route>
                     </Route>

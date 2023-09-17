@@ -1,4 +1,4 @@
-import { concoursStatus } from '@prisma/client';
+import { Attachment, concoursStatus } from '@prisma/client';
 import { prisma } from '../../prisma/db.prisma';
 import dayjs from 'dayjs';
 import httpException from '../../utils/httpException';
@@ -222,6 +222,32 @@ const getExaminationSiteDetails = async (concoursId: string) => {
     }
 }
 
+const getResults = async (concoursId: string) => {
+    try {
+        const concoursResults = await prisma.concoursResult.findUnique({
+            where:{
+                concoursId: concoursId,
+            },
+            include:{
+                attachments: true,
+                concours:{
+                    select:{
+                        label: true
+                    }
+                }
+            }
+        })
+        if(!concoursResults)
+            throw new httpException(404, "Ce concours n'as pas encore un résultat");
+        /* concoursResults.attachments.map((attachment) => {
+            attachment.attachmentData = attachment.file_data.toString('base64');
+        }) */
+        return concoursResults;
+    } catch (err) {
+        throw err;
+    }
+}
+
 const changeExaminationSiteDetails = async (
     concoursId: string,
     newCitiesAssignments:any[]
@@ -305,6 +331,63 @@ const create = async (
     return concours;
 };
 
+const createOrGetConcoursResultRecord = async (concoursId: string) => {
+    try {
+        const concoursResult = await prisma.concoursResult.findUnique({
+            where:{
+                concoursId: concoursId,
+            },
+        })
+        if(concoursResult) return concoursResult;
+        const newConcoursResult = await prisma.concoursResult.create({
+            data: {
+                concours: {
+                    connect: {
+                        id: concoursId,
+                    },
+                },
+            },
+        });
+        return newConcoursResult;
+    } catch (err) {
+        throw err;
+    }
+};
+
+const setResults = async (
+    concoursResultsId: string,
+    summonedCandidatsAttachmentId: string|undefined,
+    writtenExamAttachmentId:string|undefined,
+    finalResultsAttachmentId:string|undefined,
+    accessPlanAttachmentId:string|undefined
+) => {
+    try {
+        const attachmentIds = [
+            summonedCandidatsAttachmentId,
+            writtenExamAttachmentId,
+            finalResultsAttachmentId,
+            accessPlanAttachmentId,
+        ].filter(Boolean); // Remove undefined values
+
+        const attachmentIdObjects = attachmentIds.map(id => ({ id })); // Convert to connectable objects array
+
+        const concoursResult = await prisma.concoursResult.update({
+            where:{
+                id: concoursResultsId,
+            },
+            data: {
+                attachments: {
+                    connect: attachmentIdObjects,
+                },
+            },
+        });
+
+        return concoursResult;
+    } catch (err) {
+        throw err;
+    }
+}
+
 const update = async (
     updatedData: any,
     id: string
@@ -346,7 +429,7 @@ const endConcours = async (id: string) => {
 
 const remove = async (id: string) => {
     try {
-        
+
         const concours = await prisma.concours.delete({
             where: {
                 id: id,
@@ -376,8 +459,11 @@ export default {
     getAll_W_UsefulPropsOnly,
     getAll_W_usefulProps_userAssignments,
     getExaminationSiteDetails,
+    getResults,
     changeExaminationSiteDetails,
     create,
+    createOrGetConcoursResultRecord,
+    setResults,
     update,
     endConcours,
     remove,

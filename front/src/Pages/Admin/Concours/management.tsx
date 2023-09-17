@@ -3,10 +3,11 @@ import Table from "../../../Components/admin/Concours/Manage/Table";
 import SearchBar from "../../../Components/admin/Concours/Manage/searchBar";
 //import Stats from "../../../Components/admin/Concours/Manage/stats";
 import useHelpers from "../../../Hooks/admin/concours/manage/useHelpers";
-import { useAppSelector } from "../../../Hooks/redux";
+import { useAppDispatch, useAppSelector } from "../../../Hooks/redux";
 import InfosPanel from "../../../Components/admin/Concours/Manage/InfosPanel";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import Toast from "../../../Components/toast";
+import { activateAlert } from "../../../Redux/alerts";
 
 const ConcoursManagement = () => {
     const { getConcours } = useHelpers();
@@ -15,6 +16,17 @@ const ConcoursManagement = () => {
     useEffect(() => {
         getConcours();
     }, []);
+    const location = useLocation()
+    const dispatch = useAppDispatch();
+    useEffect(()=>{
+        console.log(location.state);
+        if(location.state?.message && location.state?.type){
+            dispatch(activateAlert({
+                message: location.state.message,
+                level: location.state.type
+            }))
+        }
+    },[location])
     return (
         <div className="flex-grow w-5/6 flex flex-col justify-center ">
             <div className="flex justify-center items-center gap-5 mt-5 py-3">

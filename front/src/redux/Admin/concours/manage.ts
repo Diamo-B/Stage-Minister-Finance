@@ -36,10 +36,15 @@ const manage = createSlice({
             state.filteredConcours = action.payload;
         },
         EndConcours: (state, action) => {
-            const id = action.payload;
+            const id = action.payload; 
+            console.log(id);
+            
             const index = state.filteredConcours.findIndex(concours => concours.id === id);
-            if(index) 
+            
+            if(index !== -1) 
+            {
                 state.filteredConcours[index].status = 'ended';
+            }
             const originalIndex = state.concours.findIndex(concours => concours.id === id);
             state.concours[originalIndex].status = 'ended';
         },

@@ -6,6 +6,7 @@ import {
 } from "../../Utils/interfaces/IFileUpload";
 import { FileRejection } from "react-dropzone";
 
+//explain candidat Registration
 import {
     addFile as addFileStep4,
     removeFile as removeFileStep4,
@@ -21,7 +22,42 @@ import {
 } from "../../Redux/RegisterationForm/lastStep";
 
 import convertBase64 from "../../Utils/convertBase64";
-import { addAvis, removeAvis, resetAvis } from "../../Redux/Admin/concours/create";
+//explain concours creation [avis]
+import {
+    addAvis,
+    removeAvis,
+    resetAvis,
+} from "../../Redux/Admin/concours/create";
+
+//explain concours results
+//?[accessPlans]
+import {
+    addAccessPlan,
+    removeAccessPlan,
+    resetAccessPlan,
+} from "../../Redux/Admin/concours/results";
+
+//?[summoned candidats]
+import {
+    addSummonedCandidats,
+    removeSummonedCandidats,
+    resetSummonedCandidats,
+} from "../../Redux/Admin/concours/results";
+
+//?[written exam results]
+import {
+    addWrittenExamResults,
+    removeWrittenExamResults,
+    resetWrittenExamResults,
+} from "../../Redux/Admin/concours/results";
+
+//?[final results]
+import {
+    addFinalResults,
+    removeFinalResults,
+    resetFinalResults,
+} from "../../Redux/Admin/concours/results";
+
 import { useAppDispatch } from "../redux";
 
 type Props = {
@@ -30,10 +66,17 @@ type Props = {
     setFiles: React.Dispatch<React.SetStateAction<fileField[]>>;
     setShow: React.Dispatch<React.SetStateAction<boolean>>;
     setErrors: React.Dispatch<React.SetStateAction<errorsField | null>>;
-    numberOfFiles: number|undefined;
+    numberOfFiles: number | undefined;
 };
 
-const useHelpers = ({ reg, files, setFiles, setShow, setErrors, numberOfFiles }: Props) => {
+const useHelpers = ({
+    reg,
+    files,
+    setFiles,
+    setShow,
+    setErrors,
+    numberOfFiles,
+}: Props) => {
     const dispatch = useAppDispatch();
 
     const onDrop = useCallback(
@@ -64,7 +107,7 @@ const useHelpers = ({ reg, files, setFiles, setShow, setErrors, numberOfFiles }:
                     requiredError: false,
                 });
             }
-            if (files.length < (numberOfFiles||2)) { 
+            if (files.length < (numberOfFiles || 2)) {
                 setFiles(prev => [
                     ...prev,
                     ...acceptedFiles.map(file => {
@@ -163,8 +206,44 @@ const useHelpers = ({ reg, files, setFiles, setShow, setErrors, numberOfFiles }:
                         file: data.file,
                         name: data.name,
                         extension: data.extension,
-                    })
+                    }),
                 );
+                break;
+            case "summonedCandidats":
+                dispatch(
+                    addSummonedCandidats({
+                        file:data.file,
+                        name: data.name,
+                        extension: data.extension
+                    })
+                )
+                break;
+            case "accessPlan":
+                dispatch(
+                    addAccessPlan({
+                        file:data.file,
+                        name: data.name,
+                        extension: data.extension
+                    })
+                )
+                break;
+            case "writtenExamResults":
+                dispatch(
+                    addWrittenExamResults({
+                        file:data.file,
+                        name: data.name,
+                        extension: data.extension
+                    })
+                )
+                break;
+            case "finalResults":
+                dispatch(
+                    addFinalResults({
+                        file:data.file,
+                        name: data.name,
+                        extension: data.extension
+                    })
+                )
                 break;
         }
     };
@@ -183,6 +262,18 @@ const useHelpers = ({ reg, files, setFiles, setShow, setErrors, numberOfFiles }:
             case "avis": //explain: concours avis file (page /admin/concours/create)
                 dispatch(removeAvis(index));
                 break;
+            case "summonedCandidats":
+                dispatch(removeSummonedCandidats(index))
+                break;
+            case "accessPlan":
+                dispatch(removeAccessPlan(index))
+                break;
+            case "writtenExamResults":
+                dispatch(removeWrittenExamResults(index))
+                break;
+            case "finalResults":
+                dispatch(removeFinalResults(index))
+                break;
         }
     };
 
@@ -199,6 +290,18 @@ const useHelpers = ({ reg, files, setFiles, setShow, setErrors, numberOfFiles }:
                 break;
             case "avis": //explain: concours avis file (page /admin/concours/create)
                 dispatch(resetAvis());
+                break;
+            case "summonedCandidats":
+                dispatch(resetSummonedCandidats())
+                break;
+            case "accessPlan":
+                dispatch(resetAccessPlan())
+                break;
+            case "writtenExamResults":
+                dispatch(resetWrittenExamResults())
+                break;
+            case "finalResults":
+                dispatch(resetFinalResults())
                 break;
         }
     };

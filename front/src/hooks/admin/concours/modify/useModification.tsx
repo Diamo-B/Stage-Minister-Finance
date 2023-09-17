@@ -39,7 +39,8 @@ const useModification = ({isModify, setIsModify, setValue}: Props) => {
             )
                 .then(async res => {
                     const response = await res.json();
-                    const fileName = isModify?.avis.path.replace("./public/Concours/", "").split("/")[1];
+                    //explain: setting the file from the database to the isModify object so it can be shown inside the fileUploader component
+                    const fileName = isModify?.avis.path.replace("./public/Concours/", "").split("/")[2];
                     const fileExtension = fileName?.split(".")[1];
                     const base64Mime = `data:${fileExtension === "pdf"? "application/pdf": `image/${fileExtension}`};base64,`;
 

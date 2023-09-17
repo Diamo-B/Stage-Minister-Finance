@@ -51,7 +51,7 @@ const Table = () => {
                 </thead>
                 <tbody>
                     {
-                        filteredConcours && filteredConcours.length > 0 &&
+                        filteredConcours && filteredConcours.length > 0 ?
                         filteredConcours.map((c)=>(
                             <tr className="hover" key={c.id}>
                                 <th>
@@ -97,6 +97,12 @@ const Table = () => {
                                 </td>
                             </tr>
                         ))
+                        :
+                        <tr>
+                            <td colSpan={4} className="text-center font-bold text-base">
+                                Aucun concours n'a été trouvé
+                            </td>
+                        </tr>
                     }
                 </tbody>
             </table>

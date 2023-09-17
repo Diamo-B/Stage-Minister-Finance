@@ -11,6 +11,7 @@ import alertReducer from "./alerts";
 import confirmationPanelReducer from "./confirmationPanel";
 import concoursReducer from "./Admin/concours/create";
 import concoursManagementReducer from "./Admin/concours/manage";
+import setConcoursResultsReducer from "./Admin/concours/results"
 import forgotPasswordReducer from "./forgotPassword";
 import postulerReducer from './Concours/postuler';
 import postulerConcoursReducer from './Concours/concours'
@@ -36,6 +37,8 @@ export const store = configureStore({
         concoursCreation: concoursReducer,
         //----------------Manage concours----------------------------------
         concoursManagement: concoursManagementReducer,
+        //----------------set concours results----------------------------------
+        concoursResults: setConcoursResultsReducer,
         //!General
         forgotPassword: forgotPasswordReducer,
         loading: loadingReducer,

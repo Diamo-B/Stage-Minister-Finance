@@ -8,6 +8,13 @@ const getExaminationSiteDetails = z.object({
     concoursId: z.string().uuid({ message: 'L\'id du concours doit absolument être un UUID' }).nonempty({ message: 'L\'id du concours est obligatoire' })
 })
 
+const getResults = z.object({
+    concoursId: z
+        .string()
+        .uuid({ message: "L'id du concours doit absolument être un UUID" })
+        .nonempty({ message: "L'id du concours est obligatoire" }),
+});
+
 const ChangeExaminationSiteDetails = z.object({
     concoursId: z.string().uuid({ message: 'L\'id du concours doit absolument être un UUID' }).nonempty({ message: 'L\'id du concours est obligatoire' }),
     newCitiesAssignments: z.array(
@@ -82,6 +89,13 @@ const create = z.object({
     villesIds: z.string()
 });
 
+const setResults = z.object({
+    concoursId: z
+        .string()
+        .uuid({ message: "L'id du concours doit absolument être un UUID" })
+        .nonempty({ message: "L'id du concours est obligatoire" }),
+});
+
 const update = z.object({
     id: z.string().uuid({ message: 'L\'id du concours doit absolument être un UUID' }).nonempty({ message: 'L\'id du concours est obligatoire' }),
 }).merge(create)
@@ -100,8 +114,10 @@ const remove = z.object({
 export default {
     getById,
     getExaminationSiteDetails,
+    getResults,
     ChangeExaminationSiteDetails,
     create,
+    setResults,
     update,
     updateStatus,
     remove

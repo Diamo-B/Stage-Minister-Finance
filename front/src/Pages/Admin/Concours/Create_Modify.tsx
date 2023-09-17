@@ -111,6 +111,7 @@ const CreateModifyConcours = () => {
         }
     },[methods.formState.errors]);
 
+
     return (
         <div className="w-full px-5 py-10">
             <div className="w-full flex flex-col flex-1 border-2 border-slate-300 rounded-3xl shadow-lg bg-base-300 py-5">

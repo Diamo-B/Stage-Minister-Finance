@@ -1,7 +1,10 @@
 import { UilArrowLeft } from "@iconscout/react-unicons";
 import { useAppDispatch, useAppSelector } from "../../../../Hooks/redux";
 import AnimatedButton from "../../../FormElements/animatedButton";
-import { EndConcours, closeInfo } from "../../../../Redux/Admin/concours/manage";
+import {
+    EndConcours,
+    closeInfo,
+} from "../../../../Redux/Admin/concours/manage";
 import { CSVLink } from "react-csv";
 import {
     UilHeart,
@@ -12,7 +15,10 @@ import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import ConfirmationPanel from "../../../FormElements/confirmationPanel";
-import { hideConfirmationPanel, showConfirmationPanel } from "../../../../Redux/confirmationPanel";
+import {
+    hideConfirmationPanel,
+    showConfirmationPanel,
+} from "../../../../Redux/confirmationPanel";
 import { startLoading, stopLoading } from "../../../../Redux/loading";
 import { activateAlert } from "../../../../Redux/alerts";
 
@@ -20,98 +26,141 @@ const InfosPanel = () => {
     const dispatch = useAppDispatch();
     const { info } = useAppSelector(state => state.concoursManagement);
 
+    //! this is used so we can retrieve the candidats exam centers then fill them in the CSV file
     //explain: this will hold the id of each candidat alongside his exam city
-    const [candidatsExamCities, setCandidatsExamCities] = useState<{candidatId:string, examCenterName:string}[]>([]);
-    useEffect(()=>{
-        if(info!== null)
-        {
+    const [candidatsExamCities, setCandidatsExamCities] = useState<
+        { candidatId: string; examCenterName: string }[]
+    >([]);
+    useEffect(() => {
+        if (info !== null && candidatsExamCities.length === 0) {
             const concoursId = info.id;
             //explain: this will fetch the concours exam centers for each candidat
-            fetch(`${import.meta.env.VITE_BackendBaseUrl}/concours/examination/getAll/${concoursId}`, {
-                method: "GET",
-                headers:{
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${localStorage.getItem("AccessToken")}`,
-                }
-            }).then(async res => {
-                const response  = await res.json();
-                setCandidatsExamCities(
-                    response.map((x:any)=> {return{candidatId:x.candidat.id, examCenterName:x.villeExamen.nom}})
-                )
-            }).catch((err)=>{
-                console.error(err);
-            })
+            fetch(
+                `${
+                    import.meta.env.VITE_BackendBaseUrl
+                }/concours/examination/getAll/${concoursId}`,
+                {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${localStorage.getItem(
+                            "AccessToken",
+                        )}`,
+                    },
+                },
+            )
+                .then(async res => {
+                    const response = await res.json();
+                    setCandidatsExamCities(
+                        response.map((x: any) => {
+                            return {
+                                candidatId: x.candidat.id,
+                                examCenterName: x.villeExamen.nom,
+                            };
+                        }),
+                    );
+                })
+                .catch(err => {
+                    console.error(err);
+                });
         }
-    },[info])
+    }, [info]);
 
     //explain: Setting the candidats data export to CSV
     const [dataToExport, setDataToExport] = useState<any[]>([]);
-    
+
     useEffect(() => {
-        if(candidatsExamCities.length>0 && info !== null && dataToExport.length === 0){
-            const data =info.candidats.map(c=>{
-                const centreExamen = candidatsExamCities.find(x=>x.candidatId === c.id)!!.examCenterName;
+        if (
+            candidatsExamCities.length > 0 &&
+            info !== null &&
+            dataToExport.length === 0
+        ) {
+            const data = info.candidats.map(c => {
+                const centreExamen = candidatsExamCities.find(
+                    x => x.candidatId === c.id,
+                )!!.examCenterName;
                 return {
-                    "CIN": c.user.cin,
-                    "Titre": c.user.titre,
-                    "Nom": c.user.nom,
-                    "Prénom": c.user.prenom,
-                    "Email": c.user.email,
-                    "Adresse": c.user.adresse,
-                    "dateNaissance": dayjs(c.user.dateNaissance).format('DD/MM/YYYY'),
-                    "telephone": `'${c.user.telephone}`,
+                    CIN: c.user.cin,
+                    Titre: c.user.titre,
+                    Nom: c.user.nom,
+                    Prénom: c.user.prenom,
+                    Email: c.user.email,
+                    Ville: c.user.ville.nom,
+                    Adresse: c.user.adresse,
+                    dateNaissance: dayjs(c.user.dateNaissance).format(
+                        "DD/MM/YYYY",
+                    ),
+                    telephone: `'${c.user.telephone}`,
                     "centre_d'examen": centreExamen,
-                }
-            })
+                };
+            });
             setDataToExport(data);
         }
-    },[candidatsExamCities])
+    }, [candidatsExamCities]);
 
-    //explain: Setting the behavior of the action 'Cloturer concours'
-    const {show, isConfirmed, functionParams} = useAppSelector(state=>state.confirmationPanel)
     useEffect(()=>{
-        if(isConfirmed){
-            dispatch(startLoading())
+        info && 
+        console.log(info);
+        
+    },[info])
+
+    //explain: Setting the behavior of the action 'Clôturer concours'
+    const { show, isConfirmed, functionParams } = useAppSelector(
+        state => state.confirmationPanel,
+    );
+    useEffect(() => {
+        if (isConfirmed) {
+            dispatch(startLoading());
             //explain: Close the concours with the id present inside the functionParams
-            fetch(`${import.meta.env.VITE_BackendBaseUrl}/concours/end`,{
-                method:'PATCH',
-                headers:{
-                    'Content-Type':'application/json',
-                    Authorization: 'Bearer '+localStorage.getItem('AccessToken')
+            fetch(`${import.meta.env.VITE_BackendBaseUrl}/concours/end`, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization:
+                        "Bearer " + localStorage.getItem("AccessToken"),
                 },
                 body: JSON.stringify({
-                    id: functionParams
+                    id: functionParams,
+                }),
+            })
+                .then(async res => {
+                    const response = await res.json();
+                    if (response.errors) {
+                        throw response.errors;
+                    } else {
+                        dispatch(EndConcours(functionParams));
+                        dispatch(
+                            activateAlert({
+                                message:
+                                    "Le concours a été Clôturé avec succès",
+                                level: "alert-success",
+                            }),
+                        );
+                    }
                 })
-            }).then(async(res)=>{
-                const response = await res.json();
-                if(response.errors)
-                {
-                    throw response.errors;
-                }
-                else
-                {
-                    dispatch(EndConcours(functionParams))
-                    dispatch(activateAlert({
-                        message: "Le concours a été Clôturé avec succès",
-                        level:"alert-success"
-                    }))
-                }
-            }).catch(err=>{
-                dispatch(activateAlert({
-                    message: "Une erreur inattendue s'est produite.",
-                    level:"alert-error"
-                }))
-                console.error('err',err);
-            })
-            .finally(()=>{
-                dispatch(stopLoading())
-                //! Hide the confirmation panel. If this is not done after removing the record, be ready for some nasty bugs, since the isConfirmed will keep being true and it will launch the suppression api whenever the page re-renders.
-                dispatch(hideConfirmationPanel());
-                dispatch(closeInfo());
-            })
+                .catch(err => {
+                    dispatch(
+                        activateAlert({
+                            message: "Une erreur inattendue s'est produite.",
+                            level: "alert-error",
+                        }),
+                    );
+                    console.error("err", err);
+                })
+                .finally(() => {
+                    dispatch(stopLoading());
+                    //! Hide the confirmation panel. If this is not done after removing the record, be ready for some nasty bugs, since the isConfirmed will keep being true and it will launch the suppression api whenever the page re-renders.
+                    dispatch(hideConfirmationPanel());
+                    dispatch(closeInfo());
+                });
         }
-    },[isConfirmed])
+    }, [isConfirmed]);
+
+    useEffect(()=>{
+        console.log(info);
         
+    },[])
+
     return (
         <>
             {info !== null && (
@@ -202,44 +251,72 @@ const InfosPanel = () => {
                                     </h1>
                                     {info.specialite.label}
                                 </div>
-                                
-                                    {
-                                        info.status === 'enabled'?
-                                        <div className="col-span-2 border-t-4 h-full py-5 px-10 grid grid-cols-1 items-center place-items-center">
-                                            <h1 className="text-2xl text-base-content font-bold mb-1">
-                                                Clôturer le concours
-                                            </h1>
-                                            <p>Veuillez noter que la clôture de ce concours empêchera les candidats de postuler à l'avenir.</p>
-                                            <button className="btn btn-wide btn-outline btn-error hover:!text-white"
-                                                onClick={()=>{
-                                                    dispatch(showConfirmationPanel({
-                                                        text: 'Voulez-vous vraiment clôturer ce concours ?\n Cette action est irréversible.',
+
+                                {info.status === "enabled" ? (
+                                    <div className="col-span-2 border-t-4 h-full py-5 px-10 grid grid-cols-1 items-center place-items-center">
+                                        <h1 className="text-2xl text-base-content font-bold mb-1">
+                                            Clôturer le concours
+                                        </h1>
+                                        <p>
+                                            Veuillez noter que la clôture de ce
+                                            concours empêchera les candidats de
+                                            postuler à l'avenir.
+                                        </p>
+                                        <button
+                                            className="btn btn-wide btn-outline btn-error hover:!text-white"
+                                            onClick={() => {
+                                                dispatch(
+                                                    showConfirmationPanel({
+                                                        text: "Voulez-vous vraiment clôturer ce concours ?\n Cette action est irréversible.",
                                                         functionParams: info.id,
-                                                        itemIdentifier: info.label,
-                                                    }))
-                                                }}
-                                            >
-                                                Clôturer
-                                            </button>
+                                                        itemIdentifier:
+                                                            info.label,
+                                                    }),
+                                                );
+                                            }}
+                                        >
+                                            Clôturer
+                                        </button>
+                                    </div>
+                                ) : (
+                                    info.status === "ended" && (
+                                        <div className=" border-t-4 rounded-b-lg h-full col-span-2 py-5 px-10 grid grid-cols-1 items-center place-items-center">
+                                            <h1 className="capitalize text-xl font-bold text-center">
+                                                Vous avez clôturé ce concours!!
+                                            </h1>
+                                            <p className="text-base">
+                                                Veuillez cliquez ici pour
+                                                ajouter les résultats de ce
+                                                concours{" "}
+                                            </p>
+                                            <div className="w-full flex justify-center">
+                                                <Link
+                                                    to={
+                                                        "/admin/concours/results"
+                                                    }
+                                                    state={{
+                                                        concoursId: info.id,
+                                                        concoursLabel: info.label
+                                                    }}
+                                                >
+                                                    <button className="btn btn-outline hover:btn-success hover:!text-white">
+                                                        Ajouter les résultats
+                                                    </button>
+                                                </Link>
+                                            </div>
                                         </div>
-                                        :
-                                            info.status === 'ended'&&
-                                                <div className=" border-t-4 rounded-b-lg h-full py-5 px-10 col-span-2 relative bg-slate-700/50 text-base-300 flex flex-col justify-center items-center">
-                                                    <p className="capitalize text-xl font-bold">Vous avez clôturé ce concours!!</p>
-                                                    <p className="text-xl font-bold">Cette action est irréversible.</p> 
-                                                </div>
-                                    }
+                                    )
+                                )}
                             </div>
                         </div>
                         <div className="border-4 rounded-xl">
                             <div className="flex flex-col w-full h-full border-opacity-50 py-10">
                                 <div className="grid h-1/2">
-                                <div className="grid grid-cols-1 grid-rows-2 text-center h-full"> 
-                                    <h1 className="text-2xl text-base-content font-bold">
-                                        Avis
-                                    </h1>
-                                    <div className="h-full flex justify-center">
-                                        <button className="btn max-w-xs">
+                                    <div className="grid grid-cols-1 grid-rows-2 text-center h-full">
+                                        <h1 className="text-2xl text-base-content font-bold">
+                                            Avis
+                                        </h1>
+                                        <div className="h-full flex justify-center">
                                             <Link
                                                 to={`${import.meta.env.VITE_BackendBaseUrl.replace(
                                                     "/api/v1",
@@ -249,24 +326,35 @@ const InfosPanel = () => {
                                                     "",
                                                 )}`}
                                             >
-                                                    {info?.avis.path.split("/")[4]}
+                                                <button className="btn max-w-xs">
+                                                    {
+                                                        info?.avis.path.split(
+                                                            "/",
+                                                        )[5]
+                                                    }
+                                                </button>
                                             </Link>
-                                        </button>
+                                        </div>
                                     </div>
-                                </div>
 
-                                <div className=""></div>
+                                    <div className=""></div>
                                 </div>
-                                <div className="divider">OR</div>
+                                <div className="divider">OU</div>
                                 <div className="grid h-1/2 text-center gap-1">
                                     <h1 className="text-2xl text-base-content font-bold ">
                                         Candidats
                                     </h1>
                                     <div className="h-full flex justify-center">
-                                        <button className={`btn max-w-xs ${info.candidats.length === 0 ? 'btn-disabled' : ''}`}>
+                                        <button
+                                            className={`btn max-w-xs ${
+                                                info.candidats.length === 0
+                                                    ? "btn-disabled"
+                                                    : ""
+                                            }`}
+                                        >
                                             <CSVLink
                                                 separator={";"}
-                                                data={dataToExport}        
+                                                data={dataToExport}
                                                 filename={`${info.label}.csv`}
                                             >
                                                 infos_Candidats.csv
@@ -279,10 +367,7 @@ const InfosPanel = () => {
                     </div>
                 </div>
             )}
-            {
-                show &&
-                <ConfirmationPanel customConfirmButton="Clôturer"/>
-            }
+            {show && <ConfirmationPanel customConfirmButton="Clôturer" />}
         </>
     );
 };

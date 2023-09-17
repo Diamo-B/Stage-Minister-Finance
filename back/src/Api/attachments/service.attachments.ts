@@ -58,7 +58,8 @@ const create = async (
     blob: Buffer,
     candidatId?: string,
     concoursId?: string,
-    diplomeId?: string
+    diplomeId?: string,
+    concoursResultId?: string
 ) => {
 
     try {
@@ -75,6 +76,14 @@ const create = async (
                 },
             };
         }
+        
+        if (diplomeId !== undefined) {
+            attachmentData.diplome = {
+                connect: {
+                    id: diplomeId,
+                },
+            };
+        }
 
         if (concoursId !== undefined) {
             attachmentData.concours = {
@@ -84,13 +93,14 @@ const create = async (
             };
         }
 
-        if (diplomeId !== undefined) {
-            attachmentData.diplome = {
+        if (concoursResultId !== undefined) {
+            attachmentData.concoursResult = {
                 connect: {
-                    id: diplomeId,
+                    id: concoursResultId,
                 },
             };
         }
+
 
         return await prisma.attachment.create({
             data: attachmentData,
@@ -148,11 +158,12 @@ const deleteAttachments_byDiplome = async (diplomeId: string, paths: string[]) =
     }
 }
 
-const deleteByConcoursId = async (concoursId: string) => {
+const deleteByConcoursId = async (concoursId: string, type: AttachmentTypes) => {
     try {
         const attachment = await prisma.attachment.deleteMany({
             where:{
-                concoursId,
+                concoursId: concoursId,
+                type: type
             }
         })
         if(!attachment)
@@ -166,6 +177,25 @@ const deleteByConcoursId = async (concoursId: string) => {
     }
 }
 
+const deleteByConcoursResultId = async (concoursResultId: string, type: AttachmentTypes) => {
+    try {
+        const attachment = await prisma.attachment.deleteMany({
+            where: {
+                AND: {
+                    concoursResultId: concoursResultId,
+                    type: type,
+                }
+            },
+        });
+        if (!attachment) {
+            throw new httpException(404, 'attachment not found');
+        }
+        return attachment;
+    } catch (err: any) {
+        if (err instanceof httpException) throw err;
+        throw new httpException(500, err.message);
+    }
+}
 
 export default {
     getById,
@@ -175,4 +205,5 @@ export default {
     deleteById,
     deleteAttachments_byDiplome,
     deleteByConcoursId,
+    deleteByConcoursResultId,
 };
