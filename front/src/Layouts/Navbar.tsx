@@ -16,6 +16,8 @@ import { useEffect, useState } from "react";
 import { setConnectedUser } from "../Redux/GeneralValues";
 import { resetSteps } from "../Redux/RegisterationForm/formSteps";
 import Menu from "./menu";
+import { connectedUserSchema } from "../Redux/types/GeneralValuesTypes";
+import { z } from "zod";
 
 const Navbar = () => {
     const navigate = useNavigate();
@@ -24,6 +26,7 @@ const Navbar = () => {
         state => state.confirmationPanel,
     );
     const { connectedUser } = useAppSelector(state => state.genValues);
+    
     
     useEffect(() => {
         if (isConfirmed && functionParams.logout) {
@@ -83,12 +86,12 @@ const Navbar = () => {
                     </a>
                 </div>
                 <div className="navbar-end">
-                    {connectedUser && typeof connectedUser === "object" && (
+                    {connectedUser && (
                         <>
                             <p className="text-base text-base-100 mr-5 badge badge-lg badge-success flex gap-1">
                                 <UilLink className="text-white" />
                                 <span className="font-bold">
-                                    {`${connectedUser.email}`}
+                                    {`${(connectedUser as z.infer<typeof connectedUserSchema>).email}`}
                                 </span>
                             </p>
                         </>
@@ -122,7 +125,7 @@ const Navbar = () => {
             </nav>
             <div className="relative w-full flex justify-center rounded-xl">
                 {menu && <Menu menu={menu} showMenu={showMenu} userType={
-                    connectedUser!!.admin !== null ? 'admin' : 'candidat'
+                    connectedUser && (connectedUser as z.infer<typeof connectedUserSchema>).admin !== null ? 'admin' : 'candidat'
                 }/>}
             </div>
             {show && <ConfirmationPanel customConfirmButton="Déconnexion" />}
