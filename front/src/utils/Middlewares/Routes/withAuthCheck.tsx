@@ -12,10 +12,9 @@ const WithAuthCheck = ({ userTypes }: Props) => {
     const navigate = useNavigate();
     const location = useLocation(); //? used only with the purpose of being inside the deps of the useEffect to force a re-render whenever the location changes
     const dispatch = useAppDispatch();
-    useEffect(()=>{
-        dispatch(startGenPageLoading()); 
-    },[])
-    useEffect(() => {        
+
+    useEffect(() => {    
+        dispatch(startGenPageLoading());     
         const token = localStorage.getItem("AccessToken");      
           
         if (token) {

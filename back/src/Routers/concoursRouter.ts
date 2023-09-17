@@ -22,11 +22,15 @@ router.get(
     concoursApis.getExaminationSiteDetails
 );
 
+//explain: gets the results of all concours
+router.get('/results/getAll', concoursApis.getAllConcoursResults);
+
+//explain: gets the results of a specific concours
 router.get(
     '/:concoursId/getResults',
     AuthMiddleware,
     validate(schema.getResults),
-    concoursApis.getResults
+    concoursApis.getSingleConcoursResults
 );
 
 //explain: this route updates the concours exam center for the candidats of each city
@@ -43,6 +47,7 @@ router.post('/create', AuthMiddleware, validate(schema.create), concoursApis.cre
 //explain: ends a concours (changes it's status to "ended")
 router.patch('/end', AuthMiddleware, validate(schema.updateStatus), concoursApis.updateStatus);
 
+
 //explain: sets the results of a concours
 router.post(
     '/:concoursId/setResults',
@@ -50,6 +55,7 @@ router.post(
     validate(schema.setResults),
     concoursApis.setResults
 );
+
 
 //explain: updates a concours
 router.put('/update/:id', AuthMiddleware, concoursApis.update);

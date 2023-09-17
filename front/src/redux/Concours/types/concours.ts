@@ -12,6 +12,30 @@ export type concours = {
     candidats?: {id: string}[];  
 }
 
+export type result = {
+    id: string;
+    label: string;
+    status:string;
+    limitePlaces: number;
+    direction:{
+        label: string;
+    };
+    poste:{
+        label: string;
+    };
+    grade:{
+        label: string;
+    };
+    dateConcours: string;
+    resultFilesPaths: {
+        summonedCandidats: string;
+        writtenExamResults: string;
+        finalResults: string;
+        accessPlan: string;
+    }
+}
+
 export interface concoursState {
     concours: concours[];
+    results: result[];
 }

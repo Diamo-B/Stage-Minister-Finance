@@ -72,10 +72,6 @@ const CreateConcoursResults = () => {
     }
 
     useEffect(()=>{
-        console.log('accessPlan',accessPlan,'summonedCandidats', summonedCandidats, 'writtenExamResults',writtenExamResults, 'finalResults',finalResults);
-    },[accessPlan, summonedCandidats, writtenExamResults, finalResults])
-
-    useEffect(()=>{
         console.log(filesShowcases);
         
     },[filesShowcases])

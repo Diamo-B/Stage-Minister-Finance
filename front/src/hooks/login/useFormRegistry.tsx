@@ -3,7 +3,7 @@ import { ILoginForm } from "../../Utils/interfaces/Login/ILoginForm";
 import { UseFormReset, UseFormSetFocus } from "react-hook-form";
 import { Dispatch, SetStateAction } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { startLoading, stopLoading } from "../../Redux/loading";
+import { startLoading, stopGenPageLoading, stopLoading } from "../../Redux/loading";
 import { useAppDispatch } from "../redux";
 
 const useFormRegistry = () => {
@@ -51,7 +51,13 @@ const useFormRegistry = () => {
                     })
                     .catch(async err => {
                         console.error(err);
-                    });
+                    }).finally(()=>{
+                        dispatch(stopGenPageLoading())
+                    })
+            }
+            else
+            {
+                dispatch(stopGenPageLoading())
             }
         } catch (err) {
             console.error(err);

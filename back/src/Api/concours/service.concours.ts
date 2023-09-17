@@ -222,23 +222,72 @@ const getExaminationSiteDetails = async (concoursId: string) => {
     }
 }
 
-const getResults = async (concoursId: string) => {
+const getAllConcoursResults = async () => {
     try {
-        const concoursResults = await prisma.concoursResult.findUnique({
-            where:{
-                concoursId: concoursId,
-            },
-            include:{
-                attachments: true,
-                concours:{
+        const concoursResults = await prisma.concours.findMany({
+            select:{
+                id:true,
+                dateConcours: true,
+                status: true,
+                direction:{
                     select:{
-                        label: true
+                        label:true
+                    }
+                },
+                grade:{
+                    select:{
+                        label:true
+                    }
+                },
+                poste:{
+                    select:{
+                        label:true
+                    }
+                },
+                label:true,
+                limitePlaces:true,
+                result:{
+                    select:{
+                        attachments: {
+                            select:{
+                                path: true,
+                                type: true
+                            }
+                        }
                     }
                 }
             }
         })
-        if(!concoursResults)
-            throw new httpException(404, "Ce concours n'as pas encore un résultat");
+
+        if(!concoursResults || concoursResults.length === 0)
+            throw new httpException(404, "Aucun concours n'est trouvé");
+
+        return concoursResults; 
+    } catch (err) {
+        throw err;
+    }
+}
+
+const getSingleConcoursResults = async (concoursId: string) => {
+    try {
+        const concoursResults = await prisma.concoursResult.findUnique({
+            where: {
+                concoursId: concoursId,
+            },
+            include: {
+                attachments: true,
+                concours: {
+                    select: {
+                        label: true,
+                    },
+                },
+            },
+        });
+        if (!concoursResults)
+            throw new httpException(
+                404,
+                "Ce concours n'as pas encore un résultat"
+            );
         /* concoursResults.attachments.map((attachment) => {
             attachment.attachmentData = attachment.file_data.toString('base64');
         }) */
@@ -246,7 +295,7 @@ const getResults = async (concoursId: string) => {
     } catch (err) {
         throw err;
     }
-}
+};
 
 const changeExaminationSiteDetails = async (
     concoursId: string,
@@ -459,7 +508,8 @@ export default {
     getAll_W_UsefulPropsOnly,
     getAll_W_usefulProps_userAssignments,
     getExaminationSiteDetails,
-    getResults,
+    getAllConcoursResults,
+    getSingleConcoursResults,
     changeExaminationSiteDetails,
     create,
     createOrGetConcoursResultRecord,

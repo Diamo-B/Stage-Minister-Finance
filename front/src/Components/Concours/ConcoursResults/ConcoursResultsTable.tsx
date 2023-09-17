@@ -1,19 +1,17 @@
-import { Link } from "react-router-dom";
-import { UilFileDownload } from "@iconscout/react-unicons";
-import AnimatedButton from "../../FormElements/animatedButton";
-import { useEffect, useState } from "react";
-import useHelpers from "../../../Hooks/Home/useHelpers";
+import { useRef } from "react";
 import { useAppSelector } from "../../../Hooks/redux";
+import DownloadButton from "../DownloadButton";
 
 const ConcoursResultsTable = () => {
     //TODO: to be implemented later
-    const [concoursResults, setConcoursResults] = useState<any[]>([]);
+    const concoursResults  = useAppSelector(state => state.postulerConcours.results);
     const { loading } = useAppSelector(state => state.loading);
-    const {getConcoursResults} = useHelpers();
     
-    useEffect(()=>{
-        getConcoursResults(setConcoursResults);
-    },[])
+    const summonedCandidatsListRef = useRef<HTMLAnchorElement>(null)
+    const writtenExamResultRef = useRef<HTMLAnchorElement>(null)
+    const finalResultsListRef = useRef<HTMLAnchorElement>(null)
+    const accesPlansRef = useRef<HTMLAnchorElement>(null)
+
 
     return (
         <section className="max-h-60 overflow-auto rounded-lg">
@@ -37,66 +35,41 @@ const ConcoursResultsTable = () => {
                             concoursResults.map(result => (
                                 <tr className="hover" key={result.id}>
                                     <td className="text-left font-bold min-w-max">
-                                        Concours de recrutement des techniciens
-                                        de 3ème grade
+                                        {result.label}
                                     </td>
-                                    <td>18-10-2023</td>
-                                    <td>233</td>
+                                    <td>{result.dateConcours}</td>
+                                    <td>{result.limitePlaces}</td>
                                     <td>
-                                        <Link
-                                            to="/assets/avis.pdf"
-                                            download={true}
-                                        >
-                                            <AnimatedButton
-                                                Icon={() => (
-                                                    <UilFileDownload className="mx-auto w-7 h-7 text-slate-400" />
-                                                )}
-                                                customButtonClasses={[
-                                                    "!m-0",
-                                                    "!w-24",
-                                                    "btn-outline",
-                                                    "border-slate-400",
-                                                    "btn-sm",
-                                                    "text-xs",
-                                                    "font-medium",
-                                                    "w-full",
-                                                    "border-2",
-                                                    "hover:!border-2",
-                                                    "hover:border-slate-400",
-                                                    "hover:bg-slate-400",
-                                                ]}
-                                                text="Télécharger"
-                                            />
-                                        </Link>
+                                        <DownloadButton 
+                                            fullPath={result.resultFilesPaths.summonedCandidats}
+                                            text="Télécharger"
+                                            ref={summonedCandidatsListRef}
+                                            disabled={result.resultFilesPaths.summonedCandidats?false:true}
+                                        />
                                     </td>
-                                    <td>-------</td>
-                                    <td>-------</td>
                                     <td>
-                                        <Link
-                                            to="/assets/avis.pdf"
-                                            download={true}
-                                        >
-                                            <AnimatedButton
-                                                Icon={() => (
-                                                    <UilFileDownload className="mx-auto w-7 h-7 text-slate-400" />
-                                                )}
-                                                customButtonClasses={[
-                                                    "!m-0",
-                                                    "!w-24",
-                                                    "btn-outline",
-                                                    "border-slate-400",
-                                                    "btn-sm",
-                                                    "text-xs",
-                                                    "font-medium",
-                                                    "w-full",
-                                                    "border-2",
-                                                    "hover:!border-2",
-                                                    "hover:border-slate-400",
-                                                    "hover:bg-slate-400",
-                                                ]}
-                                                text="Télécharger"
-                                            />
-                                        </Link>
+                                        <DownloadButton 
+                                            fullPath={result.resultFilesPaths.writtenExamResults}
+                                            text="Télécharger"
+                                            ref={writtenExamResultRef}
+                                            disabled={result.resultFilesPaths.writtenExamResults?false:true}
+                                        />
+                                    </td>
+                                    <td>
+                                        <DownloadButton 
+                                            fullPath={result.resultFilesPaths.finalResults}
+                                            text="Télécharger"
+                                            ref={finalResultsListRef}
+                                            disabled={result.resultFilesPaths.finalResults?false:true}
+                                        />
+                                    </td>
+                                    <td>
+                                        <DownloadButton 
+                                            fullPath={result.resultFilesPaths.accessPlan}
+                                            text="Télécharger"
+                                            ref={accesPlansRef}
+                                            disabled={result.resultFilesPaths.accessPlan?false:true}
+                                        />
                                     </td>
                                 </tr>
                             ))

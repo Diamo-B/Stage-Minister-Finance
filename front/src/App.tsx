@@ -4,7 +4,6 @@ import { Provider } from "react-redux";
 import { store } from "./Redux/store";
 import GenAppLayout from "./Layouts/GenAppLayout";
 import Register from "./Pages/Candidat/Register";
-import AdminHome from "./Pages/Admin/Home";
 import CreateModifyConcours from "./Pages/Admin/Concours/Create_Modify";
 import Login from "./Pages/Login";
 import NavbarLayout from "./Layouts/NavbarLayout";

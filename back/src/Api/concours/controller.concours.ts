@@ -554,14 +554,56 @@ const getExaminationSiteDetails = async (
     }
 };
 
-const getResults = async (
+const getAllConcoursResults = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    try {
+        const results = await concoursService.getAllConcoursResults();
+        const organizedResults = results.map(singleResult => {
+            return {
+                id: singleResult.id,
+                label: singleResult.label,
+                direction: singleResult.direction,
+                poste: singleResult.poste,
+                grade: singleResult.grade,
+                dateConcours: singleResult.dateConcours,
+                limitePlaces: singleResult.limitePlaces,
+                status: singleResult.status,
+                resultFilesPaths: {
+                    summonedCandidats: singleResult.result?.attachments.find(
+                        attachment => attachment.type === 'summonedCandidats'
+                    )?.path,
+                    writtenExamResults: singleResult.result?.attachments.find(
+                        attachment => attachment.type === 'writtenExamResults'
+                    )?.path,
+                    finalResults: singleResult.result?.attachments.find(
+                        attachment => attachment.type === 'finalResults'
+                    )?.path,
+                    accessPlan: singleResult.result?.attachments.find(
+                        attachment => attachment.type === 'accessPlan'
+                    )?.path,
+                },
+            };
+        })
+        return res.status(200).json(organizedResults);
+    } catch (err: any) {
+        if (err instanceof httpException) next(err);
+        next(new httpException(500, err.message));
+    }
+}
+
+const getSingleConcoursResults = async (
     req: Request,
     res: Response,
     next: NextFunction
 ) => {
     try {
         const { concoursId } = req.params;
-        const results = await concoursService.getResults(concoursId);
+        const results = await concoursService.getSingleConcoursResults(
+            concoursId
+        );
         let base64Attachments:any = [];
         results?.attachments?.forEach(attachment => {
             base64Attachments.push({
@@ -641,7 +683,8 @@ export default {
     getAll_W_UsefulPropsOnly,
     getAll_W_usefulProps_userAssignments,
     getExaminationSiteDetails,
-    getResults,
+    getAllConcoursResults,
+    getSingleConcoursResults,
     ChangeExaminationSiteDetails,
     create,
     setResults,

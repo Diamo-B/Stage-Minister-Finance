@@ -1,26 +1,23 @@
-import { UilCheck, UilFileDownload, UilTimesCircle } from "@iconscout/react-unicons";
+import { UilCheck, UilTimesCircle } from "@iconscout/react-unicons";
 import AnimatedButton from "../../FormElements/animatedButton";
-import { Link } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import useHelpers from "../../../Hooks/Home/useHelpers";
 import { useAppDispatch, useAppSelector } from "../../../Hooks/redux";
 import { hideAlreadyAppliedPanel, hidePanel, showAlreadyAppliedPanel, showPanel } from "../../../Redux/Concours/postuler";
 import { connectedUserSchema } from "../../../Redux/types/GeneralValuesTypes";
 import { z } from "zod";
 import PostulerPanel from "./postulerPanel";
+import DownloadButton from "../DownloadButton";
 
 const LatestConcoursTable = () => {
     const dispatch = useAppDispatch();
-    const { getConcours, showPanelOrRedirect } = useHelpers();
+    const { showPanelOrRedirect } = useHelpers();
     const { show, showAlreadyApplied, concoursId, concoursTitle } = useAppSelector(state => state.postuler);
-    const { concours } = useAppSelector(state => state.postulerConcours);
-    const {connectedUser} = useAppSelector(state => state.genValues);
     const {loading} = useAppSelector(state=>state.loading)
+    const {connectedUser} = useAppSelector(state => state.genValues);
+    const { concours } = useAppSelector(state => state.postulerConcours);
+    
 
-    useEffect(() => {
-        if((connectedUser as z.infer<typeof connectedUserSchema>)?.candidat?.id || connectedUser === 'visitor')
-            getConcours();
-    }, [connectedUser]);
 
     /*
         explain: this checks whether the user has already selected a concours to apply for. 
@@ -55,6 +52,9 @@ const LatestConcoursTable = () => {
         }
     },[concours, connectedUser])
 
+    const anchorLinkRef = useRef<HTMLAnchorElement>(null)
+    
+
     return (
         <section className="max-h-60 overflow-y-auto rounded-lg">
             <div className="relative">
@@ -80,38 +80,8 @@ const LatestConcoursTable = () => {
                                     <td className="text-left font-bold">
                                         {c.label}
                                     </td>
-                                    <td>
-                                        <Link
-                                            to={`${import.meta.env.VITE_BackendBaseUrl.replace(
-                                                "/api/v1",
-                                                "",
-                                            )}${c.avis.path.replace(
-                                                "./public",
-                                                "",
-                                            )}`}
-                                            download={true}
-                                        >
-                                            <AnimatedButton
-                                                Icon={() => (
-                                                    <UilFileDownload className="mx-auto w-7 h-7 text-slate-400" />
-                                                )}
-                                                customButtonClasses={[
-                                                    "!m-0",
-                                                    "!w-24",
-                                                    "btn-outline",
-                                                    "border-slate-400",
-                                                    "btn-sm",
-                                                    "text-xs",
-                                                    "font-medium",
-                                                    "w-full",
-                                                    "border-2",
-                                                    "hover:!border-2",
-                                                    "hover:border-slate-400",
-                                                    "hover:bg-slate-400",
-                                                ]}
-                                                text="Télécharger"
-                                            />
-                                        </Link>
+                                    <td> 
+                                        <DownloadButton ref={anchorLinkRef} fullPath={c.avis.path} text="Télécharger"/>
                                     </td>
                                     <td>{c.dateConcours}</td>
                                     <td>{c.dateLimiteInscription}</td>

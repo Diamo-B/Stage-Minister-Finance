@@ -14,8 +14,8 @@ import {
 import {
     addCandidatsToConcours,
     setConcours,
+    setResults,
 } from "../../Redux/Concours/concours";
-import { Dispatch, SetStateAction } from "react";
 import { concoursType } from "../../Redux/Admin/concours/types/manage";
 
 const useHelpers = () => {
@@ -52,8 +52,25 @@ const useHelpers = () => {
         }
     };
 
-    const getConcoursResults = (setter: Dispatch<SetStateAction<any>>) => {
-        setter(null);
+    const getConcoursResults = () => {
+        dispatch(startGenPageLoading());
+        if (connectedUser !== null && connectedUser !== undefined) {
+            fetch(`${import.meta.env.VITE_BackendBaseUrl}/concours/results/getAll`,{
+                method:'get',
+                headers:{
+                    "Content-Type": "application/json",
+                }
+            }).then(async(res)=>{
+                const response = await res.json();
+                console.log(response);
+                const resultsOfEndedConcours = response.filter((r:any) => r.status === 'ended')
+                dispatch(setResults(resultsOfEndedConcours));
+            }).catch((err)=>{
+                console.error(err);
+            }).finally(()=>{
+                dispatch(stopGenPageLoading());
+            })
+        }
     };
 
     const showPanelOrRedirect = (id: string, title: string) => {

@@ -6,6 +6,7 @@ const concours = createSlice({
   name: 'concours',
   initialState:{
     concours: [],
+    results: [],
   } as concoursState,
   reducers: {
     setConcours(state, action) {
@@ -22,10 +23,13 @@ const concours = createSlice({
           }
         }
       });
-    }    
+    },
+    setResults(state, action) {
+      state.results = action.payload;
+    }   
   }
 });
 
-export const {setConcours, addCandidatsToConcours} = concours.actions
+export const {setConcours, addCandidatsToConcours, setResults} = concours.actions
 
 export default concours.reducer

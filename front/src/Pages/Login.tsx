@@ -11,7 +11,7 @@ const Login = () => {
     const {checkToken} = useFormRegistry();
     const [forgotPassword, setForgotPassword] = useState<boolean>(false);
     const location = useLocation();
-    useEffect(()=>{    
+    useEffect(()=>{   
         checkToken();
     },[])
 
