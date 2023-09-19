@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import httpException from '../httpException';
+import { $env } from '../../env';
 
 export const verifyJWT = (req: Request, res: Response, next: NextFunction) => {
     const token = req.header('Authorization')?.replace('Bearer ', '');
@@ -9,7 +10,7 @@ export const verifyJWT = (req: Request, res: Response, next: NextFunction) => {
     }
     jwt.verify( 
         token,
-        process.env.JWT_SECRET as string,
+        $env.JWT_SECRET,
         (err: any, decoded: any) => {
             if (err) {
                 if (err.name === 'TokenExpiredError') {

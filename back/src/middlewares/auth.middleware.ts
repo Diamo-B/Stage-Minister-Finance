@@ -3,6 +3,7 @@ import { Request, Response, NextFunction } from 'express';
 import jsonwebtoken from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import httpException from '../utils/httpException';
+import { $env } from '../env';
 
 dotenv.config();
 
@@ -16,7 +17,7 @@ export const AuthMiddleware = (
     if (token) {
         jsonwebtoken.verify(
             token,
-            process.env.JWT_SECRET as string,
+            $env.JWT_SECRET,
             (err, decodedToken) => {
                 if (!err) {
                     if (decodedToken != null) {

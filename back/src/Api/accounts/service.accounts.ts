@@ -4,6 +4,7 @@ import userService from '../users/service.user';
 const sendMailScript = require('../../utils/mailer/nodemailerOutlook.js');
 import { generateJWT } from '../../utils/JWT/generateJWT';
 import httpException from '../../utils/httpException';
+import { $env } from '../../env';
 
 const verifyAccount = async (email: string, password: string) => {
     try {
@@ -117,7 +118,7 @@ const sendForgotPasswordEmail = async (
                         color: '#7986cb', //22BC66
                         text: `<span style="font-weight: bold">Nouvel mot de passe</span>`,
                         link: `${
-                            process.env.FRONT_URL
+                            $env.FRONT_URL
                         }/reset-password/?token=${token}`,
                     },
                 },
