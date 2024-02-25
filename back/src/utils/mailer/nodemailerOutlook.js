@@ -7,13 +7,15 @@ dotenv.config({ path: './.env' });
 
 const createTransporter = async () => {
     const transporter = nodemailer.createTransport({
-        service: 'hotmail',
+        host: 'smtp-mail.outlook.com',  // Update with the correct Outlook SMTP server
+        port: 587,
+        secure: false,
         auth: {
             user: process.env.OUTLOOK_MAIL,
             pass: process.env.OUTLOOK_PASS
         },
     });
-
+    console.log(transporter);
     return transporter;
 };
 
@@ -39,12 +41,15 @@ const sendMailScript = async (mailGenBody) => {
         return new Promise((resolve, reject) => {
             emailTransporter.sendMail(mailOptions, (err, info) => {
                 if (err) {
+                    console.log(err);
                     reject(err);
                 } else {
+                    console.log(info);
                     resolve(info);
                 }
             });
         });
+
     } catch (err) {
         throw new Error('Failed to send email: ' + err.message);
     }

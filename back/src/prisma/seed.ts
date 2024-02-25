@@ -1,3 +1,4 @@
+import { seedAdminAccount } from './seeders/AdminAccounts';
 import { seedBranches } from './seeders/BrancheSeeders';
 import { seedCities } from './seeders/CitiesSeeders';
 import { seedDiplomes } from './seeders/DiplomesSeeders';
@@ -90,6 +91,11 @@ const seed = async () => {
         .catch(error => {
             console.log('error seeding the specialites:', error);
         });
+    await seedAdminAccount().then(() => {
+        console.log('Admin account seeded successfully!');
+    }).catch((err)=>{
+        console.log('error seeding the admin account', err);
+    })
 };
 seed();
 

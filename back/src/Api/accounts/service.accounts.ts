@@ -60,10 +60,9 @@ const genAccessToken = async (candidatId: string) => {
                 email: user.user.email,
                 candidat: {
                     id: user.id,
+                    status: user.status,
                 },
-                admin: {
-                    id: null,
-                },
+                admin: null,
             };
         }
     } catch (err) {

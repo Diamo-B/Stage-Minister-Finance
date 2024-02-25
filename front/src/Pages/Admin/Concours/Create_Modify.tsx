@@ -231,7 +231,7 @@ const CreateModifyConcours = () => {
                                     */}
                                     <Input
                                         registerValue="maxPlaces"
-                                        t_left_text="Nombre de places"
+                                        t_left_text="Nombre de postes"
                                         placeholder=">= 1"
                                         type="number"
                                         changeIndicatorPlacement={true}
@@ -262,7 +262,7 @@ const CreateModifyConcours = () => {
                                     />
                                     <Input
                                         registerValue="dateLimite"
-                                        t_left_text="Date limite du dépôt des dossiers"
+                                        t_left_text="Date limite de candidature"
                                         placeholder="jj-mm-aaaa"
                                         changeIndicatorPlacement={true}
                                         customClasses={

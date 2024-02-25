@@ -30,6 +30,10 @@ const IntitulePanel = ({
     const { loading } = useAppSelector(state => state.loading);
     const [animation, animate] = useState<boolean>(false);
 
+    useEffect(()=>{
+        dispatch(resetLoading());
+    },[])
+
     useEffect(() => {
         if (loading === false) {
             animate(true);

@@ -39,7 +39,7 @@ const DragNDropCities = ({selectedCities, setSelectedCities, modification}:Props
     //? This function is used to add a city to the selectedCities array when it's dropped in the droppingArea
     function handleDragEnd(event: DragEndEvent) {
         const draggedCityId = event.active?.id; //explain: getting the id of the element being dragged
-
+        console.log(event.active);
         //explain: checking if the element was dropped in the correct dropping zone (using it's id .e.g droppingArea)
         if (event.over?.id === "droppingArea") {
 
@@ -102,7 +102,7 @@ const DragNDropCities = ({selectedCities, setSelectedCities, modification}:Props
                     <h2
                         className="text-lg font-bold py-1 border-2 border-neutral-content rounded-full text-center"
                     >
-                        Villes autorisées à passer le concours
+                        Centres d'examen associé à ce concours
                     </h2>
                 </div>
             </div>

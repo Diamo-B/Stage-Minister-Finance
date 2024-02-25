@@ -42,7 +42,8 @@ const ConfirmationPanel = ({ customConfirmButton }: Props) => {
                                 {loading ? (
                                     <span className="loading loading-spinner loading-sm text-error"></span>
                                 ) : (
-                                    customConfirmButton? customConfirmButton : "Supprimer"
+                                    /* customConfirmButton? customConfirmButton : "Supprimer" */
+                                    'Confirmer'
                                 )}
                             </span>
                         </button>

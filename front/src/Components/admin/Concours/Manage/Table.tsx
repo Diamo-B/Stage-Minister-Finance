@@ -74,7 +74,7 @@ const Table = () => {
                                             onClick={()=>{
                                                 navigate(`/admin/concours/categorize`, {state: {concoursId: c.id}})
                                             }}
-                                            disabled={c.candidats.length === 0 || c.status in ['disabled','ended']}
+                                            disabled={c.candidats.length === 0 || c.status === ('ended' ||  'disabled')}
                                         >Catégoriser</button>
                                         <button className="btn w-24 btn-xs btn-outline btn-info hover:!text-white"
                                             onClick={()=>{
